@@ -2,8 +2,6 @@ import java.util.Date;
 
 public class Block {
 
-	public static int difficulty = 5;
-	
 	public HashPointer hashOne;
 	public HashPointer hashTwo;	
 	public HashPointer previousHashOne;
@@ -22,6 +20,7 @@ public class Block {
 		
 		// calculate hash logic
 		setHashOne(); 
+		setHashTwo(); 	
 	}
 	
 	// calculating and setting the hash
@@ -99,7 +98,7 @@ public class Block {
 	// mining both hashes for the same difficulty
 	public void mineBlock(int difficulty) {
 		String target = new String(new char[difficulty]).replace('\0', '0'); //Create a string with difficulty * "0" 
-		while(!hashOne.blockHash.substring( 0, difficulty).equals(target)) {
+		while(!hashOne.blockHash.substring(0, difficulty).equals(target)) {
 			nonceOne ++;
 			setHashOne();
 		}
@@ -109,7 +108,7 @@ public class Block {
 			setHashTwo();
 		}
 		
-		System.out.println("Block Mined!!! : <" + hashOne + " , " + hashTwo + ">");
+		System.out.println("Block Mined!!! : <" + hashOne.blockHash + " , " + hashTwo.blockHash + ">");
 	}
 }
 
