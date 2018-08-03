@@ -5,6 +5,10 @@ public class Wallet {
 	public PrivateKey privateKey;
 	public PublicKey publicKey;
 	
+	public Wallet() {
+		generateKeyPair();
+	}
+	
 	public void generateKeyPair() {
 		try {
 			KeyPairGenerator keyGen = KeyPairGenerator.getInstance("ECDSA","BC");

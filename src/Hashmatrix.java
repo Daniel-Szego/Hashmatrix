@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import com.google.gson.*;
+import java.security.*;
+import org.bouncycastle.*;
 
 
 public class Hashmatrix {
@@ -7,9 +9,12 @@ public class Hashmatrix {
 	public static int difficulty = 2;
 	
 	public static ArrayList<Block> blockchain = new ArrayList<Block>();
+	
+	public static Wallet walletA;
+	public static Wallet walletB;
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+	public static void main(String[] args) {		
+		// Testing blockchain
 		HashPointer h1 = new HashPointer("", 2, 0);
 		HashPointer h2 = new HashPointer("", 2, 1);
 		
@@ -33,6 +38,24 @@ public class Hashmatrix {
 		String blockchainJson = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
 		System.out.println("\nThe block chain: ");
 		System.out.println(blockchainJson);
+		
+		// Testing transactions and wallets
+		//Setup Bouncey castle as a Security Provider
+		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider()); 
+		//Create the new wallets
+		walletA = new Wallet();
+		walletB = new Wallet();
+		//Test public and private keys
+		System.out.println("Private and public keys for wallet A:");
+		System.out.println(StringUtil.getStringFromKey(walletA.privateKey));
+		System.out.println(StringUtil.getStringFromKey(walletA.publicKey));
+		//Create a test transaction from WalletA to walletB 
+		Transaction transaction = new Transaction(walletA.publicKey, walletB.publicKey, 5, null);
+		transaction.generateSignature(walletA.privateKey);
+		//Verify the signature works and verify it from the public key
+		System.out.println("Is signature verified");
+		System.out.println(transaction.verifiySignature());
+		
 	}
 	
 
