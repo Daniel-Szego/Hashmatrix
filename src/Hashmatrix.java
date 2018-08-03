@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import com.google.gson.*;
 import java.security.*;
 import org.bouncycastle.*;
@@ -9,6 +11,8 @@ public class Hashmatrix {
 	public static int difficulty = 2;
 	
 	public static ArrayList<Block> blockchain = new ArrayList<Block>();
+	public static HashMap<String,TransactionOutput> UTXOs = new HashMap<String,TransactionOutput>(); //list of all unspent transactions.
+	public static float minimumTransaction = 0.001f;
 	
 	public static Wallet walletA;
 	public static Wallet walletB;
@@ -55,7 +59,6 @@ public class Hashmatrix {
 		//Verify the signature works and verify it from the public key
 		System.out.println("Is signature verified");
 		System.out.println(transaction.verifiySignature());
-		
 	}
 	
 
