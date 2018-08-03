@@ -1,4 +1,7 @@
+package Transaction;
 import java.security.*;
+
+import Crypto.StringUtil;
 
 
 public class TransactionOutput {

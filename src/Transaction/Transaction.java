@@ -1,5 +1,9 @@
+package Transaction;
 import java.security.*;
 import java.util.ArrayList;
+
+import Chain.Hashmatrix;
+import Crypto.StringUtil;
 
 public class Transaction {
 	

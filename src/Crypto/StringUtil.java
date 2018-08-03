@@ -1,6 +1,10 @@
+package Crypto;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Base64;
+
+import Transaction.Transaction;
+
 import java.security.*;
 
 public class StringUtil {

@@ -1,5 +1,9 @@
+package Block;
 import java.util.ArrayList;
 import java.util.Date;
+
+import Crypto.StringUtil;
+import Transaction.Transaction;
 
 public class Block {
 

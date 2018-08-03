@@ -1,7 +1,18 @@
+package Chain;
+
+import Block.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.google.gson.*;
+
+import Block.Block;
+import Block.HashPointer;
+import Transaction.Transaction;
+import Transaction.TransactionInput;
+import Transaction.TransactionOutput;
+import Wallet.Wallet;
+
 import java.security.*;
 import org.bouncycastle.*;
 

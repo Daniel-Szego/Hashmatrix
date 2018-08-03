@@ -1,6 +1,7 @@
+package Block;
 
 public class HashPointer {
-	String blockHash;
+	public String blockHash;
 	Integer resetPolicy;
 	Integer actualCount;
 	

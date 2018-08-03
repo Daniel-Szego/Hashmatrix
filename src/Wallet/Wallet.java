@@ -1,9 +1,15 @@
+package Wallet;
 import java.security.*;
 import java.security.spec.ECGenParameterSpec;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import org.bouncycastle.*;
+
+import Chain.Hashmatrix;
+import Transaction.Transaction;
+import Transaction.TransactionInput;
+import Transaction.TransactionOutput;
 
 public class Wallet {
 	public PrivateKey privateKey;
