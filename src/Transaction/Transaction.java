@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import Chain.Hashmatrix;
 import Crypto.StringUtil;
 
+// experimental implementation of an UTXO based transaction
 public class Transaction {
 	
 	public String transactionId; // this is also the hash of the transaction.

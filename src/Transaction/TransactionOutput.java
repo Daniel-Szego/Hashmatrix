@@ -3,7 +3,7 @@ import java.security.*;
 
 import Crypto.StringUtil;
 
-
+//experimental implementation of an UTXO based transaction
 public class TransactionOutput {
 
 	public String id;

@@ -30,7 +30,7 @@ public class Hashmatrix {
 	public static Wallet walletB;
 	public static Transaction genesisTransaction;
 
-	public static void main(String[] args) {	
+	public static void run() {	
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		
 		//Create wallets:
