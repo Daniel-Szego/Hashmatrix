@@ -39,6 +39,9 @@ public class StateDataTransaction extends StateTransaction {
 		String data = CryptoUtil.getStringFromKey(address) + newValue;
 		return CryptoUtil.verifyECDSASig(address, data, GetSignature());
 	}	
-
+	
+	public String getRawTransaction(){
+		return CryptoUtil.getStringFromKey(address) + newValue;
+	}
 	
 }

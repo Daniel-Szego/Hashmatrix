@@ -1,12 +1,19 @@
 package Crypto;
 
 import java.security.Key;
+import java.security.KeyFactory;
 import java.security.MessageDigest;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
+import java.security.spec.EncodedKeySpec;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Base64;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import State.State;
 import Transaction.Transaction;
@@ -17,6 +24,37 @@ public class CryptoUtil {
 	public static String getStringFromKey(Key key) {
 		return Base64.getEncoder().encodeToString(key.getEncoded());
 	}
+	
+	public static PrivateKey getPrivateKeyFromString(String keyString) {
+		// decode the base64 encoded string
+		try{
+			byte[] decodedKey = Base64.getDecoder().decode(keyString);
+			PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(decodedKey);
+			KeyFactory kf = KeyFactory.getInstance("ECDSA");
+			PrivateKey privateKey = kf.generatePrivate(privateKeySpec);
+			return privateKey;
+		}
+		catch(Exception e) {
+			// error handling
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public static PublicKey getPublicKeyFromString(String keyString) {
+		// decode the base64 encoded string
+		try{
+			byte[] decodedKey = Base64.getDecoder().decode(keyString);
+			X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(decodedKey);
+			KeyFactory kf = KeyFactory.getInstance("ECDSA");
+			PublicKey publicKey = kf.generatePublic(publicKeySpec);
+			return publicKey;
+		}
+		catch(Exception e) {
+			// error handling
+			throw new RuntimeException(e);
+		}
+	}
+
 	
 	// getting SHA256 for any given string input
 	public static String applySha256(String input){		
