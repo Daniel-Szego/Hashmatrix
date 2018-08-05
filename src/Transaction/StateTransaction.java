@@ -1,29 +1,36 @@
 package Transaction;
 
-import java.security.PublicKey;
-import java.util.ArrayList;
-
 import Crypto.CryptoUtil;
-import Crypto.StringUtil;
 
-public class StateTransaction {
-	public String transactionId; // this is also the hash of the transaction.
-	public String address; // address of the variable to change
-	public String newValue;
-	public byte[] signature; // this is to prevent anybody else from spending funds in our wallet.
-	
-	// Constructor: 
-	public StateTransaction(String _address, String _newValue) {
-		this.address = _address;
-		this.newValue = _newValue;
+// ancestor class for state transition transactions
+public abstract class StateTransaction {
+	private String transactionId; // this is also the hash of the transaction.
+	private byte[] signature; // this is to prevent anybody else from spending funds in our wallet.	
+
+	public String GetTransctionId () {
+		return transactionId;
+	}
+
+	public byte[] GetSignature () {
+		return signature;
+	}
+
+	// transaction id can be set only once
+	public void SetTransactionId(String _transactionId) {
+		if (this.transactionId == null) 
+			this.transactionId = _transactionId;
+		else 
+			// Exception handling
+			throw new RuntimeException(new Exception("Transaction id is already set"));
 	}
 	
-	// This Calculates the transaction hash (which will be used as its Id)
-	private String calulateHash() {
-		return CryptoUtil.applySha256(
-				address +
-				newValue
-				);
+	// signature can be set only once
+	public void SetSignature(byte[] _signature) {
+		if (this.signature == null) 
+			this.signature = _signature;		
+		else 
+			// Exception handling
+			throw new RuntimeException(new Exception("Signature id is already set"));
 	}
-	
+
 }
