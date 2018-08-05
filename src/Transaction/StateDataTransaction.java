@@ -27,6 +27,10 @@ public class StateDataTransaction extends StateTransaction {
 				newValue
 				);
 	}
+	
+	public String GetAddressString() {
+		return CryptoUtil.getStringFromKey(this.address);
+	}
 
 	//Signs all the data we dont wish to be tampered with.
 	public void generateSignature(PrivateKey privateKey) {

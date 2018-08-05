@@ -7,9 +7,9 @@ import Crypto.CryptoUtil;
 
 // state transaction transfering money
 public class StateTransferTransaction  extends StateTransaction {
-	public PublicKey fromAddress; // address of the from transfer
-	public PublicKey toAddress; // address of the to transfer
-	public float amount; // address of the to transfer
+	public final PublicKey fromAddress; // address of the from transfer
+	public final PublicKey toAddress; // address of the to transfer
+	public final float amount; // address of the to transfer
 	
 	public StateTransferTransaction(PublicKey _fromAddress,PublicKey _toAddress,float _amount) {
 		this.fromAddress = _fromAddress;

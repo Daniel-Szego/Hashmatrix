@@ -8,7 +8,7 @@ import Crypto.StringUtil;
 public class Account {
 	public String accountId;
 	private PublicKey address; 
-	private PrivateKey owner;
+	//private PrivateKey owner;
 	public int sequence = 0;
 	public String accountData;
 	public float accountBalance;
@@ -25,13 +25,13 @@ public class Account {
 			return address;
 	}
 	
-	public PrivateKey getOwner() {
+/*	public PrivateKey getOwner() {
 		if (owner == null)
 			throw new RuntimeException(new Exception("Account still not generated"));
 		else
 			return owner;
 	}
-	
+*/	
 	public void setAddress(PublicKey _publicKey) {
 		if (this.address == null) 
 			this.address = _publicKey;
@@ -39,13 +39,13 @@ public class Account {
 			throw new RuntimeException(new Exception("Address is already set"));
 	}
 	
-	public void setOwner(PrivateKey _owner) {
+/*	public void setOwner(PrivateKey _owner) {
 		if (this.owner == null) 
 			this.owner = _owner;
 		else 				
 			throw new RuntimeException(new Exception("Owner is already set"));		
 	}
-		
+*/		
 	// generates the account
 	public PrivateKey generateAccount() {
 		try {
@@ -57,7 +57,7 @@ public class Account {
 			keyGen.initialize(ecSpec, random);   //256 bytes provides an acceptable security level
 	        KeyPair keyPair = keyGen.generateKeyPair();
 	        	// Set the public and private keys from the keyPair
-	        setOwner(keyPair.getPrivate());
+//	        setOwner(keyPair.getPrivate());
 	        publicKey = keyPair.getPublic();
 	        
 	        // address is the Sha256 encryption of the public key
@@ -67,7 +67,7 @@ public class Account {
 	        
 	        // account id is the hash of the address, owner, sequence and data
 	        accountId = calulateAccountHash();	
-	        return owner;
+	        return keyPair.getPrivate();
 		}catch(Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -75,11 +75,11 @@ public class Account {
 	
 	private String calulateAccountHash() {
 		return CryptoUtil.applySha256(				
-				address +
-				CryptoUtil.getStringFromKey(owner) +
-				sequence +
+				CryptoUtil.getStringFromKey(address) +
+//				CryptoUtil.getStringFromKey(owner) +
+				Integer.toString(sequence) +
 				accountData + 				
-				accountBalance
+				Float.toString(accountBalance)
 		);
 	}
 	
