@@ -7,71 +7,112 @@ import java.util.Map;
 import org.bouncycastle.*;
 
 import Chain.Hashmatrix;
-import Transaction.Transaction;
-import Transaction.TransactionInput;
-import Transaction.TransactionOutput;
+import Crypto.CryptoUtil;
+import Node.*;
+import Transaction.*;
 
-public class Wallet {
-	public PrivateKey privateKey;
-	public PublicKey publicKey;
+// Ancestor class for wallet
+public abstract class Wallet {
 	
-	public HashMap<String,TransactionOutput> UTXOs = new HashMap<String,TransactionOutput>(); //only UTXOs owned by this wallet.
+	protected ArrayList<AccountWallet> accounts = new ArrayList<AccountWallet>(); 
+	private Node node;	
 	
-	public Wallet() {
-		generateKeyPair();
+	public Wallet(Node _node) {
+		this.node = _node;
 	}
 	
-	public void generateKeyPair() {
-		try {
-			KeyPairGenerator keyGen = KeyPairGenerator.getInstance("ECDSA","BC");
-			SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
-			ECGenParameterSpec ecSpec = new ECGenParameterSpec("prime192v1");
-			// Initialize the key generator and generate a KeyPair
-			keyGen.initialize(ecSpec, random);   //256 bytes provides an acceptable security level
-	        	KeyPair keyPair = keyGen.generateKeyPair();
-	        	// Set the public and private keys from the keyPair
-	        	privateKey = keyPair.getPrivate();
-	        	publicKey = keyPair.getPublic();
-		}catch(Exception e) {
-			throw new RuntimeException(e);
+	public ArrayList<AccountWallet> getAccounts() {
+		return accounts;
+	}
+
+	// getting a certain account by transacton Id
+	public AccountWallet getAccountbyId(String transactionId) {
+		AccountWallet toReturn = null;
+		for (AccountWallet account : accounts) {
+			if (account.account.accountId.equals(transactionId))
+				toReturn = account;
 		}
+		// error handling if not found
+		return toReturn;
 	}
 	
-	  //returns balance and stores the UTXO's owned by this wallet in this.UTXOs
-		public float getBalance() {
-			float total = 0;	
-	        for (Map.Entry<String, TransactionOutput> item: Hashmatrix.UTXOs.entrySet()){
-	        	TransactionOutput UTXO = item.getValue();
-	            if(UTXO.isMine(publicKey)) { //if output belongs to me ( if coins belong to me )
-	            	UTXOs.put(UTXO.id,UTXO); //add it to our list of unspent transactions.
-	            	total += UTXO.value ; 
-	            }
-	        }  
-			return total;
+	// getting a certain account by public key
+	public AccountWallet getAccountbyPublicKey(PublicKey address) {
+		AccountWallet toReturn = null;
+		for (AccountWallet account : accounts) {
+			if (account.account.getAddress().equals(address))
+				toReturn = account;
 		}
-		//Generates and returns a new transaction from this wallet.
-		public Transaction sendFunds(PublicKey _recipient,float value ) {
-			if(getBalance() < value) { //gather balance and check funds.
-				System.out.println("#Not Enough funds to send transaction. Transaction Discarded.");
-				return null;
-			}
-	    //create array list of inputs
-			ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
-	    
-			float total = 0;
-			for (Map.Entry<String, TransactionOutput> item: UTXOs.entrySet()){
-				TransactionOutput UTXO = item.getValue();
-				total += UTXO.value;
-				inputs.add(new TransactionInput(UTXO.id));
-				if(total > value) break;
-			}
-			
-			Transaction newTransaction = new Transaction(publicKey, _recipient , value, inputs);
-			newTransaction.generateSignature(privateKey);
-			
-			for(TransactionInput input: inputs){
-				UTXOs.remove(input.transactionOutputId);
-			}
-			return newTransaction;
+		// error handling if not found
+		return toReturn;
+	}
+	
+	// getting a certain account by public key string
+	public AccountWallet getAccountbyPublicKey(String address) {
+		return this.getAccountbyPublicKey(CryptoUtil.getPublicKeyFromString(address));
+	}
+
+	// getting a certain account by private key
+	public AccountWallet getAccountbyPrivateKey(PrivateKey owner) {
+		AccountWallet toReturn = null;
+		for (AccountWallet account : accounts) {
+			if (account.getOwner().equals(owner))
+				toReturn = account;
 		}
+		// error handling if not found
+		return toReturn;
+	}
+
+	// getting a certain account by private key string
+	public AccountWallet getAccountbyPrivateKey(String owner) {
+		return this.getAccountbyPrivateKey(CryptoUtil.getPrivateKeyFromString(owner));		
+	}
+
+	// getting the account information for a wallet
+	public String getAccountInformation(PublicKey address) {
+		AccountWallet aWallet = getAccountbyPublicKey(address);
+		return aWallet.account.accountData;
+	}
+	
+	// Strig as public key
+	public String getAccountInformation(String address) {
+		return this.getAccountInformation(CryptoUtil.getPublicKeyFromString(address));
+	}
+
+	// getting the balance for one account
+	public float getAccountBalance(PublicKey address) {
+		AccountWallet aWallet = getAccountbyPublicKey(address);
+		return aWallet.account.accountBalance;		
+	}
+
+	// string as public key
+	public float getAccountBalance(String address) {
+		return this.getAccountBalance(CryptoUtil.getPublicKeyFromString(address));		
+	}
+
+	// getting the balance for the whole wallet
+	public float getWalletBalance() {
+		float toReturn = 0;
+		for (AccountWallet account : accounts) {
+			toReturn += account.account.accountBalance;
+		}
+		// error handling if not found
+		return toReturn;
+	}
+
+
+	// backing up a wallet	
+	public void backupWallet() {
+		
+	}
+	
+	// restoring a wallet
+	public void restoreWallet() {
+		
+	}
+
+	public abstract void importAccount(PrivateKey privateKey);
+	
+	public abstract AccountWallet createNewAccount();
+	
 }

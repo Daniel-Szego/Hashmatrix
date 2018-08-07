@@ -33,7 +33,7 @@ public class Hashmatrix {
 	public static void run() {	
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		
-		//Create wallets:
+/*		//Create wallets:
 		walletA = new Wallet();
 		walletB = new Wallet();		
 		Wallet coinbase = new Wallet();	
@@ -75,7 +75,9 @@ public class Hashmatrix {
 		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
 		System.out.println("WalletB's balance is: " + walletB.getBalance());
 		
-		isChainValid();	}
+		isChainValid();	
+	*/
+	}
 	
 
 	public static Boolean isChainValid() {

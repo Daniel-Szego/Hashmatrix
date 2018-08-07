@@ -2,6 +2,11 @@ package State;
 import java.security.*;
 import java.security.spec.ECGenParameterSpec;
 
+import org.bouncycastle.jce.ECNamedCurveTable;
+import org.bouncycastle.jce.spec.ECParameterSpec;
+import org.bouncycastle.jce.spec.ECPublicKeySpec;
+import org.bouncycastle.math.ec.ECPoint;
+
 import Crypto.CryptoUtil;
 import Crypto.StringUtil;
 
@@ -17,14 +22,19 @@ public class Account {
 		//generateAccount();
 	}
 	
-	// public and private keys can be generated only once
+	// getting the address which is the public key
 	public PublicKey getAddress() {
 		if (address == null)
 			throw new RuntimeException(new Exception("Account still not generated"));
 		else
 			return address;
 	}
-	
+
+	// getting the address as a string
+	public String getAddressString() {
+		return CryptoUtil.getStringFromKey(this.getAddress());
+	}
+
 /*	public PrivateKey getOwner() {
 		if (owner == null)
 			throw new RuntimeException(new Exception("Account still not generated"));
@@ -68,6 +78,25 @@ public class Account {
 	        // account id is the hash of the address, owner, sequence and data
 	        accountId = calulateAccountHash();	
 	        return keyPair.getPrivate();
+		}catch(Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public void importAccount(PrivateKey privateKey) {
+		try {
+			PublicKey publicKey;
+			
+			KeyFactory keyFactory = KeyFactory.getInstance("ECDSA", "BC");
+		    ECParameterSpec ecSpec = ECNamedCurveTable.getParameterSpec("secp256k1");
+
+		    ECPoint Q = ecSpec.getG().multiply(((org.bouncycastle.jce.interfaces.ECPrivateKey) privateKey).getD());
+
+		    ECPublicKeySpec pubSpec = new ECPublicKeySpec(Q, ecSpec);
+		    PublicKey publicKeyGenerated = keyFactory.generatePublic(pubSpec);
+		    publicKey = publicKeyGenerated;
+		    setAddress(publicKey);
+		    accountId = calulateAccountHash();	
 		}catch(Exception e) {
 			throw new RuntimeException(e);
 		}

@@ -2,8 +2,10 @@ package CLI;
 import java.security.*;
 
 import Crypto.CryptoUtil;
+import Node.*;
 import State.*;
 import Transaction.*;
+import Wallet.*;
 
 // command line interface
 public class Cli {
@@ -11,16 +13,22 @@ public class Cli {
 	public static void main(String[] args) {
 		CliArgs cliArgs = new CliArgs(args);
 		
+		// node and wallet creation has to be brainstormed
+		Node node = new Node();
+		// default wallet
+		Wallet wallet = new RandomWallet(node);
+		
 		// starting security provider, not sure if this is the right place
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		
 		// creating account - only memory
 		if (cliArgs.switchPresent("-createAccount")) {
-			Account account = new Account();
-			PrivateKey owner = account.generateAccount();
-			System.out.println("Account has been generated");
-			System.out.println("Address : " + CryptoUtil.getStringFromKey(account.getAddress()));
-			System.out.println("Owner priv key : " + CryptoUtil.getStringFromKey(owner));		
+			AccountWallet account = wallet.createNewAccount();
+			
+			System.out.println("Account has been generated and added to the default wallet");
+			System.out.println("Account Id : " + account.account.accountId);
+			System.out.println("Address : " + account.account.getAddressString());
+			System.out.println("Owner priv key : " + account.getOwnerString());		
 		}
 		
 		// creating a transaction
