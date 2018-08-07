@@ -12,18 +12,16 @@ public class Cli {
 
 	public static void main(String[] args) {
 		CliArgs cliArgs = new CliArgs(args);
-		
-		// node and wallet creation has to be brainstormed
-		Node node = new Node();
-		// default wallet
-		Wallet wallet = new RandomWallet(node);
-		
+				
 		// starting security provider, not sure if this is the right place
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		
+		// creating a test node
+		Node node = new Node();
+		
 		// creating account - only memory
 		if (cliArgs.switchPresent("-createAccount")) {
-			AccountWallet account = wallet.createNewAccount();
+			AccountWallet account = node.wallet.createNewAccount();
 			
 			System.out.println("Account has been generated and added to the default wallet");
 			System.out.println("Account Id : " + account.account.accountId);

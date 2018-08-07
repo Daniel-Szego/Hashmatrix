@@ -21,6 +21,9 @@ public abstract class Wallet {
 		this.node = _node;
 	}
 	
+	// READ OUT FUNCTIONALITIES
+	
+	// getting all the accounts
 	public ArrayList<AccountWallet> getAccounts() {
 		return accounts;
 	}
@@ -100,7 +103,29 @@ public abstract class Wallet {
 		return toReturn;
 	}
 
+	// TRANSACTIONS
+		
+	public void createDataTransaction(AccountWallet account, String newValue){
+		StateDataTransaction tr = new StateDataTransaction(account.account.getAddress(), newValue);
+		tr.generateSignature(account.getOwner());
+		node.broadcastTransaction(tr);
+	}
+	
+	public void createTransferTransaction(AccountWallet account, PublicKey toAddress, float amount){
+		StateTransferTransaction tr = new StateTransferTransaction(account.account.getAddress(), toAddress, amount);
+		tr.generateSignature(account.getOwner());
+		node.broadcastTransaction(tr);		
+	}
 
+	
+	public void createTransferTransaction(AccountWallet account, String toAddress, float amount){
+		PublicKey toPublicKey = CryptoUtil.getPublicKeyFromString(toAddress);
+		this.createTransferTransaction(account,toPublicKey,amount);
+	}
+
+	
+	// BACKUP RESTORE
+	
 	// backing up a wallet	
 	public void backupWallet() {
 		

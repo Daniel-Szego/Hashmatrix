@@ -8,8 +8,8 @@ import State.*;
 // Simple wrapper for the account containing if it is added to the blockchin 
 // or only to the wallet
 public class AccountWallet {
-	public static Account account;
-	private static PrivateKey privateKey; // the blockchain does not store the private keys, but the wallet should!
+	public final Account account;
+	private final PrivateKey privateKey; // the blockchain does not store the private keys, but the wallet should!
 	public boolean isAddedToBlockchain;	
 	
 	public AccountWallet(Account _account, PrivateKey _privateKey) {

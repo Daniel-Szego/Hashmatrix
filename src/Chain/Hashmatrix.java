@@ -8,6 +8,7 @@ import com.google.gson.*;
 
 import Block.Block;
 import Block.HashPointer;
+import Node.*;
 import Transaction.Transaction;
 import Transaction.TransactionInput;
 import Transaction.TransactionOutput;
@@ -18,6 +19,12 @@ import org.bouncycastle.*;
 
 
 public class Hashmatrix {
+	
+	public final Node node;
+	
+	public Hashmatrix(Node _node) {
+		this.node = _node;
+	}
 	
 	public static int difficulty = 2;
 	
