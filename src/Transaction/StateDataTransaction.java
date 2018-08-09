@@ -17,7 +17,7 @@ public class StateDataTransaction extends StateTransaction {
 	public StateDataTransaction(PublicKey _address, String _newValue) {
 		this.address = _address;
 		this.newValue = _newValue;
-		SetTransactionId(calulateHash());
+		setTransactionId(calulateHash());
 	}
 	
 	// This Calculates the transaction hash (which will be used as its Id)
@@ -34,14 +34,14 @@ public class StateDataTransaction extends StateTransaction {
 
 	//Signs all the data we dont wish to be tampered with.
 	public void generateSignature(PrivateKey privateKey) {
-		String data = CryptoUtil.getStringFromKey(address) + newValue;
-		SetSignature(CryptoUtil.applyECDSASig(privateKey,data));		
+		String data = CryptoUtil.getStringFromKey(address) + newValue + Integer.toString(this.getNonce());
+		setSignature(CryptoUtil.applyECDSASig(privateKey,data));		
 	}
 	
 	//Verifies the data we signed hasnt been tampered with
 	public boolean verifiySignature() {
-		String data = CryptoUtil.getStringFromKey(address) + newValue;
-		return CryptoUtil.verifyECDSASig(address, data, GetSignature());
+		String data = CryptoUtil.getStringFromKey(address) + newValue + Integer.toString(this.getNonce());
+		return CryptoUtil.verifyECDSASig(address, data, getSignature());
 	}	
 	
 	public String getRawTransaction(){

@@ -23,7 +23,7 @@ public class State {
 		int count = accounts.size();
 		ArrayList<String> previousTreeLayer = new ArrayList<String>();
 		for(Account account : accounts) {
-			previousTreeLayer.add(account.accountId);
+			previousTreeLayer.add(account.getId());
 		}
 		
 		ArrayList<String> treeLayer = previousTreeLayer;

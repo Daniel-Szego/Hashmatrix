@@ -12,17 +12,16 @@ public class RandomWallet extends Wallet{
 		super(_node);
 	}
 	
-	public void  importAccount(PrivateKey privateKey) {
-		Account account = new Account();
+	public void importAccount(PrivateKey privateKey) {
+		AccountWallet account = new AccountWallet();
 		account.importAccount(privateKey);
-		accounts.add(new AccountWallet(account, privateKey));
+		accounts.add(account);
 	}
 	
 	public AccountWallet createNewAccount() {
-		Account account = new Account();
+		AccountWallet account = new AccountWallet();
 		PrivateKey privateKey = account.generateAccount();
-		AccountWallet newAccountWallet = new AccountWallet(account, privateKey);
-		accounts.add(newAccountWallet);
-		return newAccountWallet;
+		accounts.add(account);
+		return account;
 	}
 }

@@ -1,137 +1,101 @@
 package Block;
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Date;
 
+import Crypto.CryptoUtil;
 import Crypto.StringUtil;
-import Transaction.Transaction;
+import State.Account;
+import State.State;
+import Transaction.*;
 
 public class Block {
 
-	public HashPointer hashOne;
-	public HashPointer hashTwo;	
-	public HashPointer previousHashOne;
-	public HashPointer previousHashTwo;
-	public String merkleRoot;
-	public ArrayList<Transaction> transactions = new ArrayList<Transaction>();
-	//private String data; //our data will be a simple message.
-	private long timeStamp; //as number of milliseconds since 1/1/1970.
-	private int nonceOne; // 
-	private int nonceTwo; // 
-
-	//Block Constructor.
-	public Block(HashPointer previousHashOne,HashPointer previousHashTwo) {
-		this.previousHashOne = previousHashOne;
-		this.previousHashTwo = previousHashTwo;
-		this.timeStamp = new Date().getTime();
+	public ArrayList<HashLink> matrix = new ArrayList<HashLink>();
+ 	public ArrayList<StateTransaction> transactions = new ArrayList<StateTransaction>();
+ 	public ArrayList<Account> accounts = new ArrayList<Account>();
+	public String stateRoot;
+	public String transactionRoot;
+	public Block previousBlock;
 		
-		// calculate hash logic
-		setHashOne(); 
-		setHashTwo(); 	
+	//Creating a blanck Block 
+	public Block(Block _previousBlock) {
+		this.previousBlock = _previousBlock;
 	}
 	
-	// calculating and setting the hash
-	public void setHashOne() {
-		// reset one
-		if (this.previousHashOne.actualCount == this.previousHashOne.resetPolicy){
-			hashOne = new HashPointer(calculateHash1(),this.previousHashOne.resetPolicy,0);
-
-		}
-		else {
-			hashOne = new HashPointer(calculateHash1(),this.previousHashOne.resetPolicy,previousHashOne.actualCount + 1);
-		}				
-	}
-	
-	public void setHashTwo() {
-		// reset two
-		if (this.previousHashTwo.actualCount == this.previousHashTwo.resetPolicy){
-			hashTwo = new HashPointer(calculateHash2(),this.previousHashTwo.resetPolicy,0);
-
-		}
-		else {
-			hashTwo = new HashPointer(calculateHash2(),this.previousHashTwo.resetPolicy,previousHashTwo.actualCount + 1);
-		}				
-	}
-
-	
-	public String calculateHash1() {
-		String calculatedhashOne;
-		
-		// reset one
-		if (this.previousHashOne.actualCount == this.previousHashOne.resetPolicy){
-			calculatedhashOne = StringUtil.applySha256( 
-					previousHashOne.ToResetString() +
-				Long.toString(timeStamp) +
-				Integer.toString(nonceOne) +
-				merkleRoot 
-			);
-		}
-		// reset none
-		else {
-			calculatedhashOne = StringUtil.applySha256( 
-					previousHashOne.ToHashString() +
-				Long.toString(timeStamp) +
-				Integer.toString(nonceOne) +
-				merkleRoot 
-			);
-		}
-		return calculatedhashOne;
-	}
-
-	public String calculateHash2() {
-		String calculatedhashTwo;
-		
-		// reset one
-		if (this.previousHashTwo.actualCount == this.previousHashTwo.resetPolicy){
-			calculatedhashTwo = StringUtil.applySha256( 
-					previousHashTwo.ToResetString() +
-				Long.toString(timeStamp) +
-				Integer.toString(nonceTwo) +
-				merkleRoot 
-			);
-		}
-		// reset none
-		else {
-			calculatedhashTwo = StringUtil.applySha256( 
-					previousHashTwo.ToHashString() +
-				Long.toString(timeStamp) +
-				Integer.toString(nonceTwo) +
-				merkleRoot 
-			);
-		}
-		return calculatedhashTwo;
-	}	
-	
-	// mining both hashes for the same difficulty
-	public void mineBlock(int difficulty) {
-		merkleRoot = StringUtil.getMerkleRoot(transactions);
-		String target = new String(new char[difficulty]).replace('\0', '0'); //Create a string with difficulty * "0" 
-		while(!hashOne.blockHash.substring(0, difficulty).equals(target)) {
-			nonceOne ++;
-			setHashOne();
+	// calculating state root
+	public String calculateStateRoot() {
+		int count = accounts.size();
+		ArrayList<String> previousTreeLayer = new ArrayList<String>();
+		for(Account account : accounts) {
+			previousTreeLayer.add(account.getId());
 		}
 		
-		while(!hashTwo.blockHash.substring( 0, difficulty).equals(target)) {
-			nonceTwo ++;
-			setHashTwo();
+		ArrayList<String> treeLayer = previousTreeLayer;
+		while(count > 1) {
+			treeLayer = new ArrayList<String>();
+			for(int i=1; i < previousTreeLayer.size(); i++) {
+				treeLayer.add(CryptoUtil.applySha256(previousTreeLayer.get(i-1) + previousTreeLayer.get(i)));
+			}
+			count = treeLayer.size();
+			previousTreeLayer = treeLayer;
 		}
-		
-		System.out.println("Block Mined!!! : <" + hashOne.blockHash + " , " + hashTwo.blockHash + ">");
+		String merkleRoot = (treeLayer.size() == 1) ? treeLayer.get(0) : "";
+		stateRoot = merkleRoot;
+		return merkleRoot;
 	}
 	
-	//Add transactions to this block
-		public boolean addTransaction(Transaction transaction) {
-			//process transaction and check if valid, unless block is genesis block then ignore.
-			if(transaction == null) return false;		
-			if((previousHashOne.blockHash != "0") && (previousHashTwo.blockHash != "0")) {
-				if((transaction.processTransaction() != true)) {
-					System.out.println("Transaction failed to process. Discarded.");
-					return false;
+	// calculating transaction root
+	public String calculateTransactionRoot() {
+		int count = accounts.size();
+		ArrayList<String> previousTreeLayer = new ArrayList<String>();
+		for(StateTransaction tr : transactions) {
+			previousTreeLayer.add(tr.getTransctionId());
+		}
+		
+		ArrayList<String> treeLayer = previousTreeLayer;
+		while(count > 1) {
+			treeLayer = new ArrayList<String>();
+			for(int i=1; i < previousTreeLayer.size(); i++) {
+				treeLayer.add(CryptoUtil.applySha256(previousTreeLayer.get(i-1) + previousTreeLayer.get(i)));
+			}
+			count = treeLayer.size();
+			previousTreeLayer = treeLayer;
+		}
+		String merkleRoot = (treeLayer.size() == 1) ? treeLayer.get(0) : "";
+		transactionRoot = merkleRoot;
+		return merkleRoot;
+	} 
+
+		
+	// aplying transactions to the state if they have a valid sginature
+	// supposing that state is copied from the previous block
+	public void calculateNewState(){
+		for(StateTransaction tr : transactions) {
+			if (tr instanceof StateDataTransaction) {
+				if(TransactionValidator.validateDataTransaction((StateDataTransaction)tr, accounts)){
+					StateTransformer.applyDataTransactionToState((StateDataTransaction)tr, accounts);	
+				}
+				else {
+					// non valid transaction in the proposed transactions ? error ?
+					
 				}
 			}
-			transactions.add(transaction);
-			System.out.println("Transaction Successfully added to Block");
-			return true;
-		}
+			else if(tr instanceof StateTransferTransaction) {
+				if(TransactionValidator.validateTransferTransaction((StateTransferTransaction)tr, accounts)){
+					StateTransformer.applyTransferTransactionToState((StateTransferTransaction)tr, accounts);	
+				}
+				else {
+					// non valid transaction in the proposed transactions ? error ?
+					
+				}				
+			}
+			else {
+				// unknown transaction -> error handing
+				
+			}
+		}	
+	}	
 }
 
 

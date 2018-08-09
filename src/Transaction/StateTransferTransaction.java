@@ -15,7 +15,7 @@ public class StateTransferTransaction  extends StateTransaction {
 		this.fromAddress = _fromAddress;
 		this.toAddress = _toAddress;
 		this.amount = _amount; 
-		SetTransactionId(calulateHash());
+		setTransactionId(calulateHash());
 	}
 
 	// This Calculates the transaction hash (which will be used as its Id)
@@ -30,12 +30,12 @@ public class StateTransferTransaction  extends StateTransaction {
 	//Signs all the data we dont wish to be tampered with.
 	public void generateSignature(PrivateKey privateKey) {
 		String data = CryptoUtil.getStringFromKey(fromAddress) + CryptoUtil.getStringFromKey(toAddress) + Float.toString(amount);
-		SetSignature(CryptoUtil.applyECDSASig(privateKey,data));		
+		setSignature(CryptoUtil.applyECDSASig(privateKey,data));		
 	}
 	
 	//Verifies the data we signed hasnt been tampered with
 	public boolean verifiySignature() {
 		String data = CryptoUtil.getStringFromKey(fromAddress) + CryptoUtil.getStringFromKey(toAddress) + Float.toString(amount);
-		return CryptoUtil.verifyECDSASig(fromAddress, data, GetSignature());
+		return CryptoUtil.verifyECDSASig(fromAddress, data, getSignature());
 	}		
 }

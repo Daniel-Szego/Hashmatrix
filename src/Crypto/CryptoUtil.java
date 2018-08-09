@@ -16,7 +16,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import State.State;
-import Transaction.Transaction;
 
 public class CryptoUtil {
 	

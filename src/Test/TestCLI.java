@@ -20,27 +20,9 @@ public class TestCLI {
 		String[] params = {"-createAccount"};
 		Cli.main(params);	
 		System.out.println("");	
-
-
 		
-		// test key conversion
-		System.out.println("TEST KEY CONVERSION");	
-		Account account = new Account();
-		PrivateKey owner = account.generateAccount();
-		PublicKey address = account.getAddress();
-		System.out.println("Public Key : " + address);
-		System.out.println("Private Key : " + owner);		
-		String accountString = CryptoUtil.getStringFromKey(address);
-		String ownerString = CryptoUtil.getStringFromKey(owner);	
-		System.out.println("Public Key String : " + accountString);
-		System.out.println("Private Key String: " + ownerString);
-		PublicKey publicReconverted =  CryptoUtil.getPublicKeyFromString(accountString);
-		PrivateKey privateReconverted = CryptoUtil.getPrivateKeyFromString(ownerString);
-		System.out.println("Public Key String reconverted : " + publicReconverted);
-		System.out.println("Private Key String reconverted: " + privateReconverted);
+		String accountString = Cli.node.wallet.getAccounts().get(0).getOwnerString();
 		
-		System.out.println("");	
-
 		// test transactions
 		System.out.println("TEST TRANSACTIONS");	
 		System.out.println("Create:");	

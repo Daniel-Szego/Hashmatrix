@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.bouncycastle.*;
 
-import Chain.Hashmatrix;
+import Chain.Blockchain;
 import Crypto.CryptoUtil;
 import Node.*;
 import Transaction.*;
@@ -28,17 +28,6 @@ public abstract class Wallet {
 		return accounts;
 	}
 
-	// getting a certain account by transacton Id
-	public AccountWallet getAccountbyId(String transactionId) {
-		AccountWallet toReturn = null;
-		for (AccountWallet account : accounts) {
-			if (account.account.accountId.equals(transactionId))
-				toReturn = account;
-		}
-		// error handling if not found
-		return toReturn;
-	}
-	
 	// getting a certain account by public key
 	public AccountWallet getAccountbyPublicKey(PublicKey address) {
 		AccountWallet toReturn = null;
@@ -127,12 +116,12 @@ public abstract class Wallet {
 	// BACKUP RESTORE
 	
 	// backing up a wallet	
-	public void backupWallet() {
+	public void BackupWallet() {
 		
 	}
 	
 	// restoring a wallet
-	public void restoreWallet() {
+	public void RestoreWallet() {
 		
 	}
 

@@ -11,14 +11,14 @@ public class Node {
 	
 	public final RandomWallet wallet;
 	public final MinerPOW miner ;
-	public final Hashmatrix blockchain;
+	public final Blockchain blockchain;
 	public final TransactionPool pool;
 	
 	// starting the node - test code, no persistance or communiction
 	public Node() {
 		wallet = new RandomWallet(this);
 		miner = new MinerPOW(this);
-		blockchain = new Hashmatrix(this);
+		blockchain = new Blockchain(this);
 		pool = new TransactionPool(this);
 	}
 	
@@ -39,7 +39,7 @@ public class Node {
 	
 	// starting the miner - only one round implementation
 	public void startMiner() {
-		Block proposedBlock = miner.mineNextBlock(this.blockchain, this.pool);
+		Block proposedBlock = miner.mineNextBlock(this.blockchain.getLatestBlock(), this.pool);
 		this.broadcastBlock(proposedBlock);
 	}
 }

@@ -13,6 +13,6 @@ public abstract class Miner {
 		this.node = _node;
 	}
 	
-	public abstract Block mineNextBlock(Hashmatrix blockchain, TransactionPool pool);
+	public abstract Block mineNextBlock(Block previousBlock, TransactionPool pool);
 
 }

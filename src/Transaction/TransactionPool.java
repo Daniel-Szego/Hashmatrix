@@ -13,11 +13,11 @@ public class TransactionPool {
 		this.node = _node;
 	}
 	
-	public ArrayList<StateTransaction> pool = new ArrayList<StateTransaction>();
+	public ArrayList<StateTransaction> transactions = new ArrayList<StateTransaction>();
 	
 	// adding transaction to the pool
 	public void addTransaction(StateTransaction tr) {
-		pool.add(tr);
+		transactions.add(tr);
 	}
 	
 	

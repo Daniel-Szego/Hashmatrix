@@ -7,35 +7,38 @@ import java.util.HashMap;
 import com.google.gson.*;
 
 import Block.Block;
-import Block.HashPointer;
 import Node.*;
-import Transaction.Transaction;
-import Transaction.TransactionInput;
-import Transaction.TransactionOutput;
+import Transaction.*;
 import Wallet.Wallet;
 
 import java.security.*;
 import org.bouncycastle.*;
 
 
-public class Hashmatrix {
+public class Blockchain {
 	
 	public final Node node;
 	
-	public Hashmatrix(Node _node) {
+	public Blockchain(Node _node) {
 		this.node = _node;
 	}
 	
-	public static int difficulty = 2;
-	
+	// simple implementation: future: forking has to be considrered
 	public static ArrayList<Block> blockchain = new ArrayList<Block>();
-	public static HashMap<String,TransactionOutput> UTXOs = new HashMap<String,TransactionOutput>(); //list of all unspent transactions.
-	public static float minimumTransaction = 0.1f;
+	
+	public void addBlock(Block _block) {
+		blockchain.add(_block);
+	}
+	
+	// experimental implementation, future: forking has to be considered !!!
+	public Block getLatestBlock() {
+		if (blockchain.size() == 0)
+			return null;
+		else 
+			return blockchain.get(blockchain.size() - 1);			
+	}
 	
 	
-	public static Wallet walletA;
-	public static Wallet walletB;
-	public static Transaction genesisTransaction;
 
 	public static void run() {	
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
@@ -88,6 +91,7 @@ public class Hashmatrix {
 	
 
 	public static Boolean isChainValid() {
+		/*
 		Block currentBlock; 
 		Block previousBlock;
 		
@@ -167,12 +171,8 @@ public class Hashmatrix {
 					}			
 				}
 			
-		}
+		} */
 		return true;
 	}
 	
-	public static void addBlock(Block newBlock) {
-		newBlock.mineBlock(difficulty);
-		blockchain.add(newBlock);
-	}	
 }
