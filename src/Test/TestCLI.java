@@ -20,6 +20,13 @@ public class TestCLI {
 		String[] params = {"-createAccount"};
 		Cli.main(params);	
 		System.out.println("");	
+
+		//GENESIS BLOCK
+		System.out.println("GENESIS BLOCK");
+		String[] paramsg = {"-createGenesisBlock"};
+		Cli.main(paramsg);	
+		System.out.println("genesis block created");
+		System.out.println("");
 		
 		String accountString = Cli.node.wallet.getAccounts().get(0).getOwnerString();
 		
@@ -34,10 +41,10 @@ public class TestCLI {
 		Cli.main(params3);	
 		System.out.println("");	
 
-		// test transactions
-		System.out.println("TRANSACTION SIGNATURES");	
-
 		
+		
+		// test transactions
+		System.out.println("TRANSACTION SIGNATURES");			
 	}
 	
 	

@@ -11,7 +11,7 @@ import Crypto.CryptoUtil;
 import Crypto.StringUtil;
 
 public class Account {
-	private PublicKey address; 
+	private PublicKey address = null; 
 	public int nonce = 0;
 	public String accountData;
 	public float accountBalance = 0;

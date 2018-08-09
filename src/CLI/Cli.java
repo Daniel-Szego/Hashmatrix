@@ -1,6 +1,8 @@
 package CLI;
 import java.security.*;
 
+import Block.*;
+import Chain.*;
 import Crypto.CryptoUtil;
 import Node.*;
 import State.*;
@@ -62,6 +64,41 @@ public class Cli {
 		else if (cliArgs.switchPresent("-signTransaction")) {
 				String trId = cliArgs.switchValue("-transactionId");
 				String privateKey = cliArgs.switchValue("-privateKeyId");				
+		}
+		else if (cliArgs.switchPresent("-createGenesisBlock")) {
+			// creating a genesis account
+			AccountWallet accountWallet = node.wallet.createNewAccount();
+
+			System.out.println("Genesis account has been generated");
+			System.out.println("Address : " + accountWallet.account.getAddressString());
+			System.out.println("Owner priv key : " + accountWallet.getOwnerString());		
+			
+			// HashLink
+			String hashOne = "0"; 
+			String hashTwo =  "0";
+			int resetPolicy = 2;
+			int resetCount= 0;
+			boolean lastResetedHash = true;
+			boolean singleHash = false;
+			int difficulty = 1;
+			
+			HashLink hashLink = new HashLink(hashOne, hashTwo, resetPolicy, resetCount,lastResetedHash, singleHash, difficulty);
+			
+			// genesis block
+			Block genesisBlock = new Block(null);
+			genesisBlock.accounts.add(accountWallet.account);			
+			genesisBlock.matrix.add(hashLink);
+			genesisBlock.calculateStateRoot();
+			genesisBlock.calculateTransactionRoot();
+			
+			// add genesis block to the blockchain
+			node.blockchain.addBlock(genesisBlock);
+			
+		}
+		else if (cliArgs.switchPresent("-runMinerOne")) {
+			
+			
+			
 		}
 
 	}
