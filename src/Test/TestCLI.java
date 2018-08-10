@@ -4,6 +4,7 @@ import java.security.*;
 
 import CLI.*;
 import Crypto.CryptoUtil;
+import Node.*;
 import State.*;
 
 public class TestCLI {
@@ -28,8 +29,9 @@ public class TestCLI {
 		System.out.println("genesis block created");
 		System.out.println("");
 		
-		String accountString = Cli.node.wallet.getAccounts().get(0).account.getAddressString();
-		String ownerString = Cli.node.wallet.getAccounts().get(0).getOwnerString();
+		String accountString = Cli.node.wallet.getAccounts().get(1).account.getAddressString();
+		String accountToString = Cli.node.wallet.getAccounts().get(0).account.getAddressString();
+		String ownerString = Cli.node.wallet.getAccounts().get(1).getOwnerString();
 		
 		// test transactions
 		System.out.println("TEST TRANSACTIONS");	
@@ -38,7 +40,7 @@ public class TestCLI {
 		Cli.main(params2);	
 		System.out.println("");	
 		System.out.println("Transfer:");	
-		String[] params3 = {"-createTransaction", "-transfer", "-from", accountString, "-to", accountString,"-amount", "22", "-sign", ownerString};
+		String[] params3 = {"-createTransaction", "-transfer", "-from", accountString, "-to", accountToString,"-amount", "22", "-sign", ownerString};
 		Cli.main(params3);	
 		System.out.println("");	
 		
@@ -47,6 +49,7 @@ public class TestCLI {
 		String[] paramsm = {"-runMinerOne"};
 		Cli.main(paramsm);	
 		System.out.println("");	
+
 
 		// test account mined
 		System.out.println("Account value");

@@ -21,8 +21,9 @@ public class Cli {
 		// starting security provider, not sure if this is the right place
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		
-		// creating a test node
-		node = new Node();
+		// creating a test node, but only if still not exisit 
+		if (node == null)
+			node = new Node();
 		
 		// creating account - only memory
 		if (cliArgs.switchPresent("-createAccount")) {
@@ -30,8 +31,7 @@ public class Cli {
 			
 			System.out.println("Account has been generated and added to the default wallet");
 			System.out.println("Address : " + account.account.getAddressString());
-			System.out.println("Owner priv key : " + account.getOwnerString());		
-			
+			System.out.println("Owner priv key : " + account.getOwnerString());					
 		}
 		
 		// creating a transaction
@@ -40,10 +40,9 @@ public class Cli {
 				String address = cliArgs.switchValue("-address");
 				String newValue = cliArgs.switchValue("-value");
 				String privKey = cliArgs.switchValue("-sign");
+				AccountWallet accountWallet = node.wallet.getAccountbyPublicKey(address);				
+				StateDataTransaction tr = node.wallet.createDataTransaction(accountWallet, newValue);
 				
-				StateDataTransaction tr = new StateDataTransaction(CryptoUtil.getPublicKeyFromString(address),newValue);
-				tr.generateSignature(CryptoUtil.getPrivateKeyFromString(privKey));
-				node.broadcastTransaction(tr);
 				System.out.println("State transaction has been created and broadcasted to the network");				
 				System.out.println("Transaction Id : " + tr.getTransctionId());
 				System.out.println("Address : " + tr.GetAddressString());
@@ -56,9 +55,9 @@ public class Cli {
 				Float amountFloat = Float.parseFloat(amount);
 				String privKey = cliArgs.switchValue("-sign");
 
-				StateTransferTransaction tr = new StateTransferTransaction(CryptoUtil.getPublicKeyFromString(fromAddress),CryptoUtil.getPublicKeyFromString(toAddress), amountFloat);
-				tr.generateSignature(CryptoUtil.getPrivateKeyFromString(privKey));
-				node.broadcastTransaction(tr);
+				AccountWallet accountWallet = node.wallet.getAccountbyPublicKey(fromAddress);				
+				StateTransferTransaction tr = node.wallet.createTransferTransaction(accountWallet, toAddress, amountFloat);
+
 				System.out.println("State transaction has been created and broadcasted to the network");
 				System.out.println("Transaction Id : " + tr.getTransctionId());
 				System.out.println("From Address : " +  CryptoUtil.getStringFromKey(tr.fromAddress));
@@ -79,6 +78,7 @@ public class Cli {
 		else if (cliArgs.switchPresent("-createGenesisBlock")) {
 			// creating a genesis account
 			AccountWallet accountWallet = node.wallet.createNewAccount();
+			accountWallet.account.accountBalance = 100;
 
 			System.out.println("Genesis account has been generated");
 			System.out.println("Address : " + accountWallet.account.getAddressString());
@@ -115,8 +115,7 @@ public class Cli {
 			System.out.println("Block hash one : " + node.blockchain.getLatestBlock().matrix.get(0).hashOne);	
 			System.out.println("Block hash two : " + node.blockchain.getLatestBlock().matrix.get(0).hashTwo);	
 			System.out.println("Nr of transactions : " + node.blockchain.getLatestBlock().transactions.size());			
-			System.out.println("Nr of accounts : " + node.blockchain.getLatestBlock().accounts.size());			
-			
+			System.out.println("Nr of accounts : " + node.blockchain.getLatestBlock().accounts.size());						
 		}
 		else if (cliArgs.switchPresent("-getAccountData")) {
 			String acountAddress = cliArgs.switchValue("-account");
@@ -128,6 +127,5 @@ public class Cli {
 			float value = node.explorer.getAccountBalance(acountAddress);
 			System.out.println("Account Balance : " + value);
 		}
-
 	}
 }

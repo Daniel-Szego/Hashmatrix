@@ -20,16 +20,14 @@ public class MinerPOW extends Miner{
 		// blank block
 		Block newBlock = new Block(previousBlock);
 		
-		// copy old state
-		StateTransformer.copyState(previousBlock, newBlock);
-		
-		
+		// copy old state -> copying the accounts
+		StateTransformer.copyState(previousBlock, newBlock);		
 		
 		int addedTransactions = 0;
 		// getting transactions from pool and adding to the new pool
 		for(StateTransaction tr : pool.transactions) {
 			if (tr instanceof StateDataTransaction) {
-				if(TransactionValidator.validateDataTransaction((StateDataTransaction)tr, previousBlock.accounts)){
+				if(TransactionValidator.validateDataTransaction((StateDataTransaction)tr, newBlock.accounts)){
 					if (transactionHeuristic()) {
 						newBlock.transactions.add(tr);
 						addedTransactions++;
@@ -37,7 +35,7 @@ public class MinerPOW extends Miner{
 				}
 			}
 			else if(tr instanceof StateTransferTransaction) {
-				if(TransactionValidator.validateTransferTransaction((StateTransferTransaction)tr, previousBlock.accounts)){
+				if(TransactionValidator.validateTransferTransaction((StateTransferTransaction)tr, newBlock.accounts)){
 					if (transactionHeuristic()) {
 						newBlock.transactions.add(tr);
 						addedTransactions++;

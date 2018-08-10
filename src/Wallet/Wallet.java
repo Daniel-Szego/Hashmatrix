@@ -94,22 +94,26 @@ public abstract class Wallet {
 
 	// TRANSACTIONS
 		
-	public void createDataTransaction(AccountWallet account, String newValue){
+	public StateDataTransaction createDataTransaction(AccountWallet account, String newValue){
 		StateDataTransaction tr = new StateDataTransaction(account.account.getAddress(), newValue);
+		tr.setNonce(account.account.nonce + 1);
 		tr.generateSignature(account.getOwner());
 		node.broadcastTransaction(tr);
+		return tr;
 	}
 	
-	public void createTransferTransaction(AccountWallet account, PublicKey toAddress, float amount){
+	public StateTransferTransaction createTransferTransaction(AccountWallet account, PublicKey toAddress, float amount){
 		StateTransferTransaction tr = new StateTransferTransaction(account.account.getAddress(), toAddress, amount);
+		tr.setNonce(account.account.nonce + 1);
 		tr.generateSignature(account.getOwner());
-		node.broadcastTransaction(tr);		
+		node.broadcastTransaction(tr);
+		return tr;
 	}
 
 	
-	public void createTransferTransaction(AccountWallet account, String toAddress, float amount){
+	public StateTransferTransaction createTransferTransaction(AccountWallet account, String toAddress, float amount){
 		PublicKey toPublicKey = CryptoUtil.getPublicKeyFromString(toAddress);
-		this.createTransferTransaction(account,toPublicKey,amount);
+		return this.createTransferTransaction(account,toPublicKey,amount);
 	}
 
 	

@@ -28,7 +28,8 @@ public class TransactionValidator {
 		// getting the account to be modified
 		Account accountToModify = null;
 		for(Account account: state) {
-			if (account.getAddressString().equals(address)){
+			String accountAddressString = account.getAddressString();
+			if (accountAddressString.equals(address)){
 				accountToModify = account;
 				accountFound++;
 			}
