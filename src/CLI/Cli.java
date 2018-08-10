@@ -4,6 +4,7 @@ import java.security.*;
 import Block.*;
 import Chain.*;
 import Crypto.CryptoUtil;
+import Miner.*;
 import Node.*;
 import State.*;
 import Transaction.*;
@@ -30,6 +31,7 @@ public class Cli {
 			System.out.println("Account has been generated and added to the default wallet");
 			System.out.println("Address : " + account.account.getAddressString());
 			System.out.println("Owner priv key : " + account.getOwnerString());		
+			
 		}
 		
 		// creating a transaction
@@ -37,19 +39,27 @@ public class Cli {
 			if (cliArgs.switchPresent("-state")) {
 				String address = cliArgs.switchValue("-address");
 				String newValue = cliArgs.switchValue("-value");
+				String privKey = cliArgs.switchValue("-sign");
+				
 				StateDataTransaction tr = new StateDataTransaction(CryptoUtil.getPublicKeyFromString(address),newValue);
-				System.out.println("State transaction has been created");				
+				tr.generateSignature(CryptoUtil.getPrivateKeyFromString(privKey));
+				node.broadcastTransaction(tr);
+				System.out.println("State transaction has been created and broadcasted to the network");				
 				System.out.println("Transaction Id : " + tr.getTransctionId());
 				System.out.println("Address : " + tr.GetAddressString());
-				System.out.println("Value : " + tr.newValue);				
+				System.out.println("Value : " + tr.newValue);	
 			}
 			else if (cliArgs.switchPresent("-transfer")){
 				String fromAddress = cliArgs.switchValue("-from");
 				String toAddress = cliArgs.switchValue("-to");				
 				String amount = cliArgs.switchValue("-amount");
 				Float amountFloat = Float.parseFloat(amount);
+				String privKey = cliArgs.switchValue("-sign");
+
 				StateTransferTransaction tr = new StateTransferTransaction(CryptoUtil.getPublicKeyFromString(fromAddress),CryptoUtil.getPublicKeyFromString(toAddress), amountFloat);
-				System.out.println("State transaction has been created");
+				tr.generateSignature(CryptoUtil.getPrivateKeyFromString(privKey));
+				node.broadcastTransaction(tr);
+				System.out.println("State transaction has been created and broadcasted to the network");
 				System.out.println("Transaction Id : " + tr.getTransctionId());
 				System.out.println("From Address : " +  CryptoUtil.getStringFromKey(tr.fromAddress));
 				System.out.println("To Address : " +  CryptoUtil.getStringFromKey(tr.toAddress));				
@@ -62,6 +72,7 @@ public class Cli {
 		
 		// signing a transaction
 		else if (cliArgs.switchPresent("-signTransaction")) {
+				// to be implemented -> first version is only with one functionality: create, sign, voradcast
 				String trId = cliArgs.switchValue("-transactionId");
 				String privateKey = cliArgs.switchValue("-privateKeyId");				
 		}
@@ -74,8 +85,8 @@ public class Cli {
 			System.out.println("Owner priv key : " + accountWallet.getOwnerString());		
 			
 			// HashLink
-			String hashOne = "0"; 
-			String hashTwo =  "0";
+			String hashOne = "00000000000000000000000000000000"; 
+			String hashTwo =  "00000000000000000000000000000000";
 			int resetPolicy = 2;
 			int resetCount= 0;
 			boolean lastResetedHash = true;
@@ -96,9 +107,10 @@ public class Cli {
 			
 		}
 		else if (cliArgs.switchPresent("-runMinerOne")) {
-			
-			
-			
+			Block lastBlock = node.blockchain.getLatestBlock();
+			MinerPOW miner = (MinerPOW)node.miner;
+			Block newBlock = miner.mineNextBlock(lastBlock, node.pool);
+			node.broadcastBlock(newBlock);
 		}
 
 	}

@@ -11,7 +11,7 @@ public class TestCLI {
 	public static void main(String[] args) {
 		
 		// starting security provider, not sure if this is the right place
-		//Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		
 		// TODO Auto-generated method stub
 		
@@ -28,23 +28,28 @@ public class TestCLI {
 		System.out.println("genesis block created");
 		System.out.println("");
 		
-		String accountString = Cli.node.wallet.getAccounts().get(0).getOwnerString();
+		String accountString = Cli.node.wallet.getAccounts().get(0).account.getAddressString();
+		String ownerString = Cli.node.wallet.getAccounts().get(0).getOwnerString();
 		
 		// test transactions
 		System.out.println("TEST TRANSACTIONS");	
 		System.out.println("Create:");	
-		String[] params2 = {"-createTransaction", "-state", "-address", accountString, "-value", "'hello world'"};
+		String[] params2 = {"-createTransaction", "-state", "-address", accountString, "-value", "'hello world' ", "-sign", ownerString};
 		Cli.main(params2);	
 		System.out.println("");	
 		System.out.println("Transfer:");	
-		String[] params3 = {"-createTransaction", "-transfer", "-from", accountString, "-to", accountString,"-amount", "22"};
+		String[] params3 = {"-createTransaction", "-transfer", "-from", accountString, "-to", accountString,"-amount", "22", "-sign", ownerString};
 		Cli.main(params3);	
 		System.out.println("");	
-
-		
 		
 		// test transactions
-		System.out.println("TRANSACTION SIGNATURES");			
+		System.out.println("MINER ONE STEP");
+		String[] paramsm = {"-runMinerOne"};
+		Cli.main(paramsm);	
+		System.out.println("A block has been mined succesfully");		
+		System.out.println("Block hash one : " + Cli.node.blockchain.getLatestBlock().matrix.get(0).hashOne);	
+		System.out.println("Block hash two : " + Cli.node.blockchain.getLatestBlock().matrix.get(0).hashTwo);	
+		System.out.println("Nr of transactions : " + Cli.node.blockchain.getLatestBlock().transactions.size());			
 	}
 	
 	

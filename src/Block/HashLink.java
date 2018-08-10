@@ -40,7 +40,8 @@ public class HashLink {
 					  Integer.toString(resetPolicy) + 
 					  Integer.toString(resetCount) + 
 					  Boolean.toString(lastResetedHash) + 
-					  Integer.toString(difficulty)		
+					  Integer.toString(difficulty) +
+					  Integer.toString(nonceOne)
 					);
 			}
 			else {
@@ -55,7 +56,8 @@ public class HashLink {
 								  Integer.toString(resetPolicy) + 
 								  Integer.toString(resetCount) + 
 								  Boolean.toString(lastResetedHash) + 
-								  Integer.toString(difficulty)		
+								  Integer.toString(difficulty) + 
+								  Integer.toString(nonceOne)
 								);
 					}
 					else {
@@ -67,7 +69,8 @@ public class HashLink {
 								  Integer.toString(resetPolicy) + 
 								  Integer.toString(resetCount) + 
 								  Boolean.toString(lastResetedHash) + 
-								  Integer.toString(difficulty)		
+								  Integer.toString(difficulty) + 
+								  Integer.toString(nonceOne)
 								);
 					}
 									
@@ -80,7 +83,8 @@ public class HashLink {
 							  Integer.toString(resetPolicy) + 
 							  Integer.toString(resetCount) + 
 							  Boolean.toString(lastResetedHash) + 
-							  Integer.toString(difficulty)		
+							  Integer.toString(difficulty) + 
+							  Integer.toString(nonceOne)
 							);
 				}
 			}
@@ -105,7 +109,8 @@ public class HashLink {
 								  Integer.toString(resetPolicy) + 
 								  Integer.toString(resetCount) + 
 								  Boolean.toString(lastResetedHash) + 
-								  Integer.toString(difficulty)		
+								  Integer.toString(difficulty) + 
+								  Integer.toString(nonceTwo)
 								);			  								
 					}
 					else {
@@ -117,7 +122,8 @@ public class HashLink {
 								  Integer.toString(resetPolicy) + 
 								  Integer.toString(resetCount) + 
 								  Boolean.toString(lastResetedHash) + 
-								  Integer.toString(difficulty)		
+								  Integer.toString(difficulty) + 
+								  Integer.toString(nonceTwo)
 								);			  													
 					}
 									
@@ -130,14 +136,17 @@ public class HashLink {
 							  Integer.toString(resetPolicy) + 
 							  Integer.toString(resetCount) + 
 							  Boolean.toString(lastResetedHash) + 
-							  Integer.toString(difficulty)		
+							  Integer.toString(difficulty) + 
+							  Integer.toString(nonceTwo)
 							);			  			
 				}
 			}
 
 	}
 
-	public boolean validateHashOne(){		
+	public boolean validateHashOne(){	
+		if (hashOne.length() <= 1)
+			return false;
 		String target = new String(new char[difficulty]).replace('\0', '0'); //Create a string with difficulty * "0" 
 		if(hashOne.substring( 0, difficulty).equals(target))
 			return true;
@@ -145,6 +154,8 @@ public class HashLink {
 	}
 	
 	public boolean validateHashTwo(){
+		if (hashTwo.length() <= 1)
+			return false;	
 		String target = new String(new char[difficulty]).replace('\0', '0'); //Create a string with difficulty * "0" 
 		if(hashTwo.substring( 0, difficulty).equals(target))
 			return true;
@@ -162,7 +173,8 @@ public class HashLink {
 				  Integer.toString(resetPolicy) + 
 				  Integer.toString(resetCount) + 
 				  Boolean.toString(lastResetedHash) + 
-				  Integer.toString(difficulty)		
+				  Integer.toString(difficulty) + 
+				  Integer.toString(nonceOne)
 				);
 		}
 		else {
@@ -177,7 +189,8 @@ public class HashLink {
 							  Integer.toString(resetPolicy) + 
 							  Integer.toString(resetCount) + 
 							  Boolean.toString(lastResetedHash) + 
-							  Integer.toString(difficulty)		
+							  Integer.toString(difficulty) + 
+							  Integer.toString(nonceOne)
 							);
 
 					  hashTwo = CryptoUtil.applySha256(
@@ -187,7 +200,8 @@ public class HashLink {
 							  Integer.toString(resetPolicy) + 
 							  Integer.toString(resetCount) + 
 							  Boolean.toString(lastResetedHash) + 
-							  Integer.toString(difficulty)		
+							  Integer.toString(difficulty) +
+							  Integer.toString(nonceTwo)
 							);			  								
 				}
 				else {
@@ -199,7 +213,8 @@ public class HashLink {
 							  Integer.toString(resetPolicy) + 
 							  Integer.toString(resetCount) + 
 							  Boolean.toString(lastResetedHash) + 
-							  Integer.toString(difficulty)		
+							  Integer.toString(difficulty) + 
+							  Integer.toString(nonceOne)
 							);
 
 					  hashTwo = CryptoUtil.applySha256(
@@ -209,7 +224,8 @@ public class HashLink {
 							  Integer.toString(resetPolicy) + 
 							  Integer.toString(resetCount) + 
 							  Boolean.toString(lastResetedHash) + 
-							  Integer.toString(difficulty)		
+							  Integer.toString(difficulty) + 
+							  Integer.toString(nonceTwo)
 							);			  													
 				}
 								
@@ -222,7 +238,8 @@ public class HashLink {
 						  Integer.toString(resetPolicy) + 
 						  Integer.toString(resetCount) + 
 						  Boolean.toString(lastResetedHash) + 
-						  Integer.toString(difficulty)		
+						  Integer.toString(difficulty) + 
+						  Integer.toString(nonceOne)
 						);
 				  hashTwo = CryptoUtil.applySha256(
 						  _stateRoot +
@@ -231,7 +248,8 @@ public class HashLink {
 						  Integer.toString(resetPolicy) + 
 						  Integer.toString(resetCount) + 
 						  Boolean.toString(lastResetedHash) + 
-						  Integer.toString(difficulty)		
+						  Integer.toString(difficulty) + 
+						  Integer.toString(nonceTwo)
 						);			  			
 			}
 		}

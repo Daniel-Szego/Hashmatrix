@@ -34,7 +34,7 @@ public class Node {
 	
 	// broadcasting a block to the network
 	public void broadcastBlock(Block _block) {
-		
+		blockchain.addBlock(_block);
 	}
 	
 	// starting the miner - only one round implementation
