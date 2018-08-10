@@ -4,8 +4,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
 
-import Crypto.CryptoUtil;
-import Crypto.StringUtil;
+import Crypto.*;
 
 // state transaction setting the state
 // parameters: address, newValue

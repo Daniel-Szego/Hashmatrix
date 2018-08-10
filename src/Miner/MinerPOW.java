@@ -23,6 +23,8 @@ public class MinerPOW extends Miner{
 		// copy old state
 		StateTransformer.copyState(previousBlock, newBlock);
 		
+		
+		
 		int addedTransactions = 0;
 		// getting transactions from pool and adding to the new pool
 		for(StateTransaction tr : pool.transactions) {
@@ -86,7 +88,9 @@ public class MinerPOW extends Miner{
 			while(!newHashLink.validateHashTwo()) {
 				newHashLink.nonceTwo ++;
 				newHashLink.calculateHashTwo(newBlock.stateRoot, newBlock.transactionRoot,previousHashTwo);
-			}		
+			}	
+			
+			newBlock.matrix.add(newHashLink);
 		}
 		
 		return newBlock;

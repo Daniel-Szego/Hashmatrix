@@ -42,15 +42,23 @@ public class TestCLI {
 		Cli.main(params3);	
 		System.out.println("");	
 		
-		// test transactions
+		// test miner
 		System.out.println("MINER ONE STEP");
 		String[] paramsm = {"-runMinerOne"};
 		Cli.main(paramsm);	
-		System.out.println("A block has been mined succesfully");		
-		System.out.println("Block hash one : " + Cli.node.blockchain.getLatestBlock().matrix.get(0).hashOne);	
-		System.out.println("Block hash two : " + Cli.node.blockchain.getLatestBlock().matrix.get(0).hashTwo);	
-		System.out.println("Nr of transactions : " + Cli.node.blockchain.getLatestBlock().transactions.size());			
-	}
-	
-	
+		System.out.println("");	
+
+		// test account mined
+		System.out.println("Account value");
+		String[] paramsd = {"-getAccountData", "-account", accountString};
+		Cli.main(paramsd);	
+		System.out.println("");	
+
+		// test account mined
+		System.out.println("Account value");
+		String[] paramsb = {"-getAccountBalance", "-account", accountString};
+		Cli.main(paramsb);	
+		System.out.println("");	
+
+	}		
 }

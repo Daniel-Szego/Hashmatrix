@@ -38,7 +38,12 @@ public class Blockchain {
 			return blockchain.get(blockchain.size() - 1);			
 	}
 	
-	
+
+	// latest block is not necessarily the same as latest stable block
+	// forking question ?
+	public Block getLatestStableBlock() {
+		return getLatestBlock();
+	}
 
 	public static void run() {	
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());

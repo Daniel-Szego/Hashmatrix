@@ -111,6 +111,22 @@ public class Cli {
 			MinerPOW miner = (MinerPOW)node.miner;
 			Block newBlock = miner.mineNextBlock(lastBlock, node.pool);
 			node.broadcastBlock(newBlock);
+			System.out.println("One block has been mined succesfully");		
+			System.out.println("Block hash one : " + node.blockchain.getLatestBlock().matrix.get(0).hashOne);	
+			System.out.println("Block hash two : " + node.blockchain.getLatestBlock().matrix.get(0).hashTwo);	
+			System.out.println("Nr of transactions : " + node.blockchain.getLatestBlock().transactions.size());			
+			System.out.println("Nr of accounts : " + node.blockchain.getLatestBlock().accounts.size());			
+			
+		}
+		else if (cliArgs.switchPresent("-getAccountData")) {
+			String acountAddress = cliArgs.switchValue("-account");
+			String data = node.explorer.getAccountData(acountAddress);
+			System.out.println("Account Data : " + data);
+		}
+		else if (cliArgs.switchPresent("-getAccountBalance")) {
+			String acountAddress = cliArgs.switchValue("-account");
+			float value = node.explorer.getAccountBalance(acountAddress);
+			System.out.println("Account Balance : " + value);
 		}
 
 	}
