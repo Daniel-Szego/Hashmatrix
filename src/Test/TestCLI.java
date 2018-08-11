@@ -19,12 +19,13 @@ public class TestCLI {
 		// starting the network
 
 		System.out.println("STARTING NETWORK");
-		String[] paramss = {"-startNetwork", "-port", "8425"};
+		String[] paramss = {"-startNetwork", "-port", "8426"};
 		Cli.main(paramss);	
 		System.out.println("");	
 
+		
 		System.out.println("CONNECT PEER");
-		String[] paramsp = {"-connectPeer", "-peerAddress", "localhost", "-peerPort", "8546"};
+		String[] paramsp = {"-connectPeer", "-peerAddress", "localhost", "-peerPort", "8425"};
 		Cli.main(paramsp);	
 		System.out.println("");		
 		

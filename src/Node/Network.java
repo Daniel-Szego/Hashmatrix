@@ -4,6 +4,7 @@ import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.rmi.server.*;
 import java.util.ArrayList;
 
 // handling networks, connections and sockets and server functionalities
@@ -60,6 +61,7 @@ public class Network implements NetworkInterface  {
 	public void startNetwork(int port) {
         
         try {
+        	//java.rmi.server.hostname = "localhost";
         	NetworkInterface stub = (NetworkInterface) UnicastRemoteObject.exportObject(this, 0);
 
             // Bind the remote object's stub in the registry
@@ -72,6 +74,8 @@ public class Network implements NetworkInterface  {
             registry.bind(serverNameBase + usedPort, stub);
 
             networkStarted = true;
+            Peer newPeer = new Peer("localhost", usedPort);
+            this.addPeer(newPeer);
             System.err.println("Server ready");
         } catch (Exception e) {
             System.err.println("Server exception: " + e.toString());

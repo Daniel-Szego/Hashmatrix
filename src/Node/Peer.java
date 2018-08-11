@@ -3,13 +3,14 @@ package Node;
 import java.util.ArrayList;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 
 // class for representing a peer -> implicitely as a client
-public class Peer implements NetworkInterface {
-	
+public class Peer implements NetworkInterface, Serializable  {
+	  
 	// peerId -> known peer implementation
 	public String peerId;
 	public String peerHost;
@@ -25,7 +26,7 @@ public class Peer implements NetworkInterface {
 	public String getClienVersion() {
 			try {
 				Registry registry = LocateRegistry.getRegistry(peerHost,peerPort);
-				Network stub = (Network)registry.lookup(Network.serverNameBase+peerPort);
+				NetworkInterface stub = (NetworkInterface)registry.lookup(Network.serverNameBase+peerPort);
 				String clientVersion = stub.getClienVersion();
 				return clientVersion;
 			} catch (Exception e) {
@@ -40,7 +41,7 @@ public class Peer implements NetworkInterface {
 	    {
 			try {
 				Registry registry = LocateRegistry.getRegistry(peerHost,peerPort);
-				Network stub = (Network)registry.lookup(Network.serverNameBase+peerPort);
+				NetworkInterface stub = (NetworkInterface)registry.lookup(Network.serverNameBase+peerPort);
 				ArrayList<Peer> peerList = stub.getPeerList();
 				return peerList;
 			} catch (Exception e) {
@@ -54,7 +55,7 @@ public class Peer implements NetworkInterface {
 	    public boolean isPeerAlive() {
 			try {
 				Registry registry = LocateRegistry.getRegistry(peerHost,peerPort);
-				Network stub = (Network)registry.lookup(Network.serverNameBase+peerPort);
+				NetworkInterface stub = (NetworkInterface)registry.lookup(Network.serverNameBase+peerPort);
 				boolean isPeerAlive = stub.isPeerAlive();
 				return isPeerAlive;
 			} catch (Exception e) {
@@ -63,7 +64,5 @@ public class Peer implements NetworkInterface {
 			}
 			return false;
 	    }
-
-	    
 	
 }
