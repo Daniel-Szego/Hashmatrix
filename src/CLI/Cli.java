@@ -29,7 +29,14 @@ public class Cli {
 		if (cliArgs.switchPresent("-startNetwork")){
 			int port = 0;
 			port = Integer.parseInt(cliArgs.switchValue("-port"));
+			
 			node.network.startNetwork(port);		
+		}
+		else if (cliArgs.switchPresent("-connectPeer")) {			
+			String peerAddress = cliArgs.switchValue("-peerAddress");
+			String peerPort = cliArgs.switchValue("-peerPort");	
+			int peerInt = Integer.parseInt(peerPort);
+			node.network.syncPeers(peerAddress, peerInt);
 		}
 		// stopping network interface
 		else if (cliArgs.switchPresent("-stopNetwork")){

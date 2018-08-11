@@ -22,6 +22,11 @@ public class TestCLI {
 		String[] paramss = {"-startNetwork", "-port", "8425"};
 		Cli.main(paramss);	
 		System.out.println("");	
+
+		System.out.println("CONNECT PEER");
+		String[] paramsp = {"-connectPeer", "-peerAddress", "localhost", "-peerPort", "8546"};
+		Cli.main(paramsp);	
+		System.out.println("");		
 		
 		// test new account generation
 		System.out.println("TEST ACCOUNT GENERATION");
@@ -56,7 +61,6 @@ public class TestCLI {
 		String[] paramsm = {"-runMinerOne"};
 		Cli.main(paramsm);	
 		System.out.println("");	
-
 
 		// test account mined
 		System.out.println("Account value");
