@@ -15,6 +15,7 @@ public class Node {
 	public final Blockchain blockchain;
 	public final TransactionPool pool;
 	public final Explorer explorer;
+	public final Network network;
 	
 	// starting the node - test code, no persistance or communiction
 	public Node() {
@@ -23,6 +24,7 @@ public class Node {
 		blockchain = new Blockchain(this);
 		pool = new TransactionPool(this);
 		explorer = new Explorer(this);
+		network = new Network(this);
 	}
 	
 	// BROADCAST TRANSACTIONS	

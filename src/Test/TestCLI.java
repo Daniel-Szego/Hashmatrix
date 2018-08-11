@@ -16,6 +16,13 @@ public class TestCLI {
 		
 		// TODO Auto-generated method stub
 		
+		// starting the network
+
+		System.out.println("STARTING NETWORK");
+		String[] paramss = {"-startNetwork", "-port", "8425"};
+		Cli.main(paramss);	
+		System.out.println("");	
+		
 		// test new account generation
 		System.out.println("TEST ACCOUNT GENERATION");
 		String[] params = {"-createAccount"};
@@ -61,6 +68,11 @@ public class TestCLI {
 		System.out.println("Account value");
 		String[] paramsb = {"-getAccountBalance", "-account", accountString};
 		Cli.main(paramsb);	
+		System.out.println("");	
+		
+		System.out.println("STOPPING NETWORK");
+		String[] paramsstop = {"-stopNetwork"};
+		Cli.main(paramsstop);	
 		System.out.println("");	
 
 	}		

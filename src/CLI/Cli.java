@@ -25,8 +25,18 @@ public class Cli {
 		if (node == null)
 			node = new Node();
 		
+		// starting network interface
+		if (cliArgs.switchPresent("-startNetwork")){
+			int port = 0;
+			port = Integer.parseInt(cliArgs.switchValue("-port"));
+			node.network.startNetwork(port);		
+		}
+		// stopping network interface
+		else if (cliArgs.switchPresent("-stopNetwork")){
+			node.network.stopNetwork();		
+		}
 		// creating account - only memory
-		if (cliArgs.switchPresent("-createAccount")) {
+		else if (cliArgs.switchPresent("-createAccount")) {
 			AccountWallet account = node.wallet.createNewAccount();
 			
 			System.out.println("Account has been generated and added to the default wallet");
