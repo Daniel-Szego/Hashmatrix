@@ -1,4 +1,5 @@
 package State;
+import java.io.Serializable;
 import java.security.*;
 import java.security.spec.ECGenParameterSpec;
 
@@ -10,7 +11,7 @@ import org.bouncycastle.math.ec.ECPoint;
 import Crypto.CryptoUtil;
 import Crypto.StringUtil;
 
-public class Account {
+public class Account implements Serializable {
 	private PublicKey address = null; 
 	public int nonce = 0;
 	public String accountData;

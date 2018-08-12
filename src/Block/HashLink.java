@@ -1,11 +1,13 @@
 package Block;
 
+import java.io.Serializable;
+
 import Crypto.CryptoUtil;
 import Miner.*;
 
 // administrating a pair of hashlinks
 // hashlink is practically like a block header
-public class HashLink {
+public class HashLink implements Serializable {
 	public String hashOne; // first hash structure for the 
 	public String hashTwo; // second hash structure
 	public int resetPolicy; // after how many blocks should be reseted

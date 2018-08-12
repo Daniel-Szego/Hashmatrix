@@ -1,9 +1,11 @@
 package Transaction;
 
+import java.io.Serializable;
+
 import Crypto.CryptoUtil;
 
 // ancestor class for state transition transactions
-public abstract class StateTransaction {
+public abstract class StateTransaction  implements Serializable{
 	private String transactionId; // this is also the hash of the transaction.
 	private byte[] signature; // this is to prevent anybody else from spending funds in our wallet.	
 	private int nonce = -1; // can be only set once

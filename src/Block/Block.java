@@ -1,4 +1,5 @@
 package Block;
+import java.io.Serializable;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,7 +10,7 @@ import State.Account;
 import State.State;
 import Transaction.*;
 
-public class Block {
+public class Block implements Serializable {
 
 	public ArrayList<HashLink> matrix = new ArrayList<HashLink>();
  	public ArrayList<StateTransaction> transactions = new ArrayList<StateTransaction>();
