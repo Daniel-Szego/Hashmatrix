@@ -28,18 +28,26 @@ public class Node {
 	}
 	
 	// BROADCAST TRANSACTIONS	
-	// broadcasting a transaction to the network
+	// broadcasting a transaction to the network -> call from CLI
 	public void broadcastTransaction(StateTransaction tr) {
-		// real implementation
-		
-		
-		// Test implementation, adding only to the pool
+		// adding only to the pool
 		pool.addTransaction(tr);
+		
+		// gossiping the transaction on the network
+		for(Peer pr: this.network.peers) {
+			pr.boradcastTransaction(tr);
+		}		
 	}
 	
 	// broadcasting a block to the network
 	public void broadcastBlock(Block _block) {
+		// adding to the blockchain
 		blockchain.addBlock(_block);
+	
+		// gossiping the block on the network
+		for(Peer pr: this.network.peers) {
+			pr.broadcastBlock(_block);
+		}				
 	}
 	
 	// starting the miner - only one round implementation

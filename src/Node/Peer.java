@@ -1,6 +1,10 @@
 package Node;
 
 import java.util.ArrayList;
+
+import Block.Block;
+import Transaction.*;
+
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.io.Serializable;
@@ -65,4 +69,26 @@ public class Peer implements NetworkInterface, Serializable  {
 			return false;
 	    }
 	
+	    
+	    public void boradcastTransaction (StateTransaction tr) {
+			try {
+				Registry registry = LocateRegistry.getRegistry(peerHost,peerPort);
+				NetworkInterface stub = (NetworkInterface)registry.lookup(Network.serverNameBase+peerPort);
+				stub.boradcastTransaction(tr);
+			} catch (Exception e) {
+				System.err.println("Client exception: " + e.toString());
+				e.printStackTrace();
+			}	    	
+	    }
+	    
+	    public void broadcastBlock(Block block) {
+			try {
+				Registry registry = LocateRegistry.getRegistry(peerHost,peerPort);
+				NetworkInterface stub = (NetworkInterface)registry.lookup(Network.serverNameBase+peerPort);
+				stub.broadcastBlock(block);
+			} catch (Exception e) {
+				System.err.println("Client exception: " + e.toString());
+				e.printStackTrace();
+			}	    		    	
+	    }
 }

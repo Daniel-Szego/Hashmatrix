@@ -7,6 +7,9 @@ import java.rmi.server.UnicastRemoteObject;
 import java.rmi.server.*;
 import java.util.ArrayList;
 
+import Block.Block;
+import Transaction.*;
+
 // handling networks, connections and sockets and server functionalities
 public class Network implements NetworkInterface  {
 
@@ -54,6 +57,20 @@ public class Network implements NetworkInterface  {
     	return true;
     }
     
+    public void boradcastTransaction (StateTransaction tr) {
+		// SINGLE HOP -> transactions are not propagated further
+    	// can be used in fully connected networks
+    	node.pool.addTransaction(tr);
+    }
+    
+    public void broadcastBlock(Block block) {
+		// SINGLE HOP -> transactions are not propagated further
+    	// can be used in fully connected networks    	
+    	node.blockchain.addBlock(block);
+
+    	
+    }
+
     
     
     // CLI FUNCTIONS
