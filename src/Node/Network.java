@@ -67,7 +67,7 @@ public class Network implements NetworkInterface  {
 		// SINGLE HOP -> transactions are not propagated further
     	// can be used in fully connected networks    	
     	node.blockchain.addBlock(block);
-
+    	
     	
     }
 

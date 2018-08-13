@@ -61,12 +61,11 @@ public class Blockchain {
 		// stale blocks are not added to the chain
 		if (!isStaleBlock)
 			blocklist.add(newExtendedblock);
+		//deleting transactions from the transactionpool that are in the valid block
+		
 	}
 	
-	// first implementation: stale blocks are not cosidered, but stale blockchains are possible
-	public ArrayList<ExtendedBlock> getTopBlocks() {
-		ArrayList<ExtendedBlock> topBlocks = new ArrayList<ExtendedBlock>();
-				
+	public int getBlockchinHeight() {
 		int chainMaxHeight = 0;
 		// get the longest chain length
 		for(ExtendedBlock eBlock: blocklist) {
@@ -75,6 +74,14 @@ public class Blockchain {
 					chainMaxHeight = eBlock.blockHeight;
 			}
 		}
+		return chainMaxHeight;
+	}
+	
+	// first implementation: stale blocks are not cosidered, but stale blockchains are possible
+	public ArrayList<ExtendedBlock> getTopBlocks() {
+		ArrayList<ExtendedBlock> topBlocks = new ArrayList<ExtendedBlock>();
+				
+		int chainMaxHeight = this.getBlockchinHeight();
 
 		for(ExtendedBlock eBlock: blocklist) {
 			if ((eBlock.previousBlock != null ) && (eBlock.nextBlocks.size() == 0)) {

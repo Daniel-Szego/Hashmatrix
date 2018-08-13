@@ -22,7 +22,6 @@ public class TestCLI {
 		String[] paramss = {"-startNetwork", "-port", "8426"};
 		Cli.main(paramss);	
 		System.out.println("");	
-
 		
 		System.out.println("CONNECT PEER");
 		String[] paramsp = {"-connectPeer", "-peerAddress", "localhost", "-peerPort", "8425"};
