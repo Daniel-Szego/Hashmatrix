@@ -17,11 +17,9 @@ public class Block implements Serializable {
  	public ArrayList<Account> accounts = new ArrayList<Account>();
 	public String stateRoot;
 	public String transactionRoot;
-	public Block previousBlock;
 		
 	//Creating a blanck Block 
-	public Block(Block _previousBlock) {
-		this.previousBlock = _previousBlock;
+	public Block() {
 	}
 	
 	// calculating state root

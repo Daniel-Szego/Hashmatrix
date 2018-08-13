@@ -22,7 +22,7 @@ public class Explorer {
 	
 	// getting account data by public key
 	public String getAccountData(PublicKey _publicKey) {
-		for(Account account: this.node.blockchain.getLatestStableBlock().accounts){
+		for(Account account: this.node.blockchain.getTopStableBlock().internBlock.accounts){
 			if(account.getAddress().equals(_publicKey))
 				return account.accountData;
 		}
@@ -37,7 +37,7 @@ public class Explorer {
 
 	// getting account balance by public key
 	public float getAccountBalance(PublicKey _publicKey) {
-		for(Account account: this.node.blockchain.getLatestStableBlock().accounts){
+		for(Account account: this.node.blockchain.getTopStableBlock().internBlock.accounts){
 			if(account.getAddress().equals(_publicKey))
 				return account.accountBalance;
 		}
@@ -53,8 +53,8 @@ public class Explorer {
 	// getting info based on the transaction id 
 	public TransactionInfo getTransactionInfo(String transactionId){
 		TransactionInfo trInfo = new TransactionInfo();
-		for (Block block: node.blockchain.blockchain) {
-			for(StateTransaction tr: block.transactions){
+		for (ExtendedBlock block: node.blockchain.getBlockchain()) {
+			for(StateTransaction tr: block.internBlock.transactions){
 				trInfo.transactionId = tr.getTransctionId();
 				trInfo.nonce = tr.getNonce();
 				trInfo.signature = tr.getSignature();

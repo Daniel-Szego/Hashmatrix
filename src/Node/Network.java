@@ -132,8 +132,7 @@ public class Network implements NetworkInterface  {
 			}
 		}	
 	}
-	
-	
+		
 	// HELP FUNCTIONS
 	protected Peer getPeer(String host, int port){
 		for(Peer peer: peers) {

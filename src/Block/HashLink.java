@@ -31,11 +31,16 @@ public class HashLink implements Serializable {
 		this.singleHash = _singleHash;
 	}
 	
+	public void setHashOne(String _stateRoot, String _transactionRoot, String _previousHashOne){
+		hashOne = calculateHashOne(_stateRoot, _transactionRoot,_previousHashOne);
+	}
+	
 	// hash one and two can be calculated independently
-	public void calculateHashOne(String _stateRoot, String _transactionRoot, String _previousHashOne) {
+	public String calculateHashOne(String _stateRoot, String _transactionRoot, String _previousHashOne) {
+		String hashToReturn = null;
 		if (singleHash) {
 			  // in singlehash case, rest policy is not considered	
-			  hashOne = CryptoUtil.applySha256(
+			hashToReturn = CryptoUtil.applySha256(
 					  _stateRoot +
 					  _transactionRoot +
 					  _previousHashOne +
@@ -51,7 +56,7 @@ public class HashLink implements Serializable {
 				if (resetCount == 0) {
 					if (lastResetedHash) {
 						
-						  hashOne = CryptoUtil.applySha256(
+						hashToReturn = CryptoUtil.applySha256(
 								  _stateRoot +
 								  _transactionRoot +
 								  _previousHashOne +
@@ -64,7 +69,7 @@ public class HashLink implements Serializable {
 					}
 					else {
 						
-						  hashOne = CryptoUtil.applySha256(
+						hashToReturn = CryptoUtil.applySha256(
 								  _stateRoot +
 								  _transactionRoot +
 								  "0" +
@@ -78,7 +83,7 @@ public class HashLink implements Serializable {
 									
 				}else{
 
-					  hashOne = CryptoUtil.applySha256(
+					hashToReturn = CryptoUtil.applySha256(
 							  _stateRoot +
 							  _transactionRoot +
 							  _previousHashOne +
@@ -90,11 +95,17 @@ public class HashLink implements Serializable {
 							);
 				}
 			}
-
+		return hashToReturn;
 		
 	}
 
-	public void calculateHashTwo(String _stateRoot, String _transactionRoot, String _previousHashTwo) {
+	public void setHashTwo(String _stateRoot, String _transactionRoot, String _previousHashTwo){
+		hashTwo = calculateHashTwo(_stateRoot, _transactionRoot,_previousHashTwo);
+	}
+
+	
+	public String calculateHashTwo(String _stateRoot, String _transactionRoot, String _previousHashTwo) {
+		String hashToReturn = null;
 		if (singleHash) {
 			  // in singlehash case, rest policy is not considered	
 			  // ERROR ? in single hash mode there is no hashtwo	
@@ -104,7 +115,7 @@ public class HashLink implements Serializable {
 				if (resetCount == 0) {
 					if (lastResetedHash) {
 						
-						  hashTwo = CryptoUtil.applySha256(
+						hashToReturn = CryptoUtil.applySha256(
 								  _stateRoot +
 								  _transactionRoot +
 								  "0" +
@@ -117,7 +128,7 @@ public class HashLink implements Serializable {
 					}
 					else {
 						
-						  hashTwo = CryptoUtil.applySha256(
+						hashToReturn = CryptoUtil.applySha256(
 								  _stateRoot +
 								  _transactionRoot +
 								  _previousHashTwo +
@@ -131,7 +142,7 @@ public class HashLink implements Serializable {
 									
 				}else{
 
-					  hashTwo = CryptoUtil.applySha256(
+					hashToReturn = CryptoUtil.applySha256(
 							  _stateRoot +
 							  _transactionRoot +
 							  _previousHashTwo +
@@ -143,6 +154,7 @@ public class HashLink implements Serializable {
 							);			  			
 				}
 			}
+		return hashToReturn;
 
 	}
 

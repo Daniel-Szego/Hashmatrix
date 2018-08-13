@@ -14,7 +14,7 @@ import Wallet.Wallet;
 import java.security.*;
 import org.bouncycastle.*;
 
-
+// due to forking this is actually a set of chains
 public class Blockchain {
 	
 	public final Node node;
@@ -24,27 +24,91 @@ public class Blockchain {
 	}
 	
 	// simple implementation: future: forking has to be considrered
-	public static ArrayList<Block> blockchain = new ArrayList<Block>();
+	public static ArrayList<ExtendedBlock> blocklist = new ArrayList<ExtendedBlock>();
 	
+	public void addGenesisBlock(Block _block) {
+		ExtendedBlock newExtendedblock = new ExtendedBlock(_block);
+		newExtendedblock.blockHeight = 0;
+		blocklist.add(newExtendedblock);		
+	}
+
+	// adding a block to the chain, only if it can be put to the chain
 	public void addBlock(Block _block) {
-		blockchain.add(_block);
+		ExtendedBlock newExtendedblock = new ExtendedBlock(_block);
+		if (blocklist .size() < 1)
+			blocklist.add(newExtendedblock);
+		// finding previous and next blocks
+		boolean isStaleBlock = true;
+		for (ExtendedBlock prevBlock: blocklist) {
+			// matching only based on one top hashlink
+			// we need both hashes to find the previous
+			// becasue sometimes it can be reseted
+			HashLink prevTopHashLink = prevBlock.internBlock.matrix.get(0);
+			HashLink topHashLink = _block.matrix.get(0);			
+			String eHashOne = prevTopHashLink.hashOne;
+			String eHashTwo = prevTopHashLink.hashTwo;
+			boolean eHashOneEquals = eHashOne.equals(topHashLink.calculateHashOne(_block.stateRoot, _block.transactionRoot, eHashOne));
+			boolean eHashTwoEquals = eHashTwo.equals(topHashLink.calculateHashTwo(_block.stateRoot, _block.transactionRoot, eHashTwo));
+			if (eHashOneEquals && eHashTwoEquals)	{
+				// match -> previous node
+				newExtendedblock.previousBlock = prevBlock; 
+				newExtendedblock.blockHeight = prevBlock.blockHeight + 1;
+				if (!prevBlock.nextBlockContains(newExtendedblock))
+					prevBlock.nextBlocks.add(newExtendedblock);		
+				isStaleBlock = false;
+			}			
+		}
+		// stale blocks are not added to the chain
+		if (!isStaleBlock)
+			blocklist.add(newExtendedblock);
 	}
 	
-	// experimental implementation, future: forking has to be considered !!!
-	public Block getLatestBlock() {
-		if (blockchain.size() == 0)
-			return null;
-		else 
-			return blockchain.get(blockchain.size() - 1);			
-	}
-	
+	// first implementation: stale blocks are not cosidered, but stale blockchains are possible
+	public ArrayList<ExtendedBlock> getTopBlocks() {
+		ArrayList<ExtendedBlock> topBlocks = new ArrayList<ExtendedBlock>();
+				
+		int chainMaxHeight = 0;
+		// get the longest chain length
+		for(ExtendedBlock eBlock: blocklist) {
+			if ((eBlock.previousBlock != null ) && (eBlock.nextBlocks.size() == 0)) {
+				if (chainMaxHeight < eBlock.blockHeight)
+					chainMaxHeight = eBlock.blockHeight;
+			}
+		}
 
+		for(ExtendedBlock eBlock: blocklist) {
+			if ((eBlock.previousBlock != null ) && (eBlock.nextBlocks.size() == 0)) {
+				if (chainMaxHeight == eBlock.blockHeight)
+					topBlocks.add(eBlock);
+			}
+		}
+		return topBlocks;
+	}
+	
+	// blockchain resolution strategy, pick the first from the longest
+	public ExtendedBlock getTopBlock() {
+		return getTopBlocks().get(0);
+	}
+	
 	// latest block is not necessarily the same as latest stable block
-	// forking question ?
-	public Block getLatestStableBlock() {
-		return getLatestBlock();
+	// improvement: the last block should be considered that does not fork much
+	public ExtendedBlock getTopStableBlock() {
+		
+		return getTopBlock();
 	}
 
+	// getting the blockchain for the longest chain 
+	// forking resolution the first block is condiered from the longest ones
+	public ArrayList<ExtendedBlock> getBlockchain() {
+		ArrayList<ExtendedBlock> blockchain = new ArrayList<ExtendedBlock>();
+		ExtendedBlock topBlock = this.getTopBlock();
+		while (topBlock.previousBlock != null){
+			blockchain.add(topBlock);
+			topBlock = topBlock.previousBlock;			
+		}		
+		return blockchain;
+	}
+	
 	public static void run() {	
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		

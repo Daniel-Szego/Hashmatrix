@@ -52,7 +52,7 @@ public class Node {
 	
 	// starting the miner - only one round implementation
 	public void startMiner() {
-		Block proposedBlock = miner.mineNextBlock(this.blockchain.getLatestBlock(), this.pool);
+		Block proposedBlock = miner.mineNextBlock(this.blockchain.getTopBlock().internBlock, this.pool);
 		this.broadcastBlock(proposedBlock);
 	}
 }

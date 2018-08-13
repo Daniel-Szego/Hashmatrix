@@ -13,12 +13,11 @@ public class MinerPOW extends Miner{
 	
 	public MinerPOW(Node _node) {
 		super(_node);
-	}
-	
+	}	
 	
 	public Block mineNextBlock(Block previousBlock, TransactionPool pool) {
 		// blank block
-		Block newBlock = new Block(previousBlock);
+		Block newBlock = new Block();
 		
 		// copy old state -> copying the accounts
 		StateTransformer.copyState(previousBlock, newBlock);		
@@ -79,13 +78,13 @@ public class MinerPOW extends Miner{
 			// mining hash one
 			while(!newHashLink.validateHashOne()) {
 				newHashLink.nonceOne ++;
-				newHashLink.calculateHashOne(newBlock.stateRoot, newBlock.transactionRoot,previousHashOne);
+				newHashLink.setHashOne(newBlock.stateRoot, newBlock.transactionRoot,previousHashOne);
 			}
 			
 			// mining hash two
 			while(!newHashLink.validateHashTwo()) {
 				newHashLink.nonceTwo ++;
-				newHashLink.calculateHashTwo(newBlock.stateRoot, newBlock.transactionRoot,previousHashTwo);
+				newHashLink.setHashTwo(newBlock.stateRoot, newBlock.transactionRoot,previousHashTwo);
 			}	
 			
 			newBlock.matrix.add(newHashLink);

@@ -113,26 +113,26 @@ public class Cli {
 			HashLink hashLink = new HashLink(hashOne, hashTwo, resetPolicy, resetCount,lastResetedHash, singleHash, difficulty);
 			
 			// genesis block
-			Block genesisBlock = new Block(null);
+			Block genesisBlock = new Block();
 			genesisBlock.accounts.add(accountWallet.account);			
 			genesisBlock.matrix.add(hashLink);
 			genesisBlock.calculateStateRoot();
 			genesisBlock.calculateTransactionRoot();
 			
 			// add genesis block to the blockchain
-			node.blockchain.addBlock(genesisBlock);
+			node.blockchain.addGenesisBlock(genesisBlock);
 			
 		}
 		else if (cliArgs.switchPresent("-runMinerOne")) {
-			Block lastBlock = node.blockchain.getLatestBlock();
+			Block lastBlock = node.blockchain.getTopBlock().internBlock;
 			MinerPOW miner = (MinerPOW)node.miner;
 			Block newBlock = miner.mineNextBlock(lastBlock, node.pool);
 			node.broadcastBlock(newBlock);
 			System.out.println("One block has been mined succesfully");		
-			System.out.println("Block hash one : " + node.blockchain.getLatestBlock().matrix.get(0).hashOne);	
-			System.out.println("Block hash two : " + node.blockchain.getLatestBlock().matrix.get(0).hashTwo);	
-			System.out.println("Nr of transactions : " + node.blockchain.getLatestBlock().transactions.size());			
-			System.out.println("Nr of accounts : " + node.blockchain.getLatestBlock().accounts.size());						
+			System.out.println("Block hash one : " + node.blockchain.getTopBlock().internBlock.matrix.get(0).hashOne);	
+			System.out.println("Block hash two : " + node.blockchain.getTopBlock().internBlock.matrix.get(0).hashTwo);	
+			System.out.println("Nr of transactions : " + node.blockchain.getTopBlock().internBlock.transactions.size());			
+			System.out.println("Nr of accounts : " + node.blockchain.getTopBlock().internBlock.accounts.size());						
 		}
 		else if (cliArgs.switchPresent("-getAccountData")) {
 			String acountAddress = cliArgs.switchValue("-account");
