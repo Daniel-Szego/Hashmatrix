@@ -27,7 +27,7 @@ public class Peer implements NetworkInterface, Serializable  {
 	public Peer(String _peerHost, int _peerPort){
 		peerHost = _peerHost;
 		peerPort = _peerPort;
-		CryptoUtil.applySha256(
+		peerId = CryptoUtil.applySha256(
 				peerHost +
 				peerPort
 				);

@@ -8,6 +8,7 @@ import java.rmi.server.*;
 import java.util.ArrayList;
 import Utils.*;
 
+
 import Block.Block;
 import Transaction.*;
 
@@ -53,6 +54,7 @@ public class Network implements NetworkInterface  {
     public ArrayList<Peer> getPeerList (Peer _callee) 
     {
     	// if  peer is not contained, add to the list
+    	Logger.Log("getPeerList called" + _callee.peerHost);
     	boolean contains = false;
     	for(Peer peer: peers) {
     		if (peer.peerId.equals(_callee.peerId))
@@ -99,6 +101,7 @@ public class Network implements NetworkInterface  {
 
             networkStarted = true;
             Peer newPeer = new Peer("localhost", usedPort);
+            selfPeer = newPeer;
             this.addPeer(newPeer);
             System.err.println("Server ready");
         } catch (Exception e) {

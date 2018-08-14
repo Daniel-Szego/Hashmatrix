@@ -100,11 +100,12 @@ public class Blockchain {
 		int chainMaxHeight = this.getBlockchinHeight();
 
 		for(ExtendedBlock eBlock: blocklist) {
-			if ((eBlock.previousBlock != null ) && (eBlock.nextBlocks.size() == 0)) {
+			if (eBlock.nextBlocks.size() == 0) {
 				if (chainMaxHeight == eBlock.blockHeight)
 					topBlocks.add(eBlock);
 			}
 		}
+		//if empty, the genesis block 
 		return topBlocks;
 	}
 	

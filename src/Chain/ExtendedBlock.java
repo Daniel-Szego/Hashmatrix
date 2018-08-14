@@ -10,13 +10,14 @@ public class ExtendedBlock {
 	
 	public Block internBlock;
 	public ExtendedBlock previousBlock;
-	public ArrayList<ExtendedBlock> nextBlocks = new ArrayList<ExtendedBlock>();
+	public ArrayList<ExtendedBlock> nextBlocks;
 	public int blockHeight;
 	
 	public ExtendedBlock(Block _block, ExtendedBlock _previousBlock, ArrayList<ExtendedBlock> _nextBlocks) {
 		internBlock = _block;
 		previousBlock = _previousBlock;	
 		nextBlocks = _nextBlocks;
+		nextBlocks = new ArrayList<ExtendedBlock>();
 	}
 
 	public ExtendedBlock(Block _block, ExtendedBlock _previousBlock) {

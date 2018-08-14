@@ -3,7 +3,7 @@ package Test;
 import java.security.*;
 
 import CLI.*;
-import Crypto.CryptoUtil;
+import Crypto.*;
 import Node.*;
 import State.*;
 import Utils.*;
@@ -12,6 +12,7 @@ public class TestCLI {
 
 	public static void main(String[] args) {
 		CliArgs cliArgs = new CliArgs(args);
+		Logger.Log("Start");
 		
 		// starting security provider, not sure if this is the right place
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
@@ -20,8 +21,9 @@ public class TestCLI {
 		
 		// starting the network
 
-		if (cliArgs.switchPresent("-nodeFirst")){
-
+		if (cliArgs.switchPresent("-nodeOne")){
+			
+			Logger.Log("Starting node one");
 		
 			Logger.Log("STARTING NETWORK");
 			String[] paramss = {"-startNetwork", "-port", "8425"};
@@ -80,8 +82,9 @@ public class TestCLI {
 			Cli.main(paramsstop);	
 			Logger.Log("");	 */
 		}
-		else if (cliArgs.switchPresent("-nodeSecond")){
+		else if (cliArgs.switchPresent("-nodeTwo")){
 
+			Logger.Log("Starting node two");
 			
 			Logger.Log("STARTING NETWORK");
 			String[] paramss = {"-startNetwork", "-port", "8426"};
@@ -90,15 +93,16 @@ public class TestCLI {
 			
 			Logger.Log("CONNECT PEER");
 			String[] paramsp = {"-connectPeer", "-peerAddress", "localhost", "-peerPort", "8425"};
-			Cli.main(paramsp);	
+			Cli.main(paramsp);
+ 			for(Peer peer: Cli.node.network.peers) 
+ 				Logger.Log("Peer Info, host : " + peer.peerHost + " port : " + peer.peerPort);		
 			Logger.Log("");		
-
+			
 			// test new account generation
 			Logger.Log("TEST ACCOUNT GENERATION");
 			String[] params = {"-createAccount"};
 			Cli.main(params);	
-			Logger.Log("");	
-		
+			Logger.Log("");			
 		}
 	}
 
