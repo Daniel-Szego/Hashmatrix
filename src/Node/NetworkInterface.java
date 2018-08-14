@@ -11,13 +11,13 @@ public interface NetworkInterface extends Remote {
     
 	String getClienVersion() throws RemoteException;
     
-    ArrayList<Peer> getPeerList () throws RemoteException;
+    ArrayList<Peer> getPeerList (Peer _callee) throws RemoteException;
     
     boolean isPeerAlive() throws RemoteException;
   
-    void boradcastTransaction (StateTransaction tr);
+    void boradcastTransaction (StateTransaction tr) throws RemoteException;
     
-    void broadcastBlock(Block block);
+    void broadcastBlock(Block block) throws RemoteException;
     
 }
 

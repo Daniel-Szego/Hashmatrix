@@ -3,6 +3,7 @@ package Transaction;
 import java.io.Serializable;
 
 import Crypto.CryptoUtil;
+import Utils.*;
 
 // ancestor class for state transition transactions
 public abstract class StateTransaction  implements Serializable{
@@ -34,14 +35,13 @@ public abstract class StateTransaction  implements Serializable{
 		}
 	}
 
-
 	// transaction id can be set only once
 	public void setTransactionId(String _transactionId) {
 		if (this.transactionId == null) 
 			this.transactionId = _transactionId;
 		else 
 			// Exception handling
-			throw new RuntimeException(new Exception("Transaction id is already set"));
+			Logger.Log("Transaction id is already set", Severity.CRITICAL);
 	}
 	
 	// signature can be set only once
@@ -50,8 +50,6 @@ public abstract class StateTransaction  implements Serializable{
 			this.signature = _signature;		
 		else 
 			// Exception handling
-			throw new RuntimeException(new Exception("Signature id is already set"));
-	}
-	
-
+			Logger.Log("Signature id is already set", Severity.CRITICAL);
+	}	
 }

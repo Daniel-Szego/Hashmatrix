@@ -1,5 +1,6 @@
 package Block;
 import java.io.Serializable;
+import Utils.*;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Date;
@@ -77,7 +78,7 @@ public class Block implements Serializable {
 				}
 				else {
 					// non valid transaction in the proposed transactions ? error ?
-					
+					Logger.Log("non valid transaction in the proposed transactions");
 				}
 			}
 			else if(tr instanceof StateTransferTransaction) {
@@ -86,12 +87,12 @@ public class Block implements Serializable {
 				}
 				else {
 					// non valid transaction in the proposed transactions ? error ?
-					
+					Logger.Log("non valid transaction in the proposed transactions");
 				}				
 			}
 			else {
 				// unknown transaction -> error handing
-				
+				Logger.Log("unknown transaction");
 			}
 		}	
 	}	

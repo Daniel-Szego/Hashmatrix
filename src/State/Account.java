@@ -10,6 +10,8 @@ import org.bouncycastle.math.ec.ECPoint;
 
 import Crypto.CryptoUtil;
 import Crypto.StringUtil;
+import Utils.Logger;
+import Utils.Severity;
 
 public class Account implements Serializable {
 	private PublicKey address = null; 
@@ -34,8 +36,8 @@ public class Account implements Serializable {
 	public void setAddress(PublicKey _publicKey) {
 		if (this.address == null) 
 			this.address = _publicKey;
-		else 				
-			throw new RuntimeException(new Exception("Address is already set"));
+		else 	
+			Logger.Log("Address is already set",Severity.CRITICAL);
 	}
 	
 	// Id is calculated based on the existing data, but it is not stored

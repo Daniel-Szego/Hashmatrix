@@ -15,6 +15,7 @@ import org.bouncycastle.math.ec.ECPoint;
 
 import Crypto.CryptoUtil;
 import State.*;
+import Utils.*;
 
 // Simple wrapper for the account containing if it is added to the blockchin 
 // or only to the wallet
@@ -72,8 +73,9 @@ public class AccountWallet {
 	        this.setPrivateKey(keyPair.getPrivate());	        
 	        return keyPair.getPrivate();
 		}catch(Exception e) {
-			throw new RuntimeException(e);
+			Logger.Log(e, Severity.CRITICAL);
 		}
+		return null;
 	}
 	
 	public void importAccount(PrivateKey _privateKey) {
@@ -91,7 +93,7 @@ public class AccountWallet {
 		    account.setAddress(publicKey);
 	        this.setPrivateKey(_privateKey);	
 		}catch(Exception e) {
-			throw new RuntimeException(e);
+			Logger.Log(e, Severity.CRITICAL);
 		}
 	}
 	

@@ -9,6 +9,7 @@ import com.google.gson.*;
 import Block.Block;
 import Node.*;
 import Transaction.*;
+import Utils.Logger;
 import Wallet.Wallet;
 
 import java.security.*;
@@ -59,9 +60,24 @@ public class Blockchain {
 			}			
 		}
 		// stale blocks are not added to the chain
-		if (!isStaleBlock)
+		if (!isStaleBlock) {
 			blocklist.add(newExtendedblock);
-		//deleting transactions from the transactionpool that are in the valid block
+			Logger.Log("new block added to the blockchain");
+			Logger.LogObject(newExtendedblock);
+			
+			//deleting transactions from the transactionpool that are in the valid block
+			for(StateTransaction trPool: this.node.pool.transactions) {
+				for (StateTransaction trBlock: newExtendedblock.internBlock.transactions ) {
+					if(trBlock.getTransctionId().equals(trPool.getTransctionId())){
+						this.node.pool.transactions.remove(trPool);
+					}				
+				}
+			}
+			
+		}
+		else
+			Logger.Log("stale block found");
+
 		
 	}
 	

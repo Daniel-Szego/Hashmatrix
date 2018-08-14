@@ -4,6 +4,7 @@ import Transaction.*;
 
 import java.security.PublicKey;
 import java.util.ArrayList;
+import Utils.*;
 
 
 // helper class to apply transaction changes to the state
@@ -23,6 +24,7 @@ public class StateTransformer {
 		}
 		else{
 			// error handling calling copystate but previous block not initialized 
+			Logger.Log("calling copystate but previous block not initialized ");
 		}
 	}
 

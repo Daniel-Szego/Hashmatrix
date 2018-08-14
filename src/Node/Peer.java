@@ -3,7 +3,10 @@ package Node;
 import java.util.ArrayList;
 
 import Block.Block;
+import Crypto.CryptoUtil;
 import Transaction.*;
+import Utils.Logger;
+import Utils.Severity;
 
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
@@ -17,13 +20,17 @@ public class Peer implements NetworkInterface, Serializable  {
 	  
 	// peerId -> known peer implementation
 	public String peerId;
-	public String peerHost;
-	public int peerPort;
+	public final String peerHost;
+	public final int peerPort;
 	public boolean active;
 	
 	public Peer(String _peerHost, int _peerPort){
 		peerHost = _peerHost;
 		peerPort = _peerPort;
+		CryptoUtil.applySha256(
+				peerHost +
+				peerPort
+				);
 	}
 	
 	// REMOTE FUNCTION client wrapper 
@@ -34,23 +41,21 @@ public class Peer implements NetworkInterface, Serializable  {
 				String clientVersion = stub.getClienVersion();
 				return clientVersion;
 			} catch (Exception e) {
-				System.err.println("Client exception: " + e.toString());
-				e.printStackTrace();
+				Logger.Log(e,Severity.CRITICAL);
 			}
 			return null;
 		}
 		
 		// returning the known peers
-	    public ArrayList<Peer> getPeerList () 
+	    public ArrayList<Peer> getPeerList (Peer _callee) 
 	    {
 			try {
 				Registry registry = LocateRegistry.getRegistry(peerHost,peerPort);
 				NetworkInterface stub = (NetworkInterface)registry.lookup(Network.serverNameBase+peerPort);
-				ArrayList<Peer> peerList = stub.getPeerList();
+				ArrayList<Peer> peerList = stub.getPeerList(_callee);
 				return peerList;
 			} catch (Exception e) {
-				System.err.println("Client exception: " + e.toString());
-				e.printStackTrace();
+				Logger.Log(e,Severity.CRITICAL);
 			}
 			return null;
 	    }
@@ -63,8 +68,7 @@ public class Peer implements NetworkInterface, Serializable  {
 				boolean isPeerAlive = stub.isPeerAlive();
 				return isPeerAlive;
 			} catch (Exception e) {
-				System.err.println("Client exception: " + e.toString());
-				e.printStackTrace();
+				Logger.Log(e,Severity.CRITICAL);
 			}
 			return false;
 	    }
@@ -76,8 +80,7 @@ public class Peer implements NetworkInterface, Serializable  {
 				NetworkInterface stub = (NetworkInterface)registry.lookup(Network.serverNameBase+peerPort);
 				stub.boradcastTransaction(tr);
 			} catch (Exception e) {
-				System.err.println("Client exception: " + e.toString());
-				e.printStackTrace();
+				Logger.Log(e,Severity.CRITICAL);
 			}	    	
 	    }
 	    
@@ -87,8 +90,7 @@ public class Peer implements NetworkInterface, Serializable  {
 				NetworkInterface stub = (NetworkInterface)registry.lookup(Network.serverNameBase+peerPort);
 				stub.broadcastBlock(block);
 			} catch (Exception e) {
-				System.err.println("Client exception: " + e.toString());
-				e.printStackTrace();
+				Logger.Log(e,Severity.CRITICAL);
 			}	    		    	
 	    }
 }

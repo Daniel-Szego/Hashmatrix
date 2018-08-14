@@ -6,10 +6,12 @@ import CLI.*;
 import Crypto.CryptoUtil;
 import Node.*;
 import State.*;
+import Utils.*;
 
 public class TestCLI {
 
 	public static void main(String[] args) {
+		CliArgs cliArgs = new CliArgs(args);
 		
 		// starting security provider, not sure if this is the right place
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
@@ -18,66 +20,87 @@ public class TestCLI {
 		
 		// starting the network
 
-		System.out.println("STARTING NETWORK");
-		String[] paramss = {"-startNetwork", "-port", "8426"};
-		Cli.main(paramss);	
-		System.out.println("");	
-		
-		System.out.println("CONNECT PEER");
-		String[] paramsp = {"-connectPeer", "-peerAddress", "localhost", "-peerPort", "8425"};
-		Cli.main(paramsp);	
-		System.out.println("");		
-		
-		// test new account generation
-		System.out.println("TEST ACCOUNT GENERATION");
-		String[] params = {"-createAccount"};
-		Cli.main(params);	
-		System.out.println("");	
+		if (cliArgs.switchPresent("-nodeFirst")){
 
-		//GENESIS BLOCK
-		System.out.println("GENESIS BLOCK");
-		String[] paramsg = {"-createGenesisBlock"};
-		Cli.main(paramsg);	
-		System.out.println("genesis block created");
-		System.out.println("");
 		
-		String accountString = Cli.node.wallet.getAccounts().get(1).account.getAddressString();
-		String accountToString = Cli.node.wallet.getAccounts().get(0).account.getAddressString();
-		String ownerString = Cli.node.wallet.getAccounts().get(1).getOwnerString();
-		
-		// test transactions
-		System.out.println("TEST TRANSACTIONS");	
-		System.out.println("Create:");	
-		String[] params2 = {"-createTransaction", "-state", "-address", accountString, "-value", "'hello world' ", "-sign", ownerString};
-		Cli.main(params2);	
-		System.out.println("");	
-		System.out.println("Transfer:");	
-		String[] params3 = {"-createTransaction", "-transfer", "-from", accountString, "-to", accountToString,"-amount", "22", "-sign", ownerString};
-		Cli.main(params3);	
-		System.out.println("");	
-		
-		// test miner
-		System.out.println("MINER ONE STEP");
-		String[] paramsm = {"-runMinerOne"};
-		Cli.main(paramsm);	
-		System.out.println("");	
+			Logger.Log("STARTING NETWORK");
+			String[] paramss = {"-startNetwork", "-port", "8425"};
+			Cli.main(paramss);	
+			Logger.Log("");	
+						
+			// test new account generation
+			Logger.Log("TEST ACCOUNT GENERATION");
+			String[] params = {"-createAccount"};
+			Cli.main(params);	
+			System.out.println("");	
+	
+			//GENESIS BLOCK
+			Logger.Log("GENESIS BLOCK");
+			String[] paramsg = {"-createGenesisBlock"};
+			Cli.main(paramsg);	
+			Logger.Log("genesis block created");
+			Logger.Log("");
+			
+			String accountString = Cli.node.wallet.getAccounts().get(1).account.getAddressString();
+			String accountToString = Cli.node.wallet.getAccounts().get(0).account.getAddressString();
+			String ownerString = Cli.node.wallet.getAccounts().get(1).getOwnerString();
+			
+			// test transactions
+			Logger.Log("TEST TRANSACTIONS");	
+			Logger.Log("Create:");	
+			String[] params2 = {"-createTransaction", "-state", "-address", accountString, "-value", "'hello world' ", "-sign", ownerString};
+			Cli.main(params2);	
+			System.out.println("");	
+			Logger.Log("Transfer:");	
+			String[] params3 = {"-createTransaction", "-transfer", "-from", accountString, "-to", accountToString,"-amount", "22", "-sign", ownerString};
+			Cli.main(params3);	
+			Logger.Log("");	
+			
+			// test miner
+			Logger.Log("MINER ONE STEP");
+			String[] paramsm = {"-runMinerOne"};
+			Cli.main(paramsm);	
+			Logger.Log("");	
+	
+			// test account mined
+			System.out.println("Account value");
+			String[] paramsd = {"-getAccountData", "-account", accountString};
+			Cli.main(paramsd);	
+			Logger.Log("");	
+	
+			// test account mined
+			Logger.Log("Account value");
+			String[] paramsb = {"-getAccountBalance", "-account", accountString};
+			Cli.main(paramsb);	
+			Logger.Log("");	
+			
+/*			// stopping the network
+			Logger.Log("STOPPING NETWORK");
+			String[] paramsstop = {"-stopNetwork"};
+			Cli.main(paramsstop);	
+			Logger.Log("");	 */
+		}
+		else if (cliArgs.switchPresent("-nodeSecond")){
 
-		// test account mined
-		System.out.println("Account value");
-		String[] paramsd = {"-getAccountData", "-account", accountString};
-		Cli.main(paramsd);	
-		System.out.println("");	
+			
+			Logger.Log("STARTING NETWORK");
+			String[] paramss = {"-startNetwork", "-port", "8426"};
+			Cli.main(paramss);	
+			Logger.Log("");	
+			
+			Logger.Log("CONNECT PEER");
+			String[] paramsp = {"-connectPeer", "-peerAddress", "localhost", "-peerPort", "8425"};
+			Cli.main(paramsp);	
+			Logger.Log("");		
 
-		// test account mined
-		System.out.println("Account value");
-		String[] paramsb = {"-getAccountBalance", "-account", accountString};
-		Cli.main(paramsb);	
-		System.out.println("");	
+			// test new account generation
+			Logger.Log("TEST ACCOUNT GENERATION");
+			String[] params = {"-createAccount"};
+			Cli.main(params);	
+			Logger.Log("");	
 		
-		System.out.println("STOPPING NETWORK");
-		String[] paramsstop = {"-stopNetwork"};
-		Cli.main(paramsstop);	
-		System.out.println("");	
+		}
+	}
 
-	}		
-}
+
+}		

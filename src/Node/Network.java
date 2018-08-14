@@ -6,6 +6,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.server.*;
 import java.util.ArrayList;
+import Utils.*;
 
 import Block.Block;
 import Transaction.*;
@@ -24,10 +25,12 @@ public class Network implements NetworkInterface  {
 	public boolean networkStarted = false;
 	public Registry registry;
 	public ArrayList<Peer> peers = new ArrayList<Peer>();
+	public Peer selfPeer;
 	
 	public Network(Peer masterPeer) {
 		node = null;
 		this.peers.add(masterPeer);
+		selfPeer = masterPeer;
 	}
 	
 	public Network(Node _node) {
@@ -36,7 +39,7 @@ public class Network implements NetworkInterface  {
 	
 	public void addPeer(Peer peer) {
 		peer.active = true;
-		peers.add(peer);		
+		peers.add(peer);	
 	}
 
 	// REMOTE FUNCTIONS
@@ -47,8 +50,16 @@ public class Network implements NetworkInterface  {
 	}
 	
 	// returning the known peers
-    public ArrayList<Peer> getPeerList () 
+    public ArrayList<Peer> getPeerList (Peer _callee) 
     {
+    	// if  peer is not contained, add to the list
+    	boolean contains = false;
+    	for(Peer peer: peers) {
+    		if (peer.peerId.equals(_callee.peerId))
+    			contains = true;
+    	} 
+    	if (!contains)
+    		peers.add(_callee);
     	return peers;
     }
 
@@ -66,12 +77,8 @@ public class Network implements NetworkInterface  {
     public void broadcastBlock(Block block) {
 		// SINGLE HOP -> transactions are not propagated further
     	// can be used in fully connected networks    	
-    	node.blockchain.addBlock(block);
-    	
-    	
+    	node.blockchain.addBlock(block);	
     }
-
-    
     
     // CLI FUNCTIONS
 	// starting the rmiregistry
@@ -123,7 +130,7 @@ public class Network implements NetworkInterface  {
 			this.addPeer(peer);
 		}
 				
-		ArrayList<Peer> remotePeers = peer.getPeerList();
+		ArrayList<Peer> remotePeers = peer.getPeerList(selfPeer);
 		
 		for(Peer remotePeer: remotePeers) {
 			Peer localPeer = this.getPeer(remotePeer.peerHost, remotePeer.peerPort);

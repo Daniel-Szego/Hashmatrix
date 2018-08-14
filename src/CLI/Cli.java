@@ -9,6 +9,7 @@ import Node.*;
 import State.*;
 import Transaction.*;
 import Wallet.*;
+import Utils.*;
 
 // command line interface
 public class Cli {
@@ -31,24 +32,27 @@ public class Cli {
 			port = Integer.parseInt(cliArgs.switchValue("-port"));
 			
 			node.network.startNetwork(port);		
+			Logger.Log("Network has started");
 		}
 		else if (cliArgs.switchPresent("-connectPeer")) {			
 			String peerAddress = cliArgs.switchValue("-peerAddress");
 			String peerPort = cliArgs.switchValue("-peerPort");	
 			int peerInt = Integer.parseInt(peerPort);
 			node.network.syncPeers(peerAddress, peerInt);
+			Logger.Log("Peer sync has started (one hop)");
 		}
 		// stopping network interface
 		else if (cliArgs.switchPresent("-stopNetwork")){
 			node.network.stopNetwork();		
+			Logger.Log("Network is stopping");
 		}
 		// creating account - only memory
 		else if (cliArgs.switchPresent("-createAccount")) {
 			AccountWallet account = node.wallet.createNewAccount();
 			
-			System.out.println("Account has been generated and added to the default wallet");
-			System.out.println("Address : " + account.account.getAddressString());
-			System.out.println("Owner priv key : " + account.getOwnerString());					
+			Logger.Log("Account has been generated and added to the default wallet");
+			Logger.Log("Address : " + account.account.getAddressString());
+			Logger.Log("Owner priv key : " + account.getOwnerString());					
 		}
 		
 		// creating a transaction
@@ -60,10 +64,10 @@ public class Cli {
 				AccountWallet accountWallet = node.wallet.getAccountbyPublicKey(address);				
 				StateDataTransaction tr = node.wallet.createDataTransaction(accountWallet, newValue);
 				
-				System.out.println("State transaction has been created and broadcasted to the network");				
-				System.out.println("Transaction Id : " + tr.getTransctionId());
-				System.out.println("Address : " + tr.GetAddressString());
-				System.out.println("Value : " + tr.newValue);	
+				Logger.Log("State transaction has been created and broadcasted to the network");				
+				Logger.Log("Transaction Id : " + tr.getTransctionId());
+				Logger.Log("Address : " + tr.GetAddressString());
+				Logger.Log("Value : " + tr.newValue);	
 			}
 			else if (cliArgs.switchPresent("-transfer")){
 				String fromAddress = cliArgs.switchValue("-from");
@@ -75,14 +79,14 @@ public class Cli {
 				AccountWallet accountWallet = node.wallet.getAccountbyPublicKey(fromAddress);				
 				StateTransferTransaction tr = node.wallet.createTransferTransaction(accountWallet, toAddress, amountFloat);
 
-				System.out.println("State transaction has been created and broadcasted to the network");
-				System.out.println("Transaction Id : " + tr.getTransctionId());
-				System.out.println("From Address : " +  CryptoUtil.getStringFromKey(tr.fromAddress));
-				System.out.println("To Address : " +  CryptoUtil.getStringFromKey(tr.toAddress));				
-				System.out.println("Amount : " + tr.amount);					
+				Logger.Log("State transaction has been created and broadcasted to the network");
+				Logger.Log("Transaction Id : " + tr.getTransctionId());
+				Logger.Log("From Address : " +  CryptoUtil.getStringFromKey(tr.fromAddress));
+				Logger.Log("To Address : " +  CryptoUtil.getStringFromKey(tr.toAddress));				
+				Logger.Log("Amount : " + tr.amount);					
 			}
 			else {
-				throw new RuntimeException(new Exception("invalid arguments transaction"));
+				Logger.Log("invalid arguments transaction", Severity.CRITICAL);
 			}
 		}
 		
@@ -121,28 +125,29 @@ public class Cli {
 			
 			// add genesis block to the blockchain
 			node.blockchain.addGenesisBlock(genesisBlock);
-			
+			Logger.Log("Genesis Block has been created");
+			Logger.LogObject(genesisBlock);
 		}
 		else if (cliArgs.switchPresent("-runMinerOne")) {
 			Block lastBlock = node.blockchain.getTopBlock().internBlock;
 			MinerPOW miner = (MinerPOW)node.miner;
 			Block newBlock = miner.mineNextBlock(lastBlock, node.pool);
 			node.broadcastBlock(newBlock);
-			System.out.println("One block has been mined succesfully");		
-			System.out.println("Block hash one : " + node.blockchain.getTopBlock().internBlock.matrix.get(0).hashOne);	
-			System.out.println("Block hash two : " + node.blockchain.getTopBlock().internBlock.matrix.get(0).hashTwo);	
-			System.out.println("Nr of transactions : " + node.blockchain.getTopBlock().internBlock.transactions.size());			
-			System.out.println("Nr of accounts : " + node.blockchain.getTopBlock().internBlock.accounts.size());						
+			Logger.Log("One block has been mined succesfully");		
+			Logger.Log("Block hash one : " + node.blockchain.getTopBlock().internBlock.matrix.get(0).hashOne);	
+			Logger.Log("Block hash two : " + node.blockchain.getTopBlock().internBlock.matrix.get(0).hashTwo);	
+			Logger.Log("Nr of transactions : " + node.blockchain.getTopBlock().internBlock.transactions.size());			
+			Logger.Log("Nr of accounts : " + node.blockchain.getTopBlock().internBlock.accounts.size());						
 		}
 		else if (cliArgs.switchPresent("-getAccountData")) {
 			String acountAddress = cliArgs.switchValue("-account");
 			String data = node.explorer.getAccountData(acountAddress);
-			System.out.println("Account Data : " + data);
+			Logger.Log("Account Data : " + data);
 		}
 		else if (cliArgs.switchPresent("-getAccountBalance")) {
 			String acountAddress = cliArgs.switchValue("-account");
 			float value = node.explorer.getAccountBalance(acountAddress);
-			System.out.println("Account Balance : " + value);
+			Logger.Log("Account Balance : " + value);
 		}
 	}
 }
