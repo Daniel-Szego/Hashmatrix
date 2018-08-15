@@ -122,19 +122,22 @@ public class Cli {
 			genesisBlock.matrix.add(hashLink);
 			genesisBlock.calculateStateRoot();
 			genesisBlock.calculateTransactionRoot();
+			genesisBlock.setBlockId();
 			
 			// add genesis block to the blockchain
 			node.blockchain.addGenesisBlock(genesisBlock);
 			Logger.Log("Genesis Block has been created");
-			Logger.LogObject(genesisBlock);
+			Logger.Log("Genesis Block ID : " + genesisBlock.blockId);
+		
+//			Logger.LogObject(genesisBlock);
 		}
 		else if (cliArgs.switchPresent("-runMinerOne")) {
 			node.startMinerOneRound();
 			Logger.Log("One block has been mined succesfully");		
-			Logger.Log("Block hash one : " + node.blockchain.getTopBlock().internBlock.matrix.get(0).hashOne);	
-			Logger.Log("Block hash two : " + node.blockchain.getTopBlock().internBlock.matrix.get(0).hashTwo);	
+			Logger.Log("Block hash : " + node.blockchain.getTopBlock().internBlock.blockId);	
 			Logger.Log("Nr of transactions : " + node.blockchain.getTopBlock().internBlock.transactions.size());			
 			Logger.Log("Nr of accounts : " + node.blockchain.getTopBlock().internBlock.accounts.size());						
+			Logger.Log("Blockchain height : " + node.blockchain.getBlockchinHeight());						
 		}
 		else if (cliArgs.switchPresent("-getAccountData")) {
 			String acountAddress = cliArgs.switchValue("-account");

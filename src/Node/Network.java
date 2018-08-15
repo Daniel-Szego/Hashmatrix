@@ -6,6 +6,8 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.server.*;
 import java.util.ArrayList;
+import java.util.Collections;
+
 import Utils.*;
 
 
@@ -104,6 +106,7 @@ public class Network implements NetworkInterface  {
     			inventar.add(block.internBlock.blockId);
     		}
     	}
+    	Collections.reverse(inventar);
     	return inventar;
     }
     

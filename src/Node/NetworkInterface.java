@@ -32,5 +32,6 @@ public interface NetworkInterface extends Remote {
     
     // getting a block specified by the Id
     Block getBlock(String blockId) throws RemoteException;
+
 }
 

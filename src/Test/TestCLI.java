@@ -1,8 +1,11 @@
 package Test;
 
 import java.security.*;
+import java.util.ArrayList;
 
 import CLI.*;
+import Chain.Blockchain;
+import Chain.ExtendedBlock;
 import Crypto.*;
 import Node.*;
 import State.*;
@@ -111,6 +114,9 @@ public class TestCLI {
 			String[] paramssync = {"-syncBlockchain"};
 			Cli.main(paramssync);
 			Logger.Log("");		
+			
+			ArrayList<ExtendedBlock> blockchain = Cli.node.blockchain.getBlockchain();
+
 			
 			// test new account generation
 			Logger.Log("TEST ACCOUNT GENERATION");

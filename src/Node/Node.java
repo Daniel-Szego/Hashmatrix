@@ -83,11 +83,13 @@ public class Node {
 			Logger.Log("Remote blockheight : " + remoteBlockchainHeight) ;
 
 			ArrayList<String> inventar = new ArrayList<String>();
+			String genesisBlock = "";
 			// Starting Syncronization
 			for(Peer peer: this.network.peers){
 				ArrayList<String> peerInv = peer.getInventar(localBlockchainHeight, remoteBlockchainHeight);
 				if (peerInv != null){
 					for (String id: peerInv) {
+						genesisBlock = peerInv.get(0);
 						if (!inventar.contains(id)) 
 							inventar.add(id);
 					}
@@ -95,11 +97,25 @@ public class Node {
 			}
 			
 			for (String Id: inventar) {
-				Logger.Log("Querying Block, BlockId : " + Id );
+				ArrayList<String> alreadyAdded = new ArrayList<String>();
+				for(Peer peer: this.network.peers){
+					if (!alreadyAdded.contains(Id)) {
+						Block block = peer.getBlock(Id);
+						if (block != null) {
+							if (Id.equals(genesisBlock))
+								this.blockchain.addGenesisBlock(block);
+							else
+								this.blockchain.addBlock(block);
+							alreadyAdded.add(Id);
+							Logger.Log("Adding Block, BlockId : " + Id );							
+						}
+					}
+				}
 			}	
 		}
-				
 		
+		this.wallet.syncAccounts();					
+		Logger.Log("Blockchain synced : " + this.blockchain.getBlockchinHeight());
 		this.blockchain.isSynced = true;
 	}
 }

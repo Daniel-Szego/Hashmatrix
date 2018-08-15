@@ -39,7 +39,7 @@ public class Blockchain {
 	// only one hashlink is considered as previous link, however that should be enoguh
 	public ExtendedBlock addBlock(Block _block) {
 		ExtendedBlock newExtendedblock = new ExtendedBlock(_block);
-		if (blocklist .size() < 1)
+		if (blocklist.size() < 1)
 			blocklist.add(newExtendedblock);
 		// finding previous and next blocks
 		boolean isStaleBlock = true;
