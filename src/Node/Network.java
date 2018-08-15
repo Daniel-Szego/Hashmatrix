@@ -47,6 +47,7 @@ public class Network implements NetworkInterface  {
 	// Called remotely by other peers
 	// getting the remote client version -> compatibility check
 	public String getClienVersion() {
+      Logger.Log("getPeerList called");
 	  return clientVersion;
 	}
 	
@@ -54,7 +55,7 @@ public class Network implements NetworkInterface  {
     public ArrayList<Peer> getPeerList (Peer _callee) 
     {
     	// if  peer is not contained, add to the list
-    	Logger.Log("getPeerList called" + _callee.peerHost);
+    	Logger.Log("getPeerList called, host :" + _callee.peerHost + " port : " + _callee.peerPort);
     	boolean contains = false;
     	for(Peer peer: peers) {
     		if (peer.peerId.equals(_callee.peerId))
@@ -73,12 +74,14 @@ public class Network implements NetworkInterface  {
     public void boradcastTransaction (StateTransaction tr) {
 		// SINGLE HOP -> transactions are not propagated further
     	// can be used in fully connected networks
+    	Logger.Log("bradcast transaction called, transaction Id :" + tr.getTransctionId());
     	node.pool.addTransaction(tr);
     }
     
     public void broadcastBlock(Block block) {
 		// SINGLE HOP -> transactions are not propagated further
     	// can be used in fully connected networks    	
+    	Logger.Log("bradcast block called, transaction Id :" + block.blockId);
     	node.blockchain.addBlock(block);	
     }
     
@@ -153,3 +156,4 @@ public class Network implements NetworkInterface  {
 		return null;		
 	}				
 }
+

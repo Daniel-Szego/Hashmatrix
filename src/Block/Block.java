@@ -13,6 +13,7 @@ import Transaction.*;
 
 public class Block implements Serializable {
 
+	public String blockId;
 	public ArrayList<HashLink> matrix = new ArrayList<HashLink>();
  	public ArrayList<StateTransaction> transactions = new ArrayList<StateTransaction>();
  	public ArrayList<Account> accounts = new ArrayList<Account>();
@@ -96,6 +97,19 @@ public class Block implements Serializable {
 			}
 		}	
 	}	
+	
+	public void setBlockId(){
+		blockId = calculateBlockId();
+	}
+	
+	public String calculateBlockId () {
+		String hashLinkStrings = null;
+		for(HashLink link: matrix) {
+			hashLinkStrings += link.hashOne;
+			hashLinkStrings += link.hashTwo;			
+		}				
+	return CryptoUtil.applySha256(hashLinkStrings);
+	}
 }
 
 

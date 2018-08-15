@@ -90,6 +90,9 @@ public class MinerPOW extends Miner{
 			newBlock.matrix.add(newHashLink);
 		}
 		
+		//computing blockId
+		//blockId can be attached previously as well, however than it is only temporary
+		newBlock.setBlockId();
 		return newBlock;
 	}
 
