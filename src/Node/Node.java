@@ -4,6 +4,8 @@ import Block.*;
 import Chain.*;
 import Miner.*;
 import Transaction.*;
+import Utils.Logger;
+import Utils.Severity;
 import Wallet.*;
 import Explorer.*;
 
@@ -35,24 +37,53 @@ public class Node {
 		
 		// gossiping the transaction on the network
 		for(Peer pr: this.network.peers) {
-			pr.boradcastTransaction(tr);
+			if (!(this.network.selfPeer.peerHost.equals(pr.peerHost) &&
+					 this.network.selfPeer.peerPort == pr.peerPort)){
+				pr.boradcastTransaction(tr);
+			}
 		}		
 	}
 	
 	// broadcasting a block to the network
-	public void broadcastBlock(Block _block) {
-		// adding to the blockchain
-		blockchain.addBlock(_block);
-	
+	public void broadcastBlock(Block _block) {	
 		// gossiping the block on the network
 		for(Peer pr: this.network.peers) {
-			pr.broadcastBlock(_block);
+			if (!(this.network.selfPeer.peerHost.equals(pr.peerHost)) &&
+				 (this.network.selfPeer.peerPort == pr.peerPort)){
+				pr.broadcastBlock(_block);
+			}
 		}				
 	}
 	
 	// starting the miner - only one round implementation
-	public void startMiner() {
+	public ExtendedBlock startMinerOneRound() {
 		Block proposedBlock = miner.mineNextBlock(this.blockchain.getTopBlock().internBlock, this.pool);
+		ExtendedBlock exBlock = this.blockchain.addBlock(proposedBlock);
+		// syncing the state is should not necessarily be here, as we still do not know if we won the race
+		wallet.syncAccounts();
 		this.broadcastBlock(proposedBlock);
+		return exBlock;
+	}
+	
+	// syncing the blockchain 
+	public void syncBlockchain() {
+		int localBlockchainHeight = this.blockchain.getBlockchinHeight();
+		int remoteBlockchainHeight = -1;
+		for(Peer peer: this.network.peers){
+			int remotePeerHeight = peer.getMaxBlockHeight();
+			if (remotePeerHeight >  remoteBlockchainHeight)
+				remoteBlockchainHeight = remotePeerHeight;			
+		}
+		if (localBlockchainHeight < remoteBlockchainHeight){
+			this.blockchain.isSynced = false;
+			Logger.Log("Syncronisation needed", Severity.INFO);
+			Logger.Log("Local blockheight : " + localBlockchainHeight);
+			Logger.Log("Remote blockheight : " + remoteBlockchainHeight) ;
+		}
+		// Starting Syncronization
+		
+		
+		
+		this.blockchain.isSynced = true;
 	}
 }

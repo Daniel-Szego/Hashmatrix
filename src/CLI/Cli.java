@@ -129,10 +129,7 @@ public class Cli {
 			Logger.LogObject(genesisBlock);
 		}
 		else if (cliArgs.switchPresent("-runMinerOne")) {
-			Block lastBlock = node.blockchain.getTopBlock().internBlock;
-			MinerPOW miner = (MinerPOW)node.miner;
-			Block newBlock = miner.mineNextBlock(lastBlock, node.pool);
-			node.broadcastBlock(newBlock);
+			node.startMinerOneRound();
 			Logger.Log("One block has been mined succesfully");		
 			Logger.Log("Block hash one : " + node.blockchain.getTopBlock().internBlock.matrix.get(0).hashOne);	
 			Logger.Log("Block hash two : " + node.blockchain.getTopBlock().internBlock.matrix.get(0).hashTwo);	
@@ -148,6 +145,9 @@ public class Cli {
 			String acountAddress = cliArgs.switchValue("-account");
 			float value = node.explorer.getAccountBalance(acountAddress);
 			Logger.Log("Account Balance : " + value);
+		}
+		else if (cliArgs.switchPresent("-syncBlockchain")) {
+			node.syncBlockchain();		
 		}
 	}
 }

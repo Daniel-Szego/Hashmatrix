@@ -74,8 +74,10 @@ public class TransactionValidator {
 		int nonce = ((StateTransferTransaction)tr).getNonce();
 	
 		// checking signature
-		if (!tr.verifiySignature()) 
+		if (!tr.verifiySignature()) {
+			Logger.Log("Invalid transaction signature, TrID : " + tr.getTransctionId());
 			return false;
+		}
 		
 		// getting the fromAccount to be modified
 		Account accountFromModify = null;
@@ -90,18 +92,19 @@ public class TransactionValidator {
 		
 		if (accountFromModifyFound > 1) {
 			// more than one account is found ?? -> raise error
-			Logger.Log("more than one matching account has been found at transfer transaction");
+			Logger.Log("more than one matching account has been found at transfer transaction TrID : " + tr.getTransctionId());
 			return false;
 		}
 		else if (accountFromModifyFound == 1) {
 			if (tr.getNonce() != accountFromModify.nonce + 1) {
 				// error -> nonce not matching -> pssible replay attack
+				Logger.Log("Nonce is not valid at transaction, possible replay aatack");
 				return false;
 			}
 			else {				
 				if (accountFromModify.accountBalance < amount){
 					// not enoguh fund on the account
-					Logger.Log("Not enoguh fund on the account at transfer transaction");
+					Logger.Log("Not enoguh fund on the account at transfer transaction TrID : " + tr.getTransctionId());
 					return false;
 				}
 				// all cool but still not return because the second account has to be checked as well
@@ -112,7 +115,7 @@ public class TransactionValidator {
 				
 		}else if (accountFromModifyFound == 0) {
 			// error, if the account does not exist, you can not transfer money from that
-			Logger.Log("The account from which you want to transfert the fund does not exist");
+			Logger.Log("The account from which you want to transfer the fund does not exist, TrID : " + tr.getTransctionId());
 			return false;
 		}
 		
@@ -130,17 +133,11 @@ public class TransactionValidator {
 		
 		if (accountToModifyFound > 1) {
 			// more than one account is found ?? -> raise error
-			Logger.Log("More than one account is found at matching the transfer transaction");
+			Logger.Log("More than one account is found at matching the transfer transaction TrID : " + tr.getTransctionId());
 			return false;
 		}
 		else if (accountToModifyFound == 1) {
-			if (tr.getNonce() != accountToModify.nonce + 1) {
-				// error -> nonce not matching -> pssible replay attack
-				return false;
-			}
-			else {				
 				accountToIsGood = true;
-			}
 				
 		}else if (accountToModifyFound == 0) {
 			// new to account can be added to the chain

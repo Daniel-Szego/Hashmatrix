@@ -19,5 +19,7 @@ public interface NetworkInterface extends Remote {
     
     void broadcastBlock(Block block) throws RemoteException;
     
+    int getMaxBlockHeight() throws RemoteException;
+    
 }
 

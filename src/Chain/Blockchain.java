@@ -19,9 +19,11 @@ import org.bouncycastle.*;
 public class Blockchain {
 	
 	public final Node node;
+	public boolean isSynced;
 	
 	public Blockchain(Node _node) {
 		this.node = _node;
+		this.isSynced = false;
 	}
 	
 	// simple implementation: future: forking has to be considrered
@@ -34,7 +36,8 @@ public class Blockchain {
 	}
 
 	// adding a block to the chain, only if it can be put to the chain
-	public void addBlock(Block _block) {
+	// only one hashlink is considered as previous link, however that should be enoguh
+	public ExtendedBlock addBlock(Block _block) {
 		ExtendedBlock newExtendedblock = new ExtendedBlock(_block);
 		if (blocklist .size() < 1)
 			blocklist.add(newExtendedblock);
@@ -48,8 +51,8 @@ public class Blockchain {
 			HashLink topHashLink = _block.matrix.get(0);			
 			String eHashOne = prevTopHashLink.hashOne;
 			String eHashTwo = prevTopHashLink.hashTwo;
-			boolean eHashOneEquals = eHashOne.equals(topHashLink.calculateHashOne(_block.stateRoot, _block.transactionRoot, eHashOne));
-			boolean eHashTwoEquals = eHashTwo.equals(topHashLink.calculateHashTwo(_block.stateRoot, _block.transactionRoot, eHashTwo));
+			boolean eHashOneEquals = topHashLink.hashOne.equals(topHashLink.calculateHashOne(_block.stateRoot, _block.transactionRoot, eHashOne));
+			boolean eHashTwoEquals = topHashLink.hashTwo.equals(topHashLink.calculateHashTwo(_block.stateRoot, _block.transactionRoot, eHashTwo));
 			if (eHashOneEquals && eHashTwoEquals)	{
 				// match -> previous node
 				newExtendedblock.previousBlock = prevBlock; 
@@ -63,22 +66,28 @@ public class Blockchain {
 		if (!isStaleBlock) {
 			blocklist.add(newExtendedblock);
 			Logger.Log("new block added to the blockchain");
-			Logger.LogObject(newExtendedblock);
+			//Logger.LogObject(newExtendedblock);
 			
 			//deleting transactions from the transactionpool that are in the valid block
+			ArrayList<StateTransaction> todDelete = new ArrayList<StateTransaction>();
 			for(StateTransaction trPool: this.node.pool.transactions) {
 				for (StateTransaction trBlock: newExtendedblock.internBlock.transactions ) {
 					if(trBlock.getTransctionId().equals(trPool.getTransctionId())){
-						this.node.pool.transactions.remove(trPool);
+						todDelete.add(trPool);
 					}				
 				}
 			}
+			
+			for (StateTransaction tr: todDelete) {
+				this.node.pool.transactions.remove(tr);
+			}
+
 			
 		}
 		else
 			Logger.Log("stale block found");
 
-		
+		return newExtendedblock;	
 	}
 	
 	public int getBlockchinHeight() {

@@ -48,22 +48,31 @@ public class TestCLI {
 			String ownerString = Cli.node.wallet.getAccounts().get(1).getOwnerString();
 			
 			// test transactions
-			Logger.Log("TEST TRANSACTIONS");	
+			Logger.Log("TEST TRANSACTION DATA");	
 			Logger.Log("Create:");	
 			String[] params2 = {"-createTransaction", "-state", "-address", accountString, "-value", "'hello world' ", "-sign", ownerString};
 			Cli.main(params2);	
 			System.out.println("");	
-			Logger.Log("Transfer:");	
-			String[] params3 = {"-createTransaction", "-transfer", "-from", accountString, "-to", accountToString,"-amount", "22", "-sign", ownerString};
-			Cli.main(params3);	
-			Logger.Log("");	
 			
-			// test miner
+			// mine one transaction
 			Logger.Log("MINER ONE STEP");
 			String[] paramsm = {"-runMinerOne"};
 			Cli.main(paramsm);	
 			Logger.Log("");	
-	
+
+			Logger.Log("TEST TRANSACTION DATA");	
+			Logger.Log("Transfer:");	
+			String[] params3 = {"-createTransaction", "-transfer", "-from", accountString, "-to", accountToString,"-amount", "22", "-sign", ownerString};
+			Cli.main(params3);	
+			Logger.Log("");	
+
+			// mine second transaction
+			Logger.Log("MINER ONE MORE STEP");
+			String[] paramsm1 = {"-runMinerOne"};
+			Cli.main(paramsm1);	
+			Logger.Log("");	
+		
+			
 			// test account mined
 			System.out.println("Account value");
 			String[] paramsd = {"-getAccountData", "-account", accountString};
@@ -97,6 +106,11 @@ public class TestCLI {
  			for(Peer peer: Cli.node.network.peers) 
  				Logger.Log("Peer Info, host : " + peer.peerHost + " port : " + peer.peerPort);		
 			Logger.Log("");		
+
+			Logger.Log("SYNC BLOCKCHAIN");
+			String[] paramssync = {"-syncBlockchain"};
+			Cli.main(paramssync);
+			Logger.Log("");		
 			
 			// test new account generation
 			Logger.Log("TEST ACCOUNT GENERATION");
@@ -105,6 +119,5 @@ public class TestCLI {
 			Logger.Log("");			
 		}
 	}
-
 
 }		

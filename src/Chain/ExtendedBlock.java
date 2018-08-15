@@ -18,6 +18,7 @@ public class ExtendedBlock {
 		previousBlock = _previousBlock;	
 		nextBlocks = _nextBlocks;
 		nextBlocks = new ArrayList<ExtendedBlock>();
+		blockHeight = -1;
 	}
 
 	public ExtendedBlock(Block _block, ExtendedBlock _previousBlock) {

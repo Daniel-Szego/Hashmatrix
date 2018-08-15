@@ -6,9 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 import org.bouncycastle.*;
 
-import Chain.Blockchain;
+import Chain.*;
 import Crypto.CryptoUtil;
 import Node.*;
+import State.*;
 import Transaction.*;
 
 // Ancestor class for wallet
@@ -116,6 +117,29 @@ public abstract class Wallet {
 		return this.createTransferTransaction(account,toPublicKey,amount);
 	}
 
+	// syncing the accounts with the last block
+	// naive implementation
+	public void syncAccounts(){
+		ExtendedBlock eBlock = node.blockchain.getTopBlock();
+		for (Account a: eBlock.internBlock.accounts) {
+			 AccountWallet aWallet = getAccountWallet(a.getAddressString());
+			 if (aWallet != null) {
+				 aWallet.account.accountBalance = a.accountBalance;
+				 aWallet.account.accountData = a.accountData;
+				 aWallet.account.nonce = a.nonce;
+			 }
+		}
+	}
+	
+	// getting the account wallet
+	public AccountWallet getAccountWallet(String address) {
+		for (AccountWallet a: accounts) {
+			if(a.account.getAddressString().equals(address)){
+				return a;
+			}
+		}
+		return null;
+	}
 	
 	// BACKUP RESTORE
 	
@@ -132,5 +156,7 @@ public abstract class Wallet {
 	public abstract void importAccount(PrivateKey privateKey);
 	
 	public abstract AccountWallet createNewAccount();
+	
+	
 	
 }

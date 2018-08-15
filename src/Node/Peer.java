@@ -93,4 +93,15 @@ public class Peer implements NetworkInterface, Serializable  {
 				Logger.Log(e,Severity.CRITICAL);
 			}	    		    	
 	    }
+	    
+	    public int getMaxBlockHeight () {
+	    	try {
+				Registry registry = LocateRegistry.getRegistry(peerHost,peerPort);
+				NetworkInterface stub = (NetworkInterface)registry.lookup(Network.serverNameBase+peerPort);
+				return stub.getMaxBlockHeight();
+			} catch (Exception e) {
+				Logger.Log(e,Severity.CRITICAL);
+			}
+	    	return -1;
+	    }
 }

@@ -71,6 +71,7 @@ public class Network implements NetworkInterface  {
     	return true;
     }
     
+    // getting a bradcasted transaction from another peer
     public void boradcastTransaction (StateTransaction tr) {
 		// SINGLE HOP -> transactions are not propagated further
     	// can be used in fully connected networks
@@ -78,11 +79,19 @@ public class Network implements NetworkInterface  {
     	node.pool.addTransaction(tr);
     }
     
+    // getting a broadcasted block from another peer
     public void broadcastBlock(Block block) {
 		// SINGLE HOP -> transactions are not propagated further
     	// can be used in fully connected networks    	
     	Logger.Log("bradcast block called, transaction Id :" + block.blockId);
     	node.blockchain.addBlock(block);	
+    }
+   
+    // giving back the max block height
+    public int getMaxBlockHeight () {
+    	int blockHeight = node.blockchain.getBlockchinHeight();
+    	Logger.Log("getMaxBlockHeigh has been called : " + blockHeight);
+    	return blockHeight;
     }
     
     // CLI FUNCTIONS
