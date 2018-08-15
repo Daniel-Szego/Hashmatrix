@@ -10,6 +10,7 @@ import Utils.*;
 
 
 import Block.Block;
+import Chain.*;
 import Transaction.*;
 
 // handling networks, connections and sockets and server functionalities
@@ -92,6 +93,29 @@ public class Network implements NetworkInterface  {
     	int blockHeight = node.blockchain.getBlockchinHeight();
     	Logger.Log("getMaxBlockHeigh has been called : " + blockHeight);
     	return blockHeight;
+    }
+    
+    // getting block header Id-s
+    public ArrayList<String> getInventar(int from, int to) {
+    	Logger.Log("getInventar has been called, from : " + from + " to : " + to);
+    	ArrayList<String> inventar = new ArrayList<String>();
+    	for(ExtendedBlock block: node.blockchain.getBlockchain()) {
+    		if ((from <= block.blockHeight) && (to >= block.blockHeight)) {
+    			inventar.add(block.internBlock.blockId);
+    		}
+    	}
+    	return inventar;
+    }
+    
+    // getting a block specified by the Id
+    public Block getBlock(String blockId) {
+    	Logger.Log("getBloock has been called, Id : " + blockId);
+    	for(ExtendedBlock block: node.blockchain.getBlockchain()) {
+    		if (block.internBlock.blockId.equals(blockId)) {
+    			return block.internBlock;
+    		}
+    	}
+    	return null;
     }
     
     // CLI FUNCTIONS

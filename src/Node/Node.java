@@ -1,5 +1,7 @@
 package Node;
 
+import java.util.ArrayList;
+
 import Block.*;
 import Chain.*;
 import Miner.*;
@@ -79,10 +81,24 @@ public class Node {
 			Logger.Log("Syncronisation needed", Severity.INFO);
 			Logger.Log("Local blockheight : " + localBlockchainHeight);
 			Logger.Log("Remote blockheight : " + remoteBlockchainHeight) ;
+
+			ArrayList<String> inventar = new ArrayList<String>();
+			// Starting Syncronization
+			for(Peer peer: this.network.peers){
+				ArrayList<String> peerInv = peer.getInventar(localBlockchainHeight, remoteBlockchainHeight);
+				if (peerInv != null){
+					for (String id: peerInv) {
+						if (!inventar.contains(id)) 
+							inventar.add(id);
+					}
+				}
+			}
+			
+			for (String Id: inventar) {
+				Logger.Log("Querying Block, BlockId : " + Id );
+			}	
 		}
-		// Starting Syncronization
-		
-		
+				
 		
 		this.blockchain.isSynced = true;
 	}

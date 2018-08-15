@@ -104,4 +104,28 @@ public class Peer implements NetworkInterface, Serializable  {
 			}
 	    	return -1;
 	    }
+	    
+	    // getting block header Id-s
+	    public ArrayList<String> getInventar(int from, int to) {
+	    	try {
+				Registry registry = LocateRegistry.getRegistry(peerHost,peerPort);
+				NetworkInterface stub = (NetworkInterface)registry.lookup(Network.serverNameBase+peerPort);
+				return stub.getInventar(from, to);
+			} catch (Exception e) {
+				Logger.Log(e,Severity.CRITICAL);
+			}
+	    	return null;	    	
+	    }
+	    
+	    // getting a block specified by the Id
+	    public Block getBlock(String blockId) {
+	    	try {
+				Registry registry = LocateRegistry.getRegistry(peerHost,peerPort);
+				NetworkInterface stub = (NetworkInterface)registry.lookup(Network.serverNameBase+peerPort);
+				return stub.getBlock(blockId);
+			} catch (Exception e) {
+				Logger.Log(e,Severity.CRITICAL);
+			}
+	    	return null;	    		    	
+	    }
 }

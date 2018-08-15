@@ -120,7 +120,12 @@ public class Blockchain {
 	
 	// blockchain resolution strategy, pick the first from the longest
 	public ExtendedBlock getTopBlock() {
-		return getTopBlocks().get(0);
+		if (getTopBlocks() == null)
+			return null;
+		else if(getTopBlocks().size() == 0)
+			return null;
+		else 
+			return getTopBlocks().get(0);
 	}
 	
 	// latest block is not necessarily the same as latest stable block
@@ -135,6 +140,8 @@ public class Blockchain {
 	public ArrayList<ExtendedBlock> getBlockchain() {
 		ArrayList<ExtendedBlock> blockchain = new ArrayList<ExtendedBlock>();
 		ExtendedBlock topBlock = this.getTopBlock();
+		if (topBlock == null)
+			return blockchain;
 		while (topBlock.previousBlock != null){
 			blockchain.add(topBlock);
 			topBlock = topBlock.previousBlock;			
