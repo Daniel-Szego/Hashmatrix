@@ -1,8 +1,6 @@
 package SmartContract;
 
-// simple smart contract implementation
+// public ancestor for smart contracts
 public abstract class SmartContract {
-	
-	
-	
+
 }

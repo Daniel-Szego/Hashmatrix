@@ -8,6 +8,7 @@ import Chain.Blockchain;
 import Chain.ExtendedBlock;
 import Crypto.*;
 import Node.*;
+import SmartContract.SimpleRule;
 import State.*;
 import Utils.*;
 
@@ -135,6 +136,11 @@ public class TestCLI {
 			String[] paramsm1 = {"-runMinerOne"};
 			Cli.main(paramsm1);	
 			Logger.Log("");	
+			
+			// testing smart contracts
+			String ruleString = "IF MEkwEwYHKoZIzj0CAQYIKoZIzj0DAQEDMgAEZtzgswwOenDE/PdqJ90lu3Sg9/6tL4c15uLZ6osraQ2rtdFZdUF/J6uNA2jySX9L CONTAINS hello THEN MEkwEwYHKoZIzj0CAQYIKoZIzj0DAQEDMgAEZtzgswwOenDE/PdqJ90lu3Sg9/6tL4c15uLZ6osraQ2rtdFZdUF/J6uNA2jySX9L Hallo";
+			SimpleRule rule = new SimpleRule(ruleString);
+			
 		}
 	}
 }		
