@@ -88,6 +88,7 @@ public class TestCLI {
 			Cli.main(paramsb);	
 			Logger.Log("");	
 			
+			
 /*			// stopping the network
 			Logger.Log("STOPPING NETWORK");
 			String[] paramsstop = {"-stopNetwork"};
@@ -114,10 +115,7 @@ public class TestCLI {
 			String[] paramssync = {"-syncBlockchain"};
 			Cli.main(paramssync);
 			Logger.Log("");		
-			
-			ArrayList<ExtendedBlock> blockchain = Cli.node.blockchain.getBlockchain();
-
-			
+							
 			// test new account generation
 			Logger.Log("TEST ACCOUNT GENERATION");
 			String[] params = {"-createAccount"};

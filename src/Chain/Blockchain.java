@@ -146,6 +146,8 @@ public class Blockchain {
 			blockchain.add(topBlock);
 			topBlock = topBlock.previousBlock;			
 		}		
+		blockchain.add(topBlock);
+
 		return blockchain;
 	}
 	
