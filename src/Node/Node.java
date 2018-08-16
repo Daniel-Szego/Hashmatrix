@@ -50,8 +50,8 @@ public class Node {
 	public void broadcastBlock(Block _block) {	
 		// gossiping the block on the network
 		for(Peer pr: this.network.peers) {
-			if (!(this.network.selfPeer.peerHost.equals(pr.peerHost)) &&
-				 (this.network.selfPeer.peerPort == pr.peerPort)){
+			if (!(this.network.selfPeer.peerHost.equals(pr.peerHost) &&
+				 this.network.selfPeer.peerPort == pr.peerPort)){
 				pr.broadcastBlock(_block);
 			}
 		}				

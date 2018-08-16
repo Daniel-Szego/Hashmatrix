@@ -74,7 +74,6 @@ public class TestCLI {
 			String[] paramsm1 = {"-runMinerOne"};
 			Cli.main(paramsm1);	
 			Logger.Log("");	
-		
 			
 			// test account mined
 			System.out.println("Account value");
@@ -121,7 +120,21 @@ public class TestCLI {
 			String[] params = {"-createAccount"};
 			Cli.main(params);	
 			Logger.Log("");			
+			
+			String accountStringNewest = Cli.node.wallet.getAccounts().get(0).account.getAddressString();
+			
+			// test transactions
+			Logger.Log("TEST TRANSACTION DATA");	
+			Logger.Log("Create:");	
+			String[] params2 = {"-createTransaction", "-state", "-address", accountStringNewest, "-value", "'hello blockchain'"};
+			Cli.main(params2);	
+			System.out.println("");
+			
+			// mine second transaction
+			Logger.Log("MINER ONE MORE STEP");
+			String[] paramsm1 = {"-runMinerOne"};
+			Cli.main(paramsm1);	
+			Logger.Log("");	
 		}
 	}
-
 }		
