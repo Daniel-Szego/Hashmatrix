@@ -16,11 +16,12 @@ Cryptography:
  - Accounts are added to the chain indirectly, as they are referred by the transactions
  
  Transactions:
- - Two kind of a transactions
+ - Three kind of a transactions
  - Transferring money from balance to balance, signed by the from account private key
  - Setting new data value signed by the private key of the account
+ - Conditional transaction implementing simple rule based value adding
  - Transaction nonce must be higher by one as the account nonce
- 
+  
 Blocks:
  - containing transactions -> block headers merke root of transactions
  - containing state (set of accounts) -> block header merkle root of accounts
@@ -49,3 +50,23 @@ Communication protocols:
   - difficulty hard-coded
   - Fork resolving policy: longest chain
 
+Smart Contract:
+ - Simple rule based value setting
+ - IF <account_condition> operator value THEN <account_effect> new_value
+ - operator: equal, contains, startswith
+ 
+ Command prommpt commands: 
+  -startNetwork, -port, <portnumber> : starting the local peer on localhost
+  -createAccount : creating a new account in the local wallet
+  -createGenesisBlock : creating a demo genesis block
+  -createTransaction -state -address <accountPrimKe> -value <string_value> -sign <owner_priv_key> : data setting transaction
+  -createTransaction -transfer -from <from_account> -to <to_account> -amount <amount> -sign <owner_priv_key> : transfer transaction
+  -createTransaction -rule <ruleString> : rule based transaction, rule string is like IF <account_condition>  <OPERAND> <value> THEN <account_effect> <new_value>
+
+  -runMinerOne : running miner one round
+  -getAccountData -account  <account> : getting account data
+  -connectPeer -peerAddress <IP> -peerPort <PostNum>
+  -syncBlockchain
+ 
+ 
+ 
