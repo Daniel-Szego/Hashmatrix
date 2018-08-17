@@ -85,6 +85,13 @@ public class Cli {
 				Logger.Log("To Address : " +  CryptoUtil.getStringFromKey(tr.toAddress));				
 				Logger.Log("Amount : " + tr.amount);					
 			}
+			else if (cliArgs.switchPresent("-rule")){
+				String ruleString = cliArgs.switchValue("-rule");
+				StateRuleTransaction tr = node.wallet.createRuleTransaction(ruleString);
+
+				Logger.Log("Rule transaction has been created and broadcasted to the network");
+				Logger.Log("Transaction Id : " + tr.getTransctionId());
+			}			
 			else {
 				Logger.Log("invalid arguments transaction", Severity.CRITICAL);
 			}

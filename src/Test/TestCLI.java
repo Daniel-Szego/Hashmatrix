@@ -137,9 +137,20 @@ public class TestCLI {
 			Cli.main(paramsm1);	
 			Logger.Log("");	
 			
-			// testing smart contracts
-			String ruleString = "IF MEkwEwYHKoZIzj0CAQYIKoZIzj0DAQEDMgAEZtzgswwOenDE/PdqJ90lu3Sg9/6tL4c15uLZ6osraQ2rtdFZdUF/J6uNA2jySX9L CONTAINS hello THEN MEkwEwYHKoZIzj0CAQYIKoZIzj0DAQEDMgAEZtzgswwOenDE/PdqJ90lu3Sg9/6tL4c15uLZ6osraQ2rtdFZdUF/J6uNA2jySX9L Hallo";
-			SimpleRule rule = new SimpleRule(ruleString);
+			// testing rules
+			Logger.Log("CREATE RULE TRANSACTION");
+			String ruleString = "IF " + accountStringNewest + " CONTAINS hello THEN " +  accountStringNewest + " Hallo";
+			String[] paramsr = {"-createTransaction", "-rule", ruleString};
+			Cli.main(paramsr);	
+			Logger.Log("");	
+			
+			// mine third transaction
+			Logger.Log("MINER ONE MORE STEP");
+			String[] paramsm3 = {"-runMinerOne"};
+			Cli.main(paramsm3);	
+			Logger.Log("");	
+
+			Logger.Log("Account Data : " + Cli.node.wallet.getAccounts().get(0).account.accountData);	
 			
 		}
 	}

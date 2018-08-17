@@ -4,6 +4,8 @@ import Transaction.*;
 
 import java.security.PublicKey;
 import java.util.ArrayList;
+
+import SmartContract.*;
 import Utils.*;
 
 
@@ -60,5 +62,27 @@ public class StateTransformer {
 				account.accountBalance += amount;
 			}
 		}			
+	}
+	
+	// applying the transfer transaction to the state, without validation
+	public static void applyRuleTransactionToState(StateRuleTransaction tr, ArrayList<Account> state) {
+		String ruleCode = ((StateRuleTransaction)tr).ruleCode;
+		SimpleRule rule = new SimpleRule(ruleCode);
+		
+		boolean isConditionValid = false;
+		for(Account account: state) {
+			if (account.getAddressString().equals(rule.account_condition)){
+				isConditionValid = rule.validateOperand(account.accountData); 
+			}
+		}
+
+		if (isConditionValid) {
+			for(Account account: state) {
+				if (account.getAddressString().equals(rule.account_effect)){
+					account.accountData = rule.value_effect;
+					account.nonce ++;							
+				}
+			}
+		}
 	}
 }

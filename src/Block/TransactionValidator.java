@@ -4,6 +4,8 @@ import java.security.PublicKey;
 import State.Account;
 import Transaction.*;
 import java.util.ArrayList;
+
+import SmartContract.SimpleRule;
 import Utils.*;
 
 
@@ -17,8 +19,10 @@ public class TransactionValidator {
 		String newData = ((StateDataTransaction)tr).newValue;
 		int transactionNonce = ((StateDataTransaction)tr).getNonce();
 		
-		if (!tr.verifiySignature()) 
+		if (!tr.verifiySignature()) {
+			Logger.Log("Signature is not valid, Id : " + tr.getTransctionId());
 			return false;
+		}
 		
 		if (newData.equals("")){
 			// checking null data, is that an error ?
@@ -60,6 +64,7 @@ public class TransactionValidator {
 			account.accountData = newData;
 			account.nonce = 0;
 			state.add(account);
+			return true;
 		}		
 
 		// if nothing matches return false
@@ -156,6 +161,93 @@ public class TransactionValidator {
 		
 		// default value
 		return false;	
-	}	
+	}
+	
+	// validates data transaction, if required, new account is added to the state
+	public static boolean validateRuleTransaction (StateRuleTransaction tr, ArrayList<Account> state) {
+		String addressEffect = ((StateRuleTransaction)tr).GetEffectedAddressString();
+		PublicKey addressPublicKey = ((StateRuleTransaction)tr).effectedAddress;
+		String ruleCode = ((StateRuleTransaction)tr).ruleCode;
+		int transactionNonce = ((StateRuleTransaction)tr).getNonce();
+		
+		if (!tr.verifiySignature()) {
+			Logger.Log("Signature is not valid, Id : " + tr.getTransctionId());
+			return false;
+		}
+		
+		if (ruleCode.equals("")){
+			// checking null data, is that an error ?
+			Logger.Log("rule must containt information, Id : " +tr.getTransctionId());
+		}
+		
+		SimpleRule rule = new SimpleRule(ruleCode);
+		
+		int accountFound = 0;
+		boolean effectAccountFound = false;
+		// getting the account to be modified
+		Account accountToModify = null;
+		for(Account account: state) {
+			String accountAddressString = account.getAddressString();
+			if (accountAddressString.equals(addressEffect)){
+				accountToModify = account;
+				accountFound++;
+			}
+		}
+		
+		if (accountFound > 1) {
+			// more than one account matches -> error
+			Logger.Log("more than one account has been found, Id : " + tr.getTransctionId());
+			return false;
+		}
+		else if (accountFound == 1) {
+			// one account has been found to match
+			if (tr.getNonce() != accountToModify.nonce + 1){
+				// nonce is not valid, possible replay attack
+				Logger.Log("Nonce is not valid at transaction, possible replay aatack");
+				return false;
+			}
+			else {
+				// seems everything cool
+				effectAccountFound = true;
+			}
+			
+		}else if (accountFound == 0){
+			Logger.Log("Effected account not found, Id : " + tr.getTransctionId());
+			return false;
+		}		
+		
+		boolean conditionAccountFound = false;
+		accountFound = 0;
+		// getting the account to be modified
+		Account accountCondition = null;
+		for(Account account: state) {
+			String accountAddressString = account.getAddressString();
+			if (accountAddressString.equals(rule.account_condition)){
+				accountCondition = account;
+				accountFound++;
+			}
+		}
+		
+		if (accountFound > 1) {
+			// more than one account matches -> error
+			Logger.Log("more than one condition account has been found, Id : " + tr.getTransctionId());
+			return false;
+		}
+		else if (accountFound == 1) {
+			conditionAccountFound = true;
+			
+		}else if (accountFound == 0){
+			Logger.Log("Condition account not found, Id : " + tr.getTransctionId());
+			return false;
+		}		
+
+		if (conditionAccountFound && effectAccountFound)
+			return true;
+
+		// if nothing matches return false
+		return false;
+	}
+
+	
 }
 	

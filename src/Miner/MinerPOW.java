@@ -41,6 +41,15 @@ public class MinerPOW extends Miner{
 					}
 				}
 			}
+			else if(tr instanceof StateRuleTransaction) {
+				if(TransactionValidator.validateRuleTransaction((StateRuleTransaction)tr, newBlock.accounts)){
+					if (transactionHeuristic()) {
+						newBlock.transactions.add(tr);
+						addedTransactions++;
+					}
+				}
+			}
+
 			// limiting transactions in a block
 			if (addedTransactions >= MaxTransactionInABlock)
 				break;

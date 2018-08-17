@@ -91,6 +91,15 @@ public class Block implements Serializable {
 					Logger.Log("non valid transaction in the proposed block, TrID : " + tr.getTransctionId());
 				}				
 			}
+			else if(tr instanceof StateRuleTransaction) {
+				if(TransactionValidator.validateRuleTransaction((StateRuleTransaction)tr, accounts)){
+					StateTransformer.applyRuleTransactionToState((StateRuleTransaction)tr, accounts);	
+				}
+				else {
+					// non valid transaction in the proposed transactions ? error ?
+					Logger.Log("non valid transaction in the proposed block, TrID : " + tr.getTransctionId());
+				}				
+			}
 			else {
 				// unknown transaction -> error handing
 				Logger.Log("unknown transaction");

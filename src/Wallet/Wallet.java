@@ -9,8 +9,10 @@ import org.bouncycastle.*;
 import Chain.*;
 import Crypto.CryptoUtil;
 import Node.*;
+import SmartContract.*;
 import State.*;
 import Transaction.*;
+import Utils.Logger;
 
 // Ancestor class for wallet
 public abstract class Wallet {
@@ -107,6 +109,18 @@ public abstract class Wallet {
 		StateTransferTransaction tr = new StateTransferTransaction(account.account.getAddress(), toAddress, amount);
 		tr.setNonce(account.account.nonce + 1);
 		tr.generateSignature(account.getOwner());
+		node.broadcastTransaction(tr);
+		return tr;
+	}
+
+	public StateRuleTransaction createRuleTransaction(String ruleString){
+		SimpleRule rule = new SimpleRule(ruleString);		
+		AccountWallet effectedAccount = node.wallet.getAccountbyPublicKey(rule.account_effect);				
+		if (effectedAccount == null)
+			Logger.Log("Error at create rule transaction: the effected account must be in wallet");
+		StateRuleTransaction tr = new StateRuleTransaction(effectedAccount.account.getAddress(), ruleString);	
+		tr.setNonce(effectedAccount.account.nonce + 1);
+		tr.generateSignature(effectedAccount.getOwner());
 		node.broadcastTransaction(tr);
 		return tr;
 	}

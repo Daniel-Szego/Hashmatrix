@@ -1,5 +1,6 @@
 package SmartContract;
 import State.*;
+import Utils.Logger;
 
 // simple rule
 // If (account_1 operator value_1) then (account_2 = value_2) 
@@ -46,7 +47,28 @@ public class SimpleRule {
 		return commandString;
 	}
 	
-	public void applyRuleToState() {
-		
+	public boolean validateOperand(String accountValue) {
+		if (operand.equals(Operand.CONTAINS)) {
+			if (accountValue.contains(value_condition))
+				return true;
+			else 
+				return false;
+		}
+		else if (operand.equals(Operand.EQUALS)) {
+			if (accountValue.equals(value_condition))
+				return true;
+			else 
+				return false;
+
+		}
+		else if (operand.equals(Operand.STARTSWITH)) {
+			if (accountValue.startsWith(value_condition))
+				return true;
+			else 
+				return false;
+		}
+		else
+			Logger.Log("Unknown Operand");
+		return false;
 	}
 }
