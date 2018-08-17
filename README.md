@@ -56,17 +56,16 @@ Smart Contract:
  - operator: equal, contains, startswith
  
  Command prommpt commands: 
-  -startNetwork, -port, <portnumber> : starting the local peer on localhost
-  -createAccount : creating a new account in the local wallet
-  -createGenesisBlock : creating a demo genesis block
-  -createTransaction -state -address <accountPrimKe> -value <string_value> -sign <owner_priv_key> : data setting transaction
-  -createTransaction -transfer -from <from_account> -to <to_account> -amount <amount> -sign <owner_priv_key> : transfer transaction
-  -createTransaction -rule <ruleString> : rule based transaction, rule string is like IF <account_condition>  <OPERAND> <value> THEN <account_effect> <new_value>
-
-  -runMinerOne : running miner one round
-  -getAccountData -account  <account> : getting account data
-  -connectPeer -peerAddress <IP> -peerPort <PostNum>
-  -syncBlockchain
+  - -startNetwork, -port, <portnumber> : starting the local peer on localhost
+  - -createAccount : creating a new account in the local wallet
+  - -createGenesisBlock : creating a demo genesis block
+  - -createTransaction -state -address <accountPrimKe> -value <string_value> -sign <owner_priv_key> : data setting transaction
+  - -createTransaction -transfer -from <from_account> -to <to_account> -amount <amount> -sign <owner_priv_key> : transfer transaction
+  - -createTransaction -rule <ruleString> : rule based transaction, rule string is like IF <account_condition>  <OPERAND> <value> THEN <account_effect> <new_value>
+  - -runMinerOne : running miner one round
+  - -getAccountData -account  <account> : getting account data
+  - -connectPeer -peerAddress <IP> -peerPort <PostNum>
+  - -syncBlockchain
  
  
  
