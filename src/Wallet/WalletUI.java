@@ -26,12 +26,17 @@ public class WalletUI extends Frame implements ActionListener {
 	Label lblBalanceValue = new Label();
 	Label lblAccounts = new Label ("Accounts of the wallet : ");
 	List lstAccount = new List();
-	Label lblTransfer = new Label ("Transfer : ");
-	TextField txtTransferValue = new TextField();
-	Button btnTransfer = new Button("Data");
+	Label lblNewData = new Label ("New Data : ");
+	TextField txtNewDataValue = new TextField();
+	Button btnNewData = new Button("Data");
 	Label lblLog = new Label("Log : ");
 	List lstLog = new List();
-		
+	Label lblTransferAccount = new Label("Transfer Account : ");
+	TextField txtTransferAccountValue = new TextField();
+	Label lblTransferAmount = new Label("Transfer Amount : ");  
+	TextField txtTransferAmountValue = new TextField();
+	Button btnTransfer = new Button("Transfer");
+	
 	public WalletUI(Node _node) {
 		node = _node;
 		setTitle("Wallet UI");
@@ -48,23 +53,37 @@ public class WalletUI extends Frame implements ActionListener {
 		this.add(lblAccounts);
 		lstAccount.setBounds(170, 110, 550, 100);
 		this.add(lstAccount);
-		lblTransfer.setBounds(20, 220, 100, 20);
-		this.add(lblTransfer);
-		txtTransferValue.setBounds(120, 220, 100, 20);
-		this.add(txtTransferValue);
-		btnTransfer.setBounds(20, 250, 60, 20);
-		btnTransfer.addActionListener(this);
-		this.add(btnTransfer);
+		
+		lblNewData.setBounds(20, 220, 100, 20);
+		this.add(lblNewData);
+		txtNewDataValue.setBounds(120, 220, 100, 20);
+		this.add(txtNewDataValue);
+		btnNewData.setBounds(20, 250, 60, 20);
+		btnNewData.addActionListener(this);
+		this.add(btnNewData);
 		this.addWindowListener(new WindowAdapter(){
 			  public void windowClosing(WindowEvent we){
 			    System.exit(0);
 			  }
 			});
-		lblLog.setBounds(20, 280, 150, 20);
+
+		lblTransferAccount.setBounds(20, 280, 100, 20);
+		this.add(lblTransferAccount);
+		txtTransferAccountValue.setBounds(120, 280, 500, 20);
+		this.add(txtTransferAccountValue);	
+		lblTransferAmount.setBounds(20,310, 100, 20);
+		this.add(lblTransferAmount);		
+		txtTransferAmountValue.setBounds(120, 310, 100, 20);
+		this.add(txtTransferAmountValue);	
+		btnTransfer.setBounds(20, 340, 100, 20);
+		this.add(btnTransfer);
+		btnTransfer.addActionListener(this);
+		
+		lblLog.setBounds(20, 370, 150, 20);
 		this.add(lblLog);
-		lstLog.setBounds(170, 310, 550, 100);
-		this.add(lstLog);
-	
+		lstLog.setBounds(170, 370, 550, 100);
+		this.add(lstLog);	
+		
 		init();
 		setLayout(null);//no layout manager  
 		setVisible(true);//now frame will be visible, by default not visible
@@ -95,7 +114,7 @@ public class WalletUI extends Frame implements ActionListener {
 		if (str.equals("Data")) {
 			int selectedIndex = lstAccount.getSelectedIndex();
 			AccountWallet account = node.wallet.getAccounts().get(selectedIndex);
-			String newValue = txtTransferValue.getText();
+			String newValue = txtNewDataValue.getText();
 			lstLog.add("Data setting started on : " + account.account.getAddressString() + " Data : " + newValue);
 			
 			String[] params2 = {"-createTransaction", "-state", "-address", account.account.getAddressString(), "-value", newValue};
@@ -107,6 +126,23 @@ public class WalletUI extends Frame implements ActionListener {
 			lstLog.add("Mined");
 
 			init();			
+		}
+		else if (str.equals("Transfer")) {
+			int selectedIndex = lstAccount.getSelectedIndex();
+			AccountWallet account = node.wallet.getAccounts().get(selectedIndex);
+			String amount = txtTransferAmountValue.getText();
+			String toAccount = txtTransferAccountValue.getText();
+			lstLog.add("Transfer transaction started on : " + account.account.getAddressString() + " Amount : " + amount);
+			
+			String[] params3 = {"-createTransaction", "-transfer", "-from", account.account.getAddressString(), "-to", toAccount,"-amount", amount};
+			Cli.main(params3);	
+			lstLog.add("Transaction initiated");
+			
+			String[] paramsm = {"-runMinerOne"};
+			Cli.main(paramsm);	
+			lstLog.add("Mined");
+
+			init();				
 		}
 	}
 		
