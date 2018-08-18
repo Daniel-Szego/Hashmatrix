@@ -88,6 +88,12 @@ public class TestCLI {
 			Cli.main(paramsb);	
 			Logger.Log("");	
 			
+			// showing result on desktop wallet
+			Logger.Log("START WEB UI");
+			String[] paramui = {"-startUI"};
+			Cli.main(paramui);
+			Logger.Log("");		
+
 			
 /*			// stopping the network
 			Logger.Log("STOPPING NETWORK");
@@ -110,12 +116,12 @@ public class TestCLI {
  			for(Peer peer: Cli.node.network.peers) 
  				Logger.Log("Peer Info, host : " + peer.peerHost + " port : " + peer.peerPort);		
 			Logger.Log("");		
-
+						
 			Logger.Log("SYNC BLOCKCHAIN");
 			String[] paramssync = {"-syncBlockchain"};
 			Cli.main(paramssync);
 			Logger.Log("");		
-							
+			
 			// test new account generation
 			Logger.Log("TEST ACCOUNT GENERATION");
 			String[] params = {"-createAccount"};

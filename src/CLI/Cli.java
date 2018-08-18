@@ -159,5 +159,8 @@ public class Cli {
 		else if (cliArgs.switchPresent("-syncBlockchain")) {
 			node.syncBlockchain();		
 		}
+		else if (cliArgs.switchPresent("-startUI")) {
+			node.walletUI = new WalletUI(node);		
+		}
 	}
 }

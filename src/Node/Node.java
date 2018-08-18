@@ -20,6 +20,7 @@ public class Node {
 	public final TransactionPool pool;
 	public final Explorer explorer;
 	public final Network network;
+	public WalletUI walletUI; //this parameter is optional
 	
 	// starting the node - test code, no persistance or communiction
 	public Node() {

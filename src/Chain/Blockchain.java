@@ -199,9 +199,9 @@ public class Blockchain {
 		isChainValid();	
 	*/
 	}
-	
 
-	public static Boolean isChainValid() {
+	
+	public static boolean validateChain() {
 		/*
 		Block currentBlock; 
 		Block previousBlock;
