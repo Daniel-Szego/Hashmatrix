@@ -18,6 +18,7 @@ public class Account implements Serializable {
 	public int nonce = 0;
 	public String accountData;
 	public float accountBalance = 0;
+	public final char[] assetType = new char[3];
 		
 	// getting the address which is the public key
 	public PublicKey getAddress() {
