@@ -6,9 +6,9 @@ import Utils.Severity;
 
 public class ServiceEventTransactionReceived extends ServiceEvent {
 	
-	public final StateDataTransaction transaction;
+	public final StateTransaction transaction;
 	
-	public ServiceEventTransactionReceived(String _message, Service _source, StateDataTransaction _transaction) {
+	public ServiceEventTransactionReceived(String _message, Service _source, StateTransaction _transaction) {
 		super(_message, _source, Severity.INFO);
 		this.transaction = _transaction;
 	}

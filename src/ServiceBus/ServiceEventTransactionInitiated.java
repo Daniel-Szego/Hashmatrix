@@ -1,13 +1,13 @@
 package ServiceBus;
 
-import Transaction.StateDataTransaction;
+import Transaction.*;
 import Utils.Severity;
 
 public class ServiceEventTransactionInitiated extends ServiceEvent {
 	
-	public final StateDataTransaction transaction;
+	public final StateTransaction transaction;
 
-	public ServiceEventTransactionInitiated(String _message, Service _source, StateDataTransaction _transaction) {
+	public ServiceEventTransactionInitiated(String _message, Service _source, StateTransaction _transaction) {
 		super(_message, _source, Severity.INFO);
 		this.transaction = _transaction;
 	}	

@@ -78,7 +78,9 @@ public class Network implements NetworkInterface  {
     public void boradcastTransaction (StateTransaction tr) {
 		// SINGLE HOP -> transactions are not propagated further
     	// can be used in fully connected networks
+    	
     	node.serviceBus.addEvent("bradcast transaction called, transaction Id :" + tr.getTransctionId());
+    	node.serviceBus.addEventTransactionReceived("Transaction received", null, tr, true);
     	node.pool.addTransaction(tr);
     }
     
@@ -87,6 +89,7 @@ public class Network implements NetworkInterface  {
 		// SINGLE HOP -> transactions are not propagated further
     	// can be used in fully connected networks    	
     	node.serviceBus.addEvent("bradcast block called, transaction Id :" + block.blockId);
+    	node.serviceBus.addEventBlockReceived("block received",null,block,true);
     	node.blockchain.addBlock(block);	
     }
    

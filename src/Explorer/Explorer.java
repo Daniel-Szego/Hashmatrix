@@ -9,12 +9,14 @@ import Block.*;
 import State.*;
 import Wallet.*;
 import Node.*;
+import ServiceBus.*;
 import Transaction.*;
 
 // explorer functionalities for the blockchain
-public class Explorer {
+public class Explorer implements ServiceListener {
 	
 	public final Node node;
+	public ExplorerUI ui;
 	
 	public Explorer(Node _node) {
 		this.node = _node;
@@ -72,9 +74,17 @@ public class Explorer {
 					// error unknown transaction in the chain
 				}
 			}
-		}
-				
+		}	
 		return trInfo;
 	}
 	
+	// EVENT LISTENERS
+	public  void EventRaised (ServiceEvent event) {
+		if (event instanceof ServiceEventBlockReceived) {
+			ui.addBlock(((ServiceEventBlockReceived)event).block);
+		}
+		else if (event instanceof ServiceEventTransactionReceived) {
+			ui.addTransaction(((ServiceEventTransactionReceived)event).transaction);
+		}
+	} 
 }

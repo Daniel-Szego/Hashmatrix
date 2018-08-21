@@ -3,7 +3,8 @@ import java.security.*;
 
 import Block.*;
 import Chain.*;
-import Crypto.CryptoUtil;
+import Crypto.*;
+import Explorer.*;
 import Miner.*;
 import Node.*;
 import State.*;
@@ -160,7 +161,8 @@ public class Cli {
 			node.syncBlockchain();		
 		}
 		else if (cliArgs.switchPresent("-startUI")) {
-			node.walletUI = new WalletUI(node);		
+			node.walletUI = new WalletUI(node);	
+			node.explorer.ui = new ExplorerUI(node);
 		}
 	}
 }

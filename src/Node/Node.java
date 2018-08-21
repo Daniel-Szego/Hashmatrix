@@ -30,14 +30,19 @@ public class Node {
 		wallet = new RandomWallet(this);
 		miner = new MinerPOW(this);
 		blockchain = new Blockchain(this);
-		pool = new TransactionPool(this);
+		pool = new TransactionPool(this);		
 		explorer = new Explorer(this);
 		network = new Network(this);
 		
 		// creating servicebus and registering services
 		serviceBus = new ServiceBus(this);
 		logger = new Logger();
-		serviceBus.addServiceListener(new ServiceListenerInfo(logger, null));		
+		// logger listens for everything
+		serviceBus.addServiceListener(new ServiceListenerInfo(logger, null));
+		// explorer listens for new transactions
+		// later on on validated transaction and blocks as well
+		serviceBus.addServiceListener(new ServiceListenerInfo(explorer, ServiceEventBlockReceived.class));
+		serviceBus.addServiceListener(new ServiceListenerInfo(explorer, ServiceEventTransactionReceived.class));
 	}
 	
 	// BROADCAST TRANSACTIONS	

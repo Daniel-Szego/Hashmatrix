@@ -80,7 +80,7 @@ public class ServiceBus {
 		}	
 	}
 
-	public void addEventTransactionReceived(String _message, Service _source, StateDataTransaction _transaction , boolean async)  {
+	public void addEventTransactionReceived(String _message, Service _source, StateTransaction _transaction , boolean async)  {
 		ServiceEventTransactionReceived event = new ServiceEventTransactionReceived(_message,_source, _transaction);
 		events.add(event);
 				
@@ -100,7 +100,7 @@ public class ServiceBus {
 		}	
 	}
 	
-	public void addEventTransactionInitiated(String _message, Service _source, StateDataTransaction _transaction , boolean async)  {
+	public void addEventTransactionInitiated(String _message, Service _source, StateTransaction _transaction , boolean async)  {
 		ServiceEventTransactionInitiated event = new ServiceEventTransactionInitiated(_message,_source, _transaction);
 		events.add(event);
 				
