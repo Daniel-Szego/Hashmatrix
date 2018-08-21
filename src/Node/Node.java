@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import Block.*;
 import Chain.*;
 import Miner.*;
+import ServiceBus.*;
 import Transaction.*;
 import Utils.Logger;
 import Utils.Severity;
@@ -21,6 +22,8 @@ public class Node {
 	public final Explorer explorer;
 	public final Network network;
 	public WalletUI walletUI; //this parameter is optional
+	public final ServiceBus serviceBus;
+	public final Logger logger;
 	
 	// starting the node - test code, no persistance or communiction
 	public Node() {
@@ -30,6 +33,11 @@ public class Node {
 		pool = new TransactionPool(this);
 		explorer = new Explorer(this);
 		network = new Network(this);
+		
+		// creating servicebus and registering services
+		serviceBus = new ServiceBus(this);
+		logger = new Logger();
+		serviceBus.addServiceListener(logger);		
 	}
 	
 	// BROADCAST TRANSACTIONS	
@@ -79,9 +87,9 @@ public class Node {
 		}
 		if (localBlockchainHeight < remoteBlockchainHeight){
 			this.blockchain.isSynced = false;
-			Logger.Log("Syncronisation needed", Severity.INFO);
-			Logger.Log("Local blockheight : " + localBlockchainHeight);
-			Logger.Log("Remote blockheight : " + remoteBlockchainHeight) ;
+			serviceBus.addEvent("Syncronisation needed");
+			serviceBus.addEvent("Local blockheight : " + localBlockchainHeight);
+			serviceBus.addEvent("Remote blockheight : " + remoteBlockchainHeight) ;
 
 			ArrayList<String> inventar = new ArrayList<String>();
 			String genesisBlock = "";
@@ -108,7 +116,7 @@ public class Node {
 							else
 								this.blockchain.addBlock(block);
 							alreadyAdded.add(Id);
-							Logger.Log("Adding Block, BlockId : " + Id );							
+							serviceBus.addEvent("Adding Block, BlockId : " + Id );							
 						}
 					}
 				}
@@ -116,7 +124,7 @@ public class Node {
 		}
 		
 		this.wallet.syncAccounts();					
-		Logger.Log("Blockchain synced : " + this.blockchain.getBlockchinHeight());
+		serviceBus.addEvent("Blockchain synced : " + this.blockchain.getBlockchinHeight());
 		this.blockchain.isSynced = true;
 	}
 }

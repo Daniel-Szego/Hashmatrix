@@ -50,7 +50,7 @@ public class Network implements NetworkInterface  {
 	// Called remotely by other peers
 	// getting the remote client version -> compatibility check
 	public String getClienVersion() {
-      Logger.Log("getPeerList called");
+	  node.serviceBus.addEvent("getPeerList called");
 	  return clientVersion;
 	}
 	
@@ -58,7 +58,7 @@ public class Network implements NetworkInterface  {
     public ArrayList<Peer> getPeerList (Peer _callee) 
     {
     	// if  peer is not contained, add to the list
-    	Logger.Log("getPeerList called, host :" + _callee.peerHost + " port : " + _callee.peerPort);
+    	node.serviceBus.addEvent("getPeerList called, host :" + _callee.peerHost + " port : " + _callee.peerPort);
     	boolean contains = false;
     	for(Peer peer: peers) {
     		if (peer.peerId.equals(_callee.peerId))
@@ -78,7 +78,7 @@ public class Network implements NetworkInterface  {
     public void boradcastTransaction (StateTransaction tr) {
 		// SINGLE HOP -> transactions are not propagated further
     	// can be used in fully connected networks
-    	Logger.Log("bradcast transaction called, transaction Id :" + tr.getTransctionId());
+    	node.serviceBus.addEvent("bradcast transaction called, transaction Id :" + tr.getTransctionId());
     	node.pool.addTransaction(tr);
     }
     
@@ -86,20 +86,20 @@ public class Network implements NetworkInterface  {
     public void broadcastBlock(Block block) {
 		// SINGLE HOP -> transactions are not propagated further
     	// can be used in fully connected networks    	
-    	Logger.Log("bradcast block called, transaction Id :" + block.blockId);
+    	node.serviceBus.addEvent("bradcast block called, transaction Id :" + block.blockId);
     	node.blockchain.addBlock(block);	
     }
    
     // giving back the max block height
     public int getMaxBlockHeight () {
     	int blockHeight = node.blockchain.getBlockchinHeight();
-    	Logger.Log("getMaxBlockHeigh has been called : " + blockHeight);
+    	node.serviceBus.addEvent("getMaxBlockHeigh has been called : " + blockHeight);
     	return blockHeight;
     }
     
     // getting block header Id-s
     public ArrayList<String> getInventar(int from, int to) {
-    	Logger.Log("getInventar has been called, from : " + from + " to : " + to);
+    	node.serviceBus.addEvent("getInventar has been called, from : " + from + " to : " + to);
     	ArrayList<String> inventar = new ArrayList<String>();
     	for(ExtendedBlock block: node.blockchain.getBlockchain()) {
     		if ((from <= block.blockHeight) && (to >= block.blockHeight)) {
@@ -112,7 +112,7 @@ public class Network implements NetworkInterface  {
     
     // getting a block specified by the Id
     public Block getBlock(String blockId) {
-    	Logger.Log("getBloock has been called, Id : " + blockId);
+    	node.serviceBus.addEvent("getBloock has been called, Id : " + blockId);
     	for(ExtendedBlock block: node.blockchain.getBlockchain()) {
     		if (block.internBlock.blockId.equals(blockId)) {
     			return block.internBlock;

@@ -3,15 +3,42 @@ import java.io.StringWriter;
 
 import com.google.gson.Gson;
 
+import ServiceBus.*;
+
 // simplified logger implementation
 // log to command line
-public class Logger {
+public class Logger implements ServiceListener{
 	
-	public static LogLevel log = LogLevel.ALL;
+	public LogLevel log = LogLevel.ALL;
 
-	public static void Log(Exception ex){
-		Log(ex,Severity.ERROR);
+	public void Logg(Exception ex){
+		Logger.Log(ex,Severity.ERROR);
 	}
+	// logging and exception 
+	public void Logg(Exception ex, Severity sev){
+		Logger.Log(ex,sev);		
+	}
+	
+	// logging an information message
+	public void Logg(String message){
+		Logger.Log(message);
+
+	}
+	
+	// logging an information message
+	public void Logg(String message, Severity sev){
+		Logger.Log(message,sev);
+	}
+	
+	// logging a full object as Json
+	public String LogObject(Object obj) {
+		String objJson = "";
+		Gson gson = new Gson();
+		objJson =  gson.toJson(obj);
+		System.out.println(objJson);
+		return objJson;
+	}
+
 	// logging and exception 
 	public static void Log(Exception ex, Severity sev){
 		System.out.println("ERROR");	
@@ -21,9 +48,14 @@ public class Logger {
 			throw new RuntimeException(ex);	
 	}
 	
+	public static void Log(Exception ex){
+		Logger.Log(ex,Severity.ERROR);
+	}
+
+	
 	// logging an information message
 	public static void Log(String message){
-		Log(message, Severity.INFO);
+		Logger.Log(message, Severity.INFO);
 	}
 	
 	// logging an information message
@@ -32,14 +64,9 @@ public class Logger {
 		if (sev.equals(Severity.CRITICAL))				
 			throw new RuntimeException(new Exception(message));	
 	}
-	
-	// logging a full object as Json
-	public static String LogObject(Object obj) {
-		String objJson = "";
-		Gson gson = new Gson();
-		objJson =  gson.toJson(obj);
-		System.out.println(objJson);
-		return objJson;
-	}
-				
+		
+	// service bus event implementation
+	public void EventRaised (ServiceEvent event) {
+		this.Logg(event.message, event.severity);		
+	}				
 }
