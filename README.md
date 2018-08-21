@@ -14,6 +14,7 @@ Cryptography:
  - Account address is the public key
  - Account owner is the private key
  - Accounts are added to the chain indirectly, as they are referred by the transactions
+ - Account types are introduced: 3 charcters, providing the possibility for multiply cryptoassets
  
  Transactions:
  - Three kind of a transactions
@@ -28,7 +29,7 @@ Blocks:
  - multi block header with different data retention policy
  - hash chain resets based on the policy
  
- Blockchain: 
+Blockchain: 
   - fork resolving strategy: 
    o longest blockchain is considered 
    o stale blocks are not added and not saved
@@ -61,6 +62,9 @@ Smart Contract:
  - Simple rule based value setting
  - IF <account_condition> operator value THEN <account_effect> new_value
  - operator: equal, contains, startswith
+ 
+ Explorer: 
+  - minimum prototype desktop explorer, listing the network event 
  
  Command prommpt commands: 
   - -startNetwork, -port, <portnumber> : starting the local peer on localhost
