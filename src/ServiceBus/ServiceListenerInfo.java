@@ -1,10 +1,10 @@
 package ServiceBus;
 
 public class ServiceListenerInfo {
-	public ServiceListener serviceListener;
+	public ServiceListenerInterface serviceListener;
 	public Class typeOfEvent;	
 	
-	public ServiceListenerInfo(ServiceListener _serviceListener,  Class _typeOfEvent) {
+	public ServiceListenerInfo(ServiceListenerInterface _serviceListener,  Class _typeOfEvent) {
 		this.serviceListener = _serviceListener;
 		this.typeOfEvent = _typeOfEvent;
 	}

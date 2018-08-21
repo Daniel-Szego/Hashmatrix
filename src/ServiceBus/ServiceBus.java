@@ -3,9 +3,12 @@ package ServiceBus;
 import java.util.ArrayList;
 
 import Block.*;
+import Chain.BockchainServiceInterface;
+import Miner.ValidatorServiceInterface;
 import Node.*;
 import Transaction.*;
 import Utils.*;
+import Wallet.WalletServiceInterface;
 
 // experimental implementation of the service bus
 public class ServiceBus {
@@ -13,6 +16,12 @@ public class ServiceBus {
 	public final Node node;
 	ArrayList<ServiceEvent> events;
 	ArrayList<ServiceListenerInfo> listeners;
+	
+	// Named services
+	public BockchainServiceInterface blockchain;
+	public WalletServiceInterface wallet;
+	public NetworkServiceInterface network;
+	public ValidatorServiceInterface miner;
 	
 	public ServiceBus (Node _node) {
 		this.node = _node;
@@ -60,6 +69,27 @@ public class ServiceBus {
 		}	
 	}
 
+	public void addEventBlockValidated(String _message, Service _source, Block _block , boolean async)  {
+		ServiceEventBlockValidated event = new ServiceEventBlockValidated(_message,_source, _block);
+		events.add(event);
+				
+		// calling listeners
+		for(ServiceListenerInfo listenerInfo: listeners) {
+			if (listenerInfo.typeOfEvent == event.getClass()){
+				if (!async) 				
+					listenerInfo.serviceListener.EventRaised(event);
+				else {				
+					new Thread(new Runnable() {
+						public void run() {
+							listenerInfo.serviceListener.EventRaised(event);
+						}
+					}).start();	
+				}
+			}
+		}	
+	}
+
+	
 	public void addEventBlockReceived(String _message, Service _source, Block _block , boolean async)  {
 		ServiceEventBlockReceived event = new ServiceEventBlockReceived(_message,_source, _block);
 		events.add(event);
@@ -120,6 +150,26 @@ public class ServiceBus {
 		}	
 	}
 
+	public void addEventBlockchainSyncronized(String _message, Service _source, boolean async)  {
+		ServiceEventBlockchainSyncronized event = new ServiceEventBlockchainSyncronized(_message,_source);
+		events.add(event);
+				
+		// calling listeners
+		for(ServiceListenerInfo listenerInfo: listeners) {
+			if (listenerInfo.typeOfEvent == event.getClass()){
+				if (!async) 				
+					listenerInfo.serviceListener.EventRaised(event);
+				else {				
+					new Thread(new Runnable() {
+						public void run() {
+							listenerInfo.serviceListener.EventRaised(event);
+						}
+					}).start();	
+				}
+			}
+		}	
+	}
+
 	
 	public void addEvent(String _message, Service _source, Severity _severity){
 		addEvent(_message, _source, _severity, true);
@@ -136,5 +186,6 @@ public class ServiceBus {
 	public void addServiceListener(ServiceListenerInfo _listenerInfo) {
 		listeners.add(_listenerInfo);
 	}
+	
 	
 }

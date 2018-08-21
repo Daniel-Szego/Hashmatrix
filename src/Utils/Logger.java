@@ -7,7 +7,7 @@ import ServiceBus.*;
 
 // simplified logger implementation
 // log to command line
-public class Logger implements ServiceListener{
+public class Logger implements ServiceListenerInterface{
 	
 	public LogLevel log = LogLevel.ALL;
 

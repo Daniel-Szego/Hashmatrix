@@ -4,6 +4,7 @@ import Block.*;
 import Transaction.*;
 import Utils.Severity;
 
+// event if a transaction has been received on the network
 public class ServiceEventTransactionReceived extends ServiceEvent {
 	
 	public final StateTransaction transaction;

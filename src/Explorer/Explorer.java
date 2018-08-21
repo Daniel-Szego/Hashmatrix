@@ -13,7 +13,7 @@ import ServiceBus.*;
 import Transaction.*;
 
 // explorer functionalities for the blockchain
-public class Explorer implements ServiceListener {
+public class Explorer implements ServiceListenerInterface {
 	
 	public final Node node;
 	public ExplorerUI ui;
