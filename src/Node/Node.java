@@ -37,7 +37,7 @@ public class Node {
 		// creating servicebus and registering services
 		serviceBus = new ServiceBus(this);
 		logger = new Logger();
-		serviceBus.addServiceListener(logger);		
+		serviceBus.addServiceListener(new ServiceListenerInfo(logger, null));		
 	}
 	
 	// BROADCAST TRANSACTIONS	
