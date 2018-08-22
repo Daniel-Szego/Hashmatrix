@@ -5,7 +5,7 @@ package Crypto;
 public interface AsymmetricCryptoInterface {
 
 	// generating keypair
-	public KeyPair generateKeyPair();
+	public KeyPairString generateKeyPair();
 	
 	// deriving public key from rpivate
 	public String derivePublicKey(String privateKey);

@@ -20,10 +20,9 @@ public class LoggerConsole implements ServiceListenerInterface, LoggerInterface{
 	}
 
 	public void log(Exception ex, Severity sev, Object source) {
-		
+		LoggerConsole.Log(ex, sev, source);
 	}
 
-	
 	// logging an information message
 	public void log(String message){
 		LoggerConsole.Log(message);
@@ -36,8 +35,7 @@ public class LoggerConsole implements ServiceListenerInterface, LoggerInterface{
 	}
 
 	public void log(String message, Severity sev, Object source) {
-		// TODO Auto-generated method stub
-		
+		LoggerConsole.Log(message, sev, source);		
 	}				
 
 	
@@ -47,6 +45,15 @@ public class LoggerConsole implements ServiceListenerInterface, LoggerInterface{
 		Gson gson = new Gson();
 		objJson =  gson.toJson(obj);
 		System.out.println(objJson);
+	}
+
+	public static void Log(Exception ex, Severity sev, Object source) {
+		System.out.println("ERROR");	
+		System.out.println(ex.getMessage());
+		System.out.println(ex.getStackTrace());
+		System.out.println("source : " +  source);
+		if (sev.equals(Severity.CRITICAL))				
+			throw new RuntimeException(ex);			
 	}
 
 	
@@ -76,6 +83,12 @@ public class LoggerConsole implements ServiceListenerInterface, LoggerInterface{
 			throw new RuntimeException(new Exception(message));	
 	}
 
+
+	public static void Log(String message, Severity sev, Object source) {
+		System.out.println(message + " source : " + source.toString());		
+		if (sev.equals(Severity.CRITICAL))				
+			throw new RuntimeException(new Exception(message + " source : " + source.toString()));			
+	}				
 
 
 	// service bus event implementation

@@ -10,7 +10,7 @@ public class CryptoProvider implements CryptoInterface {
 	public CryptoProvider() {
 		hashProvider = new SHAProvider();
 		asymmProvider = new ECDSAProvider();
-		
+		symmProvider = new AESProvider();
 	}
 	
 	// applying has function to an input
@@ -25,7 +25,7 @@ public class CryptoProvider implements CryptoInterface {
 	
 	
 	// generating keypair
-	public KeyPair generateKeyPair() {
+	public KeyPairString generateKeyPair() {
 		return asymmProvider.generateKeyPair();
 	}
 	
@@ -44,4 +44,14 @@ public class CryptoProvider implements CryptoInterface {
 		return asymmProvider.verifySignature(publicKey, data, signature);			
 	}	
 	
+	// encrypting information with the key
+	public String encryptInput(String key, String input) {
+		return symmProvider.encryptInput(key, input);
+	}
+
+	// decrypting informtaion with the key
+	public String decryptInput(String key, String input) {
+		return symmProvider.decryptInput(key, input);
+	}
+
 }
