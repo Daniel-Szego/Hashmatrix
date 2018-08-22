@@ -79,7 +79,7 @@ public class Block implements Serializable {
 				}
 				else {
 					// non valid transaction in the proposed transactions ? error ?
-					Logger.Log("non valid transaction in the proposed block, TrID : " + tr.getTransctionId());
+					LoggerConsole.Log("non valid transaction in the proposed block, TrID : " + tr.getTransctionId());
 				}
 			}
 			else if(tr instanceof StateTransferTransaction) {
@@ -88,7 +88,7 @@ public class Block implements Serializable {
 				}
 				else {
 					// non valid transaction in the proposed transactions ? error ?
-					Logger.Log("non valid transaction in the proposed block, TrID : " + tr.getTransctionId());
+					LoggerConsole.Log("non valid transaction in the proposed block, TrID : " + tr.getTransctionId());
 				}				
 			}
 			else if(tr instanceof StateRuleTransaction) {
@@ -97,12 +97,12 @@ public class Block implements Serializable {
 				}
 				else {
 					// non valid transaction in the proposed transactions ? error ?
-					Logger.Log("non valid transaction in the proposed block, TrID : " + tr.getTransctionId());
+					LoggerConsole.Log("non valid transaction in the proposed block, TrID : " + tr.getTransctionId());
 				}				
 			}
 			else {
 				// unknown transaction -> error handing
-				Logger.Log("unknown transaction");
+				LoggerConsole.Log("unknown transaction");
 			}
 		}	
 	}	

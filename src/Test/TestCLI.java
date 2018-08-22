@@ -16,7 +16,7 @@ public class TestCLI {
 
 	public static void main(String[] args) {
 		CliArgs cliArgs = new CliArgs(args);
-		Logger.Log("Start");
+		LoggerConsole.Log("Start");
 		
 		// starting security provider, not sure if this is the right place
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
@@ -27,72 +27,72 @@ public class TestCLI {
 
 		if (cliArgs.switchPresent("-nodeOne")){
 			
-			Logger.Log("Starting node one");
+			LoggerConsole.Log("Starting node one");
 		
-			Logger.Log("STARTING NETWORK");
+			LoggerConsole.Log("STARTING NETWORK");
 			String[] paramss = {"-startNetwork", "-port", "8425"};
 			Cli.main(paramss);	
-			Logger.Log("");	
+			LoggerConsole.Log("");	
 						
 			// test new account generation
-			Logger.Log("TEST ACCOUNT GENERATION");
+			LoggerConsole.Log("TEST ACCOUNT GENERATION");
 			String[] params = {"-createAccount"};
 			Cli.main(params);	
 			System.out.println("");	
 	
 			//GENESIS BLOCK
-			Logger.Log("GENESIS BLOCK");
+			LoggerConsole.Log("GENESIS BLOCK");
 			String[] paramsg = {"-createGenesisBlock"};
 			Cli.main(paramsg);	
-			Logger.Log("genesis block created");
-			Logger.Log("");
+			LoggerConsole.Log("genesis block created");
+			LoggerConsole.Log("");
 			
 			String accountString = Cli.node.wallet.getAccounts().get(1).account.getAddressString();
 			String accountToString = Cli.node.wallet.getAccounts().get(0).account.getAddressString();
 			String ownerString = Cli.node.wallet.getAccounts().get(1).getOwnerString();
 			
 			// test transactions
-			Logger.Log("TEST TRANSACTION DATA");	
-			Logger.Log("Create:");	
+			LoggerConsole.Log("TEST TRANSACTION DATA");	
+			LoggerConsole.Log("Create:");	
 			String[] params2 = {"-createTransaction", "-state", "-address", accountString, "-value", "'hello world' ", "-sign", ownerString};
 			Cli.main(params2);	
 			System.out.println("");	
 			
 			// mine one transaction
-			Logger.Log("MINER ONE STEP");
+			LoggerConsole.Log("MINER ONE STEP");
 			String[] paramsm = {"-runMinerOne"};
 			Cli.main(paramsm);	
-			Logger.Log("");	
+			LoggerConsole.Log("");	
 
-			Logger.Log("TEST TRANSACTION DATA");	
-			Logger.Log("Transfer:");	
+			LoggerConsole.Log("TEST TRANSACTION DATA");	
+			LoggerConsole.Log("Transfer:");	
 			String[] params3 = {"-createTransaction", "-transfer", "-from", accountString, "-to", accountToString,"-amount", "22", "-sign", ownerString};
 			Cli.main(params3);	
-			Logger.Log("");	
+			LoggerConsole.Log("");	
 
 			// mine second transaction
-			Logger.Log("MINER ONE MORE STEP");
+			LoggerConsole.Log("MINER ONE MORE STEP");
 			String[] paramsm1 = {"-runMinerOne"};
 			Cli.main(paramsm1);	
-			Logger.Log("");	
+			LoggerConsole.Log("");	
 			
 			// test account mined
 			System.out.println("Account value");
 			String[] paramsd = {"-getAccountData", "-account", accountString};
 			Cli.main(paramsd);	
-			Logger.Log("");	
+			LoggerConsole.Log("");	
 	
 			// test account mined
-			Logger.Log("Account value");
+			LoggerConsole.Log("Account value");
 			String[] paramsb = {"-getAccountBalance", "-account", accountString};
 			Cli.main(paramsb);	
-			Logger.Log("");	
+			LoggerConsole.Log("");	
 			
 			// showing result on desktop wallet
-			Logger.Log("START WEB UI");
+			LoggerConsole.Log("START WEB UI");
 			String[] paramui = {"-startUI"};
 			Cli.main(paramui);
-			Logger.Log("");		
+			LoggerConsole.Log("");		
 
 			
 /*			// stopping the network
@@ -103,60 +103,60 @@ public class TestCLI {
 		}
 		else if (cliArgs.switchPresent("-nodeTwo")){
 
-			Logger.Log("Starting node two");
+			LoggerConsole.Log("Starting node two");
 			
-			Logger.Log("STARTING NETWORK");
+			LoggerConsole.Log("STARTING NETWORK");
 			String[] paramss = {"-startNetwork", "-port", "8426"};
 			Cli.main(paramss);	
-			Logger.Log("");	
+			LoggerConsole.Log("");	
 			
-			Logger.Log("CONNECT PEER");
+			LoggerConsole.Log("CONNECT PEER");
 			String[] paramsp = {"-connectPeer", "-peerAddress", "localhost", "-peerPort", "8425"};
 			Cli.main(paramsp);
  			for(Peer peer: Cli.node.network.peers) 
- 				Logger.Log("Peer Info, host : " + peer.peerHost + " port : " + peer.peerPort);		
-			Logger.Log("");		
+ 				LoggerConsole.Log("Peer Info, host : " + peer.peerHost + " port : " + peer.peerPort);		
+			LoggerConsole.Log("");		
 						
-			Logger.Log("SYNC BLOCKCHAIN");
+			LoggerConsole.Log("SYNC BLOCKCHAIN");
 			String[] paramssync = {"-syncBlockchain"};
 			Cli.main(paramssync);
-			Logger.Log("");		
+			LoggerConsole.Log("");		
 			
 			// test new account generation
-			Logger.Log("TEST ACCOUNT GENERATION");
+			LoggerConsole.Log("TEST ACCOUNT GENERATION");
 			String[] params = {"-createAccount"};
 			Cli.main(params);	
-			Logger.Log("");			
+			LoggerConsole.Log("");			
 			
 			String accountStringNewest = Cli.node.wallet.getAccounts().get(0).account.getAddressString();
 			
 			// test transactions
-			Logger.Log("TEST TRANSACTION DATA");	
-			Logger.Log("Create:");	
+			LoggerConsole.Log("TEST TRANSACTION DATA");	
+			LoggerConsole.Log("Create:");	
 			String[] params2 = {"-createTransaction", "-state", "-address", accountStringNewest, "-value", "'hello blockchain'"};
 			Cli.main(params2);	
 			System.out.println("");
 			
 			// mine second transaction
-			Logger.Log("MINER ONE MORE STEP");
+			LoggerConsole.Log("MINER ONE MORE STEP");
 			String[] paramsm1 = {"-runMinerOne"};
 			Cli.main(paramsm1);	
-			Logger.Log("");	
+			LoggerConsole.Log("");	
 			
 			// testing rules
-			Logger.Log("CREATE RULE TRANSACTION");
+			LoggerConsole.Log("CREATE RULE TRANSACTION");
 			String ruleString = "IF " + accountStringNewest + " CONTAINS hello THEN " +  accountStringNewest + " Hallo";
 			String[] paramsr = {"-createTransaction", "-rule", ruleString};
 			Cli.main(paramsr);	
-			Logger.Log("");	
+			LoggerConsole.Log("");	
 			
 			// mine third transaction
-			Logger.Log("MINER ONE MORE STEP");
+			LoggerConsole.Log("MINER ONE MORE STEP");
 			String[] paramsm3 = {"-runMinerOne"};
 			Cli.main(paramsm3);	
-			Logger.Log("");	
+			LoggerConsole.Log("");	
 
-			Logger.Log("Account Data : " + Cli.node.wallet.getAccounts().get(0).account.accountData);	
+			LoggerConsole.Log("Account Data : " + Cli.node.wallet.getAccounts().get(0).account.accountData);	
 			
 		}
 	}

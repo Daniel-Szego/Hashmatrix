@@ -7,7 +7,7 @@ import Chain.*;
 import Miner.*;
 import ServiceBus.*;
 import Transaction.*;
-import Utils.Logger;
+import Utils.LoggerConsole;
 import Utils.Severity;
 import Wallet.*;
 import Explorer.*;
@@ -23,7 +23,7 @@ public class Node {
 	public final Network network;
 	public WalletUI walletUI; //this parameter is optional
 	public final ServiceBus serviceBus;
-	public final Logger logger;
+	public final LoggerConsole logger;
 	
 	// starting the node - test code, no persistance or communiction
 	public Node() {
@@ -36,7 +36,7 @@ public class Node {
 		
 		// creating servicebus and registering services
 		serviceBus = new ServiceBus(this);
-		logger = new Logger();
+		logger = new LoggerConsole();
 		// logger listens for everything
 		serviceBus.addServiceListener(new ServiceListenerInfo(logger, null));
 		// explorer listens for new transactions

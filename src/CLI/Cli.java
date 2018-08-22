@@ -94,7 +94,7 @@ public class Cli {
 				node.serviceBus.addEvent("Transaction Id : " + tr.getTransctionId());
 			}			
 			else {
-				Logger.Log("invalid arguments transaction", Severity.CRITICAL);
+				LoggerConsole.Log("invalid arguments transaction", Severity.CRITICAL);
 			}
 		}
 		

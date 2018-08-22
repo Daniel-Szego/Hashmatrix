@@ -41,7 +41,7 @@ public abstract class StateTransaction  implements Serializable{
 			this.transactionId = _transactionId;
 		else 
 			// Exception handling
-			Logger.Log("Transaction id is already set", Severity.CRITICAL);
+			LoggerConsole.Log("Transaction id is already set", Severity.CRITICAL);
 	}
 	
 	// signature can be set only once
@@ -50,6 +50,6 @@ public abstract class StateTransaction  implements Serializable{
 			this.signature = _signature;		
 		else 
 			// Exception handling
-			Logger.Log("Signature id is already set", Severity.CRITICAL);
+			LoggerConsole.Log("Signature id is already set", Severity.CRITICAL);
 	}	
 }

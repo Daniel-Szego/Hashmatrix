@@ -73,7 +73,7 @@ public class AccountWallet {
 	        this.setPrivateKey(keyPair.getPrivate());	        
 	        return keyPair.getPrivate();
 		}catch(Exception e) {
-			Logger.Log(e, Severity.CRITICAL);
+			LoggerConsole.Log(e, Severity.CRITICAL);
 		}
 		return null;
 	}
@@ -93,7 +93,7 @@ public class AccountWallet {
 		    account.setAddress(publicKey);
 	        this.setPrivateKey(_privateKey);	
 		}catch(Exception e) {
-			Logger.Log(e, Severity.CRITICAL);
+			LoggerConsole.Log(e, Severity.CRITICAL);
 		}
 	}
 	

@@ -1,6 +1,6 @@
 package SmartContract;
 import State.*;
-import Utils.Logger;
+import Utils.LoggerConsole;
 
 // simple rule
 // If (account_1 operator value_1) then (account_2 = value_2) 
@@ -68,7 +68,7 @@ public class SimpleRule {
 				return false;
 		}
 		else
-			Logger.Log("Unknown Operand");
+			LoggerConsole.Log("Unknown Operand");
 		return false;
 	}
 }

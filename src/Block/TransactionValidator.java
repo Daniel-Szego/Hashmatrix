@@ -20,13 +20,13 @@ public class TransactionValidator {
 		int transactionNonce = ((StateDataTransaction)tr).getNonce();
 		
 		if (!tr.verifiySignature()) {
-			Logger.Log("Signature is not valid, Id : " + tr.getTransctionId());
+			LoggerConsole.Log("Signature is not valid, Id : " + tr.getTransctionId());
 			return false;
 		}
 		
 		if (newData.equals("")){
 			// checking null data, is that an error ?
-			Logger.Log("new data is null in the transaction");
+			LoggerConsole.Log("new data is null in the transaction");
 		}
 		
 		int accountFound = 0;
@@ -42,14 +42,14 @@ public class TransactionValidator {
 		
 		if (accountFound > 1) {
 			// more than one account matches -> error
-			Logger.Log("more than one account has been found");
+			LoggerConsole.Log("more than one account has been found");
 			return false;
 		}
 		else if (accountFound == 1) {
 			// one account has been found to match
 			if (tr.getNonce() != accountToModify.nonce + 1){
 				// nonce is not valid, possible replay attack
-				Logger.Log("Nonce is not valid at transaction, possible replay aatack");
+				LoggerConsole.Log("Nonce is not valid at transaction, possible replay aatack");
 				return false;
 			}
 			else {
@@ -80,7 +80,7 @@ public class TransactionValidator {
 	
 		// checking signature
 		if (!tr.verifiySignature()) {
-			Logger.Log("Invalid transaction signature, TrID : " + tr.getTransctionId());
+			LoggerConsole.Log("Invalid transaction signature, TrID : " + tr.getTransctionId());
 			return false;
 		}
 		
@@ -97,19 +97,19 @@ public class TransactionValidator {
 		
 		if (accountFromModifyFound > 1) {
 			// more than one account is found ?? -> raise error
-			Logger.Log("more than one matching account has been found at transfer transaction TrID : " + tr.getTransctionId());
+			LoggerConsole.Log("more than one matching account has been found at transfer transaction TrID : " + tr.getTransctionId());
 			return false;
 		}
 		else if (accountFromModifyFound == 1) {
 			if (tr.getNonce() != accountFromModify.nonce + 1) {
 				// error -> nonce not matching -> pssible replay attack
-				Logger.Log("Nonce is not valid at transaction, possible replay aatack");
+				LoggerConsole.Log("Nonce is not valid at transaction, possible replay aatack");
 				return false;
 			}
 			else {				
 				if (accountFromModify.accountBalance < amount){
 					// not enoguh fund on the account
-					Logger.Log("Not enoguh fund on the account at transfer transaction TrID : " + tr.getTransctionId());
+					LoggerConsole.Log("Not enoguh fund on the account at transfer transaction TrID : " + tr.getTransctionId());
 					return false;
 				}
 				// all cool but still not return because the second account has to be checked as well
@@ -120,7 +120,7 @@ public class TransactionValidator {
 				
 		}else if (accountFromModifyFound == 0) {
 			// error, if the account does not exist, you can not transfer money from that
-			Logger.Log("The account from which you want to transfer the fund does not exist, TrID : " + tr.getTransctionId());
+			LoggerConsole.Log("The account from which you want to transfer the fund does not exist, TrID : " + tr.getTransctionId());
 			return false;
 		}
 		
@@ -138,7 +138,7 @@ public class TransactionValidator {
 		
 		if (accountToModifyFound > 1) {
 			// more than one account is found ?? -> raise error
-			Logger.Log("More than one account is found at matching the transfer transaction TrID : " + tr.getTransctionId());
+			LoggerConsole.Log("More than one account is found at matching the transfer transaction TrID : " + tr.getTransctionId());
 			return false;
 		}
 		else if (accountToModifyFound == 1) {
@@ -171,13 +171,13 @@ public class TransactionValidator {
 		int transactionNonce = ((StateRuleTransaction)tr).getNonce();
 		
 		if (!tr.verifiySignature()) {
-			Logger.Log("Signature is not valid, Id : " + tr.getTransctionId());
+			LoggerConsole.Log("Signature is not valid, Id : " + tr.getTransctionId());
 			return false;
 		}
 		
 		if (ruleCode.equals("")){
 			// checking null data, is that an error ?
-			Logger.Log("rule must containt information, Id : " +tr.getTransctionId());
+			LoggerConsole.Log("rule must containt information, Id : " +tr.getTransctionId());
 		}
 		
 		SimpleRule rule = new SimpleRule(ruleCode);
@@ -196,14 +196,14 @@ public class TransactionValidator {
 		
 		if (accountFound > 1) {
 			// more than one account matches -> error
-			Logger.Log("more than one account has been found, Id : " + tr.getTransctionId());
+			LoggerConsole.Log("more than one account has been found, Id : " + tr.getTransctionId());
 			return false;
 		}
 		else if (accountFound == 1) {
 			// one account has been found to match
 			if (tr.getNonce() != accountToModify.nonce + 1){
 				// nonce is not valid, possible replay attack
-				Logger.Log("Nonce is not valid at transaction, possible replay aatack");
+				LoggerConsole.Log("Nonce is not valid at transaction, possible replay aatack");
 				return false;
 			}
 			else {
@@ -212,7 +212,7 @@ public class TransactionValidator {
 			}
 			
 		}else if (accountFound == 0){
-			Logger.Log("Effected account not found, Id : " + tr.getTransctionId());
+			LoggerConsole.Log("Effected account not found, Id : " + tr.getTransctionId());
 			return false;
 		}		
 		
@@ -230,14 +230,14 @@ public class TransactionValidator {
 		
 		if (accountFound > 1) {
 			// more than one account matches -> error
-			Logger.Log("more than one condition account has been found, Id : " + tr.getTransctionId());
+			LoggerConsole.Log("more than one condition account has been found, Id : " + tr.getTransctionId());
 			return false;
 		}
 		else if (accountFound == 1) {
 			conditionAccountFound = true;
 			
 		}else if (accountFound == 0){
-			Logger.Log("Condition account not found, Id : " + tr.getTransctionId());
+			LoggerConsole.Log("Condition account not found, Id : " + tr.getTransctionId());
 			return false;
 		}		
 

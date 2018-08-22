@@ -2,7 +2,7 @@ package Crypto;
 
 
 // interface only for signing and key generation -> assymetric crypto
-public interface AssymetricCryptoInterface {
+public interface AsymmetricCryptoInterface {
 
 	// generating keypair
 	public KeyPair generateKeyPair();

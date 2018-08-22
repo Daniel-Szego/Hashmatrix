@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import Crypto.CryptoUtil;
 import Miner.*;
-import Utils.Logger;
+import Utils.LoggerConsole;
 
 // administrating a pair of hashlinks
 // hashlink is practically like a block header
@@ -109,7 +109,7 @@ public class HashLink implements Serializable {
 		if (singleHash) {
 			  // in singlehash case, rest policy is not considered	
 			  // ERROR ? in single hash mode there is no hashtwo	
-			Logger.Log("in single hash mode there is no hashtwo");
+			LoggerConsole.Log("in single hash mode there is no hashtwo");
 			}
 			else {
 			

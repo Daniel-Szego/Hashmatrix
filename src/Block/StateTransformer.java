@@ -26,7 +26,7 @@ public class StateTransformer {
 		}
 		else{
 			// error handling calling copystate but previous block not initialized 
-			Logger.Log("calling copystate but previous block not initialized ");
+			LoggerConsole.Log("calling copystate but previous block not initialized ");
 		}
 	}
 

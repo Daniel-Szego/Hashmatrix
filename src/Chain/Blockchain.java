@@ -9,7 +9,7 @@ import com.google.gson.*;
 import Block.Block;
 import Node.*;
 import Transaction.*;
-import Utils.Logger;
+import Utils.LoggerConsole;
 import Wallet.Wallet;
 
 import java.security.*;
@@ -65,7 +65,7 @@ public class Blockchain {
 		// stale blocks are not added to the chain
 		if (!isStaleBlock) {
 			blocklist.add(newExtendedblock);
-			Logger.Log("new block added to the blockchain");
+			LoggerConsole.Log("new block added to the blockchain");
 			//Logger.LogObject(newExtendedblock);
 			
 			//deleting transactions from the transactionpool that are in the valid block
@@ -85,7 +85,7 @@ public class Blockchain {
 			
 		}
 		else
-			Logger.Log("stale block found");
+			LoggerConsole.Log("stale block found");
 
 		return newExtendedblock;	
 	}

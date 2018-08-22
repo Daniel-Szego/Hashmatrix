@@ -16,10 +16,11 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import State.State;
-import Utils.Logger;
+import Utils.LoggerConsole;
 import Utils.Severity;
 
 public class CryptoUtil {
+	
 	
 	// key to string
 	public static String getStringFromKey(Key key) {
@@ -36,7 +37,7 @@ public class CryptoUtil {
 			return privateKey;
 		}
 		catch(Exception e) {
-			Logger.Log(e, Severity.CRITICAL);
+			LoggerConsole.Log(e, Severity.CRITICAL);
 		}
 		return null;
 	}
@@ -51,7 +52,7 @@ public class CryptoUtil {
 			return publicKey;
 		}
 		catch(Exception e) {
-			Logger.Log(e, Severity.CRITICAL);
+			LoggerConsole.Log(e, Severity.CRITICAL);
 		}
 		return null;
 	}
@@ -72,7 +73,7 @@ public class CryptoUtil {
 			return hexString.toString();
 		}
 		catch(Exception e) {
-			Logger.Log(e, Severity.CRITICAL);
+			LoggerConsole.Log(e, Severity.CRITICAL);
 		}
 		return null;
 	}
@@ -89,7 +90,7 @@ public class CryptoUtil {
 				byte[] realSig = dsa.sign();
 				output = realSig;
 			} catch (Exception e) {
-				Logger.Log(e, Severity.CRITICAL);
+				LoggerConsole.Log(e, Severity.CRITICAL);
 			}
 			return output;
 		}
@@ -102,7 +103,7 @@ public class CryptoUtil {
 				ecdsaVerify.update(data.getBytes());
 				return ecdsaVerify.verify(signature);
 			}catch(Exception e) {
-				Logger.Log(e, Severity.CRITICAL);
+				LoggerConsole.Log(e, Severity.CRITICAL);
 			}
 			return false;
 		}

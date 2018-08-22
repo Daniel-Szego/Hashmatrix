@@ -13,6 +13,14 @@ import Wallet.WalletServiceInterface;
 // experimental implementation of the service bus
 public class ServiceBus {
 	
+	// logger is statis as at the deep level there is not necesserily reference to the bus
+	public static LoggerInterface logger;
+	
+	static {
+		logger = new LoggerProvider();
+		((LoggerProvider)logger).addLogger(new LoggerConsole());
+	}
+	
 	public final Node node;
 	ArrayList<ServiceEvent> events;
 	ArrayList<ServiceListenerInfo> listeners;

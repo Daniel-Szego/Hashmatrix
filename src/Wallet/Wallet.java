@@ -12,7 +12,7 @@ import Node.*;
 import SmartContract.*;
 import State.*;
 import Transaction.*;
-import Utils.Logger;
+import Utils.LoggerConsole;
 
 // Ancestor class for wallet
 public abstract class Wallet {
@@ -117,7 +117,7 @@ public abstract class Wallet {
 		SimpleRule rule = new SimpleRule(ruleString);		
 		AccountWallet effectedAccount = node.wallet.getAccountbyPublicKey(rule.account_effect);				
 		if (effectedAccount == null)
-			Logger.Log("Error at create rule transaction: the effected account must be in wallet");
+			LoggerConsole.Log("Error at create rule transaction: the effected account must be in wallet");
 		StateRuleTransaction tr = new StateRuleTransaction(effectedAccount.account.getAddress(), ruleString);	
 		tr.setNonce(effectedAccount.account.nonce + 1);
 		tr.generateSignature(effectedAccount.getOwner());
