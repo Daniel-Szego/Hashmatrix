@@ -24,9 +24,9 @@ public class Explorer implements ServiceListenerInterface {
 	
 	// getting account data by public key
 	public String getAccountData(PublicKey _publicKey) {
-		for(Account account: this.node.blockchain.getTopStableBlock().internBlock.accounts){
+		for(AccountBase account: this.node.blockchain.getTopStableBlock().internBlock.accounts){
 			if(account.getAddress().equals(_publicKey))
-				return account.accountData;
+				return account.getAddress();
 		}
 		// account not found -> log, or error 
 		return null;
@@ -39,9 +39,9 @@ public class Explorer implements ServiceListenerInterface {
 
 	// getting account balance by public key
 	public float getAccountBalance(PublicKey _publicKey) {
-		for(Account account: this.node.blockchain.getTopStableBlock().internBlock.accounts){
+		for(AccountBase account: this.node.blockchain.getTopStableBlock().internBlock.accounts){
 			if(account.getAddress().equals(_publicKey))
-				return account.accountBalance;
+				return account.getNonce();
 		}
 		// account not found -> log, or error 
 		return -1;

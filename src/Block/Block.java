@@ -7,7 +7,7 @@ import java.util.Date;
 
 import Crypto.CryptoUtil;
 import Crypto.StringUtil;
-import State.Account;
+import State.AccountBase;
 import State.State;
 import Transaction.*;
 
@@ -16,7 +16,7 @@ public class Block implements Serializable {
 	public String blockId;
 	public ArrayList<HashLink> matrix = new ArrayList<HashLink>();
  	public ArrayList<StateTransaction> transactions = new ArrayList<StateTransaction>();
- 	public ArrayList<Account> accounts = new ArrayList<Account>();
+ 	public ArrayList<AccountBase> accounts = new ArrayList<AccountBase>();
 	public String stateRoot;
 	public String transactionRoot;
 		
@@ -28,8 +28,8 @@ public class Block implements Serializable {
 	public String calculateStateRoot() {
 		int count = accounts.size();
 		ArrayList<String> previousTreeLayer = new ArrayList<String>();
-		for(Account account : accounts) {
-			previousTreeLayer.add(account.getId());
+		for(AccountBase account : accounts) {
+			previousTreeLayer.add(account.getAddress());
 		}
 		
 		ArrayList<String> treeLayer = previousTreeLayer;

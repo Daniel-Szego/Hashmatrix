@@ -66,7 +66,7 @@ public abstract class Wallet {
 	// getting the account information for a wallet
 	public String getAccountInformation(PublicKey address) {
 		AccountWallet aWallet = getAccountbyPublicKey(address);
-		return aWallet.account.accountData;
+		return aWallet.account.getData();
 	}
 	
 	// Strig as public key
@@ -75,21 +75,21 @@ public abstract class Wallet {
 	}
 
 	// getting the balance for one account
-	public float getAccountBalance(PublicKey address) {
+	public double getAccountBalance(PublicKey address) {
 		AccountWallet aWallet = getAccountbyPublicKey(address);
-		return aWallet.account.accountBalance;		
+		return aWallet.account.getBalance();		
 	}
 
 	// string as public key
-	public float getAccountBalance(String address) {
+	public double getAccountBalance(String address) {
 		return this.getAccountBalance(CryptoUtil.getPublicKeyFromString(address));		
 	}
 
 	// getting the balance for the whole wallet
-	public float getWalletBalance() {
+	public double getWalletBalance() {
 		float toReturn = 0;
 		for (AccountWallet account : accounts) {
-			toReturn += account.account.accountBalance;
+			toReturn += account.account.getBalance();
 		}
 		// error handling if not found
 		return toReturn;
@@ -98,7 +98,7 @@ public abstract class Wallet {
 	// TRANSACTIONS
 		
 	public StateDataTransaction createDataTransaction(AccountWallet account, String newValue){
-		StateDataTransaction tr = new StateDataTransaction(account.account.getAddress(), newValue);
+		StateDataTransaction tr = new StateDataTransaction(account.account.getAddress().get, newValue);
 		tr.setNonce(account.account.nonce + 1);
 		tr.generateSignature(account.getOwner());
 		node.broadcastTransaction(tr);
@@ -135,7 +135,7 @@ public abstract class Wallet {
 	// naive implementation
 	public void syncAccounts(){
 		ExtendedBlock eBlock = node.blockchain.getTopBlock();
-		for (Account a: eBlock.internBlock.accounts) {
+		for (AccountBase a: eBlock.internBlock.accounts) {
 			 AccountWallet aWallet = getAccountWallet(a.getAddressString());
 			 if (aWallet != null) {
 				 aWallet.account.accountBalance = a.accountBalance;

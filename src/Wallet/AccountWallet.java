@@ -20,17 +20,17 @@ import Utils.*;
 // Simple wrapper for the account containing if it is added to the blockchin 
 // or only to the wallet
 public class AccountWallet {
-	public final Account account;
+	public  AccountBase account;
 	private PrivateKey privateKey; // the blockchain does not store the private keys, but the wallet should!
 	public boolean isSyncedWithTheBlockchain;	
 	
 	// creating a brand new account
 	public AccountWallet() {
-		account = new Account();
+//		account = new AccountBase();
 		this.isSyncedWithTheBlockchain = false;
 	}
 	
-	public AccountWallet(Account _account, PrivateKey _privateKey) {
+	public AccountWallet(AccountBase _account, PrivateKey _privateKey) {
 		this.account = _account;
 		this.privateKey = _privateKey;
 		this.isSyncedWithTheBlockchain = false;
@@ -69,7 +69,7 @@ public class AccountWallet {
 	        // address is the Sha256 encryption of the public key
 	       // address = CryptoUtil.applySha256(CryptoUtil.getStringFromKey(publicKey));
 	        // simplified implementation: address is the public key
-	        account.setAddress(publicKey);
+	  //      account.setAddress(publicKey);
 	        this.setPrivateKey(keyPair.getPrivate());	        
 	        return keyPair.getPrivate();
 		}catch(Exception e) {
@@ -90,7 +90,7 @@ public class AccountWallet {
 		    ECPublicKeySpec pubSpec = new ECPublicKeySpec(Q, ecSpec);
 		    PublicKey publicKeyGenerated = keyFactory.generatePublic(pubSpec);
 		    publicKey = publicKeyGenerated;
-		    account.setAddress(publicKey);
+	//	    account.setAddress(publicKey);
 	        this.setPrivateKey(_privateKey);	
 		}catch(Exception e) {
 			LoggerConsole.Log(e, Severity.CRITICAL);
@@ -98,23 +98,23 @@ public class AccountWallet {
 	}
 	
 	// syncing account from the blockchain
-	public void syncAccount(Account _account) {
+	public void syncAccount(AccountBase _account) {
 		if(this.isSyncedWithTheBlockchain)
 		{
 			// already syncronized -> error handling
 			return;
 		}
 		
-		if (account.getAddressString() == null) {
+		if (account.getAddress() == null) {
 			
 			// the internal account is still not initialized, error handling ?
 		}
 		// standard syncronisation
-		else if (account.getAddressString() == _account.getAddressString()) {
-			account.accountData = _account.accountData;
-			account.accountBalance = _account.accountBalance;
-			this.isSyncedWithTheBlockchain = true;
-		}
+//		else if (account.getAddressString() == _account.getAddressString()) {
+//			account.accountData = _account.accountData;
+//			account.accountBalance = _account.accountBalance;
+//			this.isSyncedWithTheBlockchain = true;
+//		}
 		else {
 
 			// wrong account is being syncronized, what to do?

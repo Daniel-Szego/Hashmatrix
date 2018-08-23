@@ -1,5 +1,5 @@
 package Block;
-import State.Account;
+import State.AccountBase;
 import Transaction.*;
 
 import java.security.PublicKey;
@@ -15,14 +15,7 @@ public class StateTransformer {
 	// copying the whole state -> it is pretty much inefficient
 	public static void copyState(Block previousBlock, Block currentBlock){
 		if (previousBlock != null) {
-			for(Account a: previousBlock.accounts) {
-				Account newAccount = new Account();
-				newAccount.setAddress(a.getAddress());
-				newAccount.accountData = a.accountData;
-				newAccount.accountBalance = a.accountBalance;
-				newAccount.nonce = a.nonce;
-				currentBlock.accounts.add(newAccount);
-			}
+			
 		}
 		else{
 			// error handling calling copystate but previous block not initialized 
@@ -31,57 +24,57 @@ public class StateTransformer {
 	}
 
 	// applying the data transaction to the state, without validation
-	public static void applyDataTransactionToState(StateDataTransaction tr, ArrayList<Account> state) {
+	public static void applyDataTransactionToState(StateDataTransaction tr, ArrayList<AccountBase> state) {
 		String address = ((StateDataTransaction)tr).GetAddressString();
 		PublicKey addressPublicKey = ((StateDataTransaction)tr).address;
 		String newData = ((StateDataTransaction)tr).newValue;
 
-		for(Account account: state) {
-			if (account.getAddressString().equals(address)){
-				account.accountData = newData;
-				account.nonce ++;							
+		for(AccountBase account: state) {
+			if (account.getAddress().equals(address)){
+				account.setData(newData);
+				account.increaseNonce();							
 			}
 		}		
 	}
 	
 	// applying the transfer transaction to the state, without validation
-	public static void applyTransferTransactionToState(StateTransferTransaction tr, ArrayList<Account> state) {
+	public static void applyTransferTransactionToState(StateTransferTransaction tr, ArrayList<AccountBase> state) {
 		PublicKey fromAddressPublicKey = ((StateTransferTransaction)tr).fromAddress;
 		PublicKey toAddressPublicKey = ((StateTransferTransaction)tr).toAddress;				
 		Float amount = ((StateTransferTransaction)tr).amount;
 
-		for(Account account: state) {
+		for(AccountBase account: state) {
 			if (account.getAddress().equals(fromAddressPublicKey)){
-				account.accountBalance -= amount;
-				account.nonce ++;							
+			//	account.accountBalance -= amount;
+			//	account.nonce ++;							
 			}
 		}
 
-		for(Account account: state) {
+		for(AccountBase account: state) {
 			if (account.getAddress().equals(toAddressPublicKey)){
-				account.accountBalance += amount;
+		//		account.accountBalance += amount;
 			}
 		}			
 	}
 	
 	// applying the transfer transaction to the state, without validation
-	public static void applyRuleTransactionToState(StateRuleTransaction tr, ArrayList<Account> state) {
+	public static void applyRuleTransactionToState(StateRuleTransaction tr, ArrayList<AccountBase> state) {
 		String ruleCode = ((StateRuleTransaction)tr).ruleCode;
 		SimpleRule rule = new SimpleRule(ruleCode);
 		
 		boolean isConditionValid = false;
-		for(Account account: state) {
-			if (account.getAddressString().equals(rule.account_condition)){
-				isConditionValid = rule.validateOperand(account.accountData); 
-			}
+		for(AccountBase account: state) {
+	//		if (account.getAddressString().equals(rule.account_condition)){
+	//			isConditionValid = rule.validateOperand(account.accountData); 
+	//		}
 		}
 
 		if (isConditionValid) {
-			for(Account account: state) {
-				if (account.getAddressString().equals(rule.account_effect)){
-					account.accountData = rule.value_effect;
-					account.nonce ++;							
-				}
+			for(AccountBase account: state) {
+	//			if (account.getAddressString().equals(rule.account_effect)){
+	//				account.accountData = rule.value_effect;
+	//				account.nonce ++;							
+	//			}
 			}
 		}
 	}

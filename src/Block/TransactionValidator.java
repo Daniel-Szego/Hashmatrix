@@ -1,7 +1,7 @@
 package Block;
 import java.security.PublicKey;
 
-import State.Account;
+import State.AccountBase;
 import Transaction.*;
 import java.util.ArrayList;
 
@@ -13,7 +13,7 @@ import Utils.*;
 public class TransactionValidator {
 
 	// validates data transaction, if required, new account is added to the state
-	public static boolean validateDataTransaction (StateDataTransaction tr, ArrayList<Account> state) {
+	public static boolean validateDataTransaction (StateDataTransaction tr, ArrayList<AccountBase> state) {
 		String address = ((StateDataTransaction)tr).GetAddressString();
 		PublicKey addressPublicKey = ((StateDataTransaction)tr).address;
 		String newData = ((StateDataTransaction)tr).newValue;
@@ -31,9 +31,9 @@ public class TransactionValidator {
 		
 		int accountFound = 0;
 		// getting the account to be modified
-		Account accountToModify = null;
-		for(Account account: state) {
-			String accountAddressString = account.getAddressString();
+		AccountBase accountToModify = null;
+		for(AccountBase account: state) {
+			String accountAddressString = account.getAddress();
 			if (accountAddressString.equals(address)){
 				accountToModify = account;
 				accountFound++;
@@ -47,7 +47,7 @@ public class TransactionValidator {
 		}
 		else if (accountFound == 1) {
 			// one account has been found to match
-			if (tr.getNonce() != accountToModify.nonce + 1){
+			if (tr.getNonce() != accountToModify.getNonce() + 1){
 				// nonce is not valid, possible replay attack
 				LoggerConsole.Log("Nonce is not valid at transaction, possible replay aatack");
 				return false;
@@ -59,11 +59,11 @@ public class TransactionValidator {
 			
 		}else if (accountFound == 0){
 			// no account is found -> a new account has to be added 
-			Account account = new Account();
-			account.setAddress(addressPublicKey);
-			account.accountData = newData;
-			account.nonce = 0;
-			state.add(account);
+//			AccountBase account = new AccountBase();
+//			account.setAddress(addressPublicKey);
+//			account.accountData = newData;
+//			account.nonce = 0;
+//			state.add(account);
 			return true;
 		}		
 
@@ -72,7 +72,7 @@ public class TransactionValidator {
 	}
 	
 	// validates transform transaction, if required, new account is added to the state
-	public static boolean validateTransferTransaction (StateTransferTransaction tr, ArrayList<Account> state) {
+	public static boolean validateTransferTransaction (StateTransferTransaction tr, ArrayList<AccountBase> state) {
 		PublicKey fromAddressPublicKey = ((StateTransferTransaction)tr).fromAddress;
 		PublicKey toAddressPublicKey = ((StateTransferTransaction)tr).toAddress;				
 		Float amount = ((StateTransferTransaction)tr).amount;
@@ -85,10 +85,10 @@ public class TransactionValidator {
 		}
 		
 		// getting the fromAccount to be modified
-		Account accountFromModify = null;
+		AccountBase accountFromModify = null;
 		int accountFromModifyFound = 0;
 		boolean accountFromIsGood = false;
-		for(Account account: state) {
+		for(AccountBase account: state) {
 			if (account.getAddress().equals(fromAddressPublicKey)){
 				accountFromModify = account;
 				accountFromModifyFound ++;
@@ -101,13 +101,13 @@ public class TransactionValidator {
 			return false;
 		}
 		else if (accountFromModifyFound == 1) {
-			if (tr.getNonce() != accountFromModify.nonce + 1) {
+			if (tr.getNonce() != accountFromModify.getNonce() + 1) {
 				// error -> nonce not matching -> pssible replay attack
 				LoggerConsole.Log("Nonce is not valid at transaction, possible replay aatack");
 				return false;
 			}
 			else {				
-				if (accountFromModify.accountBalance < amount){
+				if (accountFromModify.getBalance() < amount){
 					// not enoguh fund on the account
 					LoggerConsole.Log("Not enoguh fund on the account at transfer transaction TrID : " + tr.getTransctionId());
 					return false;
@@ -126,10 +126,10 @@ public class TransactionValidator {
 		
 
 		// getting the toAccount to be modified
-		Account accountToModify = null;
+		AccountBase accountToModify = null;
 		int accountToModifyFound = 0;
 		boolean accountToIsGood = false;
-		for(Account account: state) {
+		for(AccountBase account: state) {
 			if (account.getAddress().equals(toAddressPublicKey)){
 				accountToModify = account;
 				accountToModifyFound ++;
@@ -146,11 +146,11 @@ public class TransactionValidator {
 				
 		}else if (accountToModifyFound == 0) {
 			// new to account can be added to the chain
-			Account account = new Account();
-			account.setAddress(toAddressPublicKey);
-			account.accountBalance += amount;
-			account.nonce = 0;
-			state.add(account);
+//			AccountBase account = new AccountBase();
+//			account.setAddress(toAddressPublicKey);
+//			account.accountBalance += amount;
+//			account.nonce = 0;
+//			state.add(account);
 			accountToIsGood = true;
 		}
 		
@@ -164,7 +164,7 @@ public class TransactionValidator {
 	}
 	
 	// validates data transaction, if required, new account is added to the state
-	public static boolean validateRuleTransaction (StateRuleTransaction tr, ArrayList<Account> state) {
+	public static boolean validateRuleTransaction (StateRuleTransaction tr, ArrayList<AccountBase> state) {
 		String addressEffect = ((StateRuleTransaction)tr).GetEffectedAddressString();
 		PublicKey addressPublicKey = ((StateRuleTransaction)tr).effectedAddress;
 		String ruleCode = ((StateRuleTransaction)tr).ruleCode;
@@ -185,9 +185,9 @@ public class TransactionValidator {
 		int accountFound = 0;
 		boolean effectAccountFound = false;
 		// getting the account to be modified
-		Account accountToModify = null;
-		for(Account account: state) {
-			String accountAddressString = account.getAddressString();
+		AccountBase accountToModify = null;
+		for(AccountBase account: state) {
+			String accountAddressString = account.getAddress();
 			if (accountAddressString.equals(addressEffect)){
 				accountToModify = account;
 				accountFound++;
@@ -201,7 +201,7 @@ public class TransactionValidator {
 		}
 		else if (accountFound == 1) {
 			// one account has been found to match
-			if (tr.getNonce() != accountToModify.nonce + 1){
+			if (tr.getNonce() != accountToModify.getNonce() + 1){
 				// nonce is not valid, possible replay attack
 				LoggerConsole.Log("Nonce is not valid at transaction, possible replay aatack");
 				return false;
@@ -219,9 +219,9 @@ public class TransactionValidator {
 		boolean conditionAccountFound = false;
 		accountFound = 0;
 		// getting the account to be modified
-		Account accountCondition = null;
-		for(Account account: state) {
-			String accountAddressString = account.getAddressString();
+		AccountBase accountCondition = null;
+		for(AccountBase account: state) {
+			String accountAddressString = account.getAddress();
 			if (accountAddressString.equals(rule.account_condition)){
 				accountCondition = account;
 				accountFound++;

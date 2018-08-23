@@ -7,6 +7,10 @@ public class LoggerProvider implements LoggerInterface {
 
 	public ArrayList<LoggerInterface> loggers;
 	
+	public LoggerProvider () {
+		loggers = new ArrayList<LoggerInterface> ();
+	}
+	
 	// logging exception
 	public void log(Exception ex) {
 		loggers = new ArrayList<LoggerInterface>();

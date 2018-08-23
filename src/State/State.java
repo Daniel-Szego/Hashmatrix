@@ -4,26 +4,60 @@ import java.util.ArrayList;
 
 import Crypto.StringUtil;
 import Crypto.CryptoUtil;
+import java.util.Random;
+import ServiceBus.*;
 
 
-public class State {
-	public ArrayList<Account> accounts = new ArrayList<Account>();
-	public String stateId;
-	
+public class State implements StateInterface {
+
+	protected ArrayList<AccountBase> accounts = new ArrayList<AccountBase>();
+	public final String stateId;
+
+	// default constructor, state id is initialized
 	public State () {
-		stateId = getStateMerkleRoot();
+		this.stateId = generateStateId();
 	}
 	
-	public void addAccont(Account _newAccount) {
-		accounts.add(_newAccount);
-		stateId = getStateMerkleRoot();
+	public State (String _stateId) {
+		this.stateId = _stateId;
 	}
-		
-	public String getStateMerkleRoot() {
+	
+	// adding an account to the state
+	public void addAccount(AccountBase _account) {
+		if (!isAccountContained(_account)) {
+			accounts.add(_account);
+		}
+	}
+	
+	// querying if an account is in the state 
+	public boolean isAccountContained(AccountBase _account) {
+		return isAccountContained(_account.address);
+	}
+	
+	// querying if an account is in the state 
+	public boolean isAccountContained(String _address) {
+		for (AccountBase account: accounts) {
+			if (account.address.equals(_address))
+				return true;
+		}
+		return false;
+	}
+
+	// getting an account based on the address
+	public AccountBase getAccount(String _address) {
+		for (AccountBase account: accounts) {
+			if (account.address.equals(_address))
+				return account;
+		}
+		return null;		
+	}
+	
+	// gettint merkle root of the state
+	public String getMerkleRoot() {
 		int count = accounts.size();
 		ArrayList<String> previousTreeLayer = new ArrayList<String>();
-		for(Account account : accounts) {
-			previousTreeLayer.add(account.getId());
+		for(AccountBase account : accounts) {
+			previousTreeLayer.add(account.getAddress());
 		}
 		
 		ArrayList<String> treeLayer = previousTreeLayer;
@@ -36,6 +70,35 @@ public class State {
 			previousTreeLayer = treeLayer;
 		}
 		String merkleRoot = (treeLayer.size() == 1) ? treeLayer.get(0) : "";
-		return merkleRoot;
+		return merkleRoot;		
+	}
+
+	// return all the accounts
+	public ArrayList<AccountBase> getAccounts() {
+		return accounts;
+	}
+	
+	// hard copy a state with all of the accounts
+	public State copyState() {
+		State newState = new State();
+		for (AccountBase account: accounts) {
+			AccountBase newAccount = account.copyAccount();
+			newState.addAccount(newAccount);
+		}
+		return newState;
+	}
+	
+	// generating a state id string
+	// first implementation, random and hash
+	protected String generateStateId() {
+		Random rand = new Random();
+		int  n = rand.nextInt(60000);
+		String Id = ServiceBus.crypto.applyHash(String.valueOf(n));
+		return Id;
+	}
+	
+	// getting the number of accounts
+	public int getAccounsSize() {
+		return accounts.size();
 	}
 }

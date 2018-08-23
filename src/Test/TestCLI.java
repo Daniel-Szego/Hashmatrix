@@ -47,8 +47,8 @@ public class TestCLI {
 			LoggerConsole.Log("genesis block created");
 			LoggerConsole.Log("");
 			
-			String accountString = Cli.node.wallet.getAccounts().get(1).account.getAddressString();
-			String accountToString = Cli.node.wallet.getAccounts().get(0).account.getAddressString();
+			String accountString = Cli.node.wallet.getAccounts().get(1).account.getAddress();
+			String accountToString = Cli.node.wallet.getAccounts().get(0).account.getAddress();
 			String ownerString = Cli.node.wallet.getAccounts().get(1).getOwnerString();
 			
 			// test transactions
@@ -128,7 +128,7 @@ public class TestCLI {
 			Cli.main(params);	
 			LoggerConsole.Log("");			
 			
-			String accountStringNewest = Cli.node.wallet.getAccounts().get(0).account.getAddressString();
+			String accountStringNewest = Cli.node.wallet.getAccounts().get(0).account.getAddress();
 			
 			// test transactions
 			LoggerConsole.Log("TEST TRANSACTION DATA");	
@@ -156,7 +156,7 @@ public class TestCLI {
 			Cli.main(paramsm3);	
 			LoggerConsole.Log("");	
 
-			LoggerConsole.Log("Account Data : " + Cli.node.wallet.getAccounts().get(0).account.accountData);	
+			LoggerConsole.Log("Account Data : " + Cli.node.wallet.getAccounts().get(0).account.getData());	
 			
 		}
 	}

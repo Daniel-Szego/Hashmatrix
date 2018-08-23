@@ -52,7 +52,7 @@ public class Cli {
 			AccountWallet account = node.wallet.createNewAccount();
 			
 			node.serviceBus.addEvent("Account has been generated and added to the default wallet");
-			node.serviceBus.addEvent("Address : " + account.account.getAddressString());
+			node.serviceBus.addEvent("Address : " + account.account.getAddress());
 			node.serviceBus.addEvent("Owner priv key : " + account.getOwnerString());					
 		}
 		
@@ -107,10 +107,9 @@ public class Cli {
 		else if (cliArgs.switchPresent("-createGenesisBlock")) {
 			// creating a genesis account
 			AccountWallet accountWallet = node.wallet.createNewAccount();
-			accountWallet.account.accountBalance = 100;
 
 			node.serviceBus.addEvent("Genesis account has been generated");
-			node.serviceBus.addEvent("Address : " + accountWallet.account.getAddressString());
+			node.serviceBus.addEvent("Address : " + accountWallet.account.getAddress());
 			node.serviceBus.addEvent("Owner priv key : " + accountWallet.getOwnerString());		
 			
 			// HashLink

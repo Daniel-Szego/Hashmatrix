@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import Block.*;
 import Chain.BockchainServiceInterface;
+import Crypto.*;
 import Miner.ValidatorServiceInterface;
 import Node.*;
 import Transaction.*;
@@ -15,10 +16,13 @@ public class ServiceBus {
 	
 	// logger is statis as at the deep level there is not necesserily reference to the bus
 	public static LoggerInterface logger;
+	// cryptointerface is the same
+	public static CryptoInterface crypto;
 	
 	static {
 		logger = new LoggerProvider();
 		((LoggerProvider)logger).addLogger(new LoggerConsole());
+		crypto = new CryptoProvider();
 	}
 	
 	public final Node node;
