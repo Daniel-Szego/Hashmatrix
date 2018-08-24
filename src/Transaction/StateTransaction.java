@@ -6,20 +6,26 @@ import Crypto.CryptoUtil;
 import Utils.*;
 
 // ancestor class for state transition transactions
-public abstract class StateTransaction  implements Serializable{
-	private String transactionId; // this is also the hash of the transaction.
-	private byte[] signature; // this is to prevent anybody else from spending funds in our wallet.	
-	private int nonce = -1; // can be only set once
+public abstract class StateTransaction  implements Serializable, TransactionInterface {
+	protected String transactionId; // this is also the hash of the transaction.
+	protected byte[] signature; // this is to prevent anybody else from spending funds in our wallet.	
+	protected int nonce = -1; // can be only set once
 	
+	// getting transaction Id
 	public String getTransctionId () {
 		return transactionId;
 	}
 
-	
-	public byte[] getSignature () {
-		return signature;
+	// transaction id can be set only once
+	public void setTransactionId(String _transactionId) {
+		if (this.transactionId == null) 
+			this.transactionId = _transactionId;
+		else 
+			// Exception handling
+			LoggerConsole.Log("Transaction id is already set", Severity.CRITICAL);
 	}
 	
+	// getting nonce
 	public int getNonce() {
 		return nonce;
 	}
@@ -34,16 +40,12 @@ public abstract class StateTransaction  implements Serializable{
 			
 		}
 	}
-
-	// transaction id can be set only once
-	public void setTransactionId(String _transactionId) {
-		if (this.transactionId == null) 
-			this.transactionId = _transactionId;
-		else 
-			// Exception handling
-			LoggerConsole.Log("Transaction id is already set", Severity.CRITICAL);
-	}
 	
+	// getting signature
+	public byte[] getSignature () {
+		return signature;
+	}
+
 	// signature can be set only once
 	public void setSignature(byte[] _signature) {
 		if (this.signature == null) 
@@ -52,4 +54,14 @@ public abstract class StateTransaction  implements Serializable{
 			// Exception handling
 			LoggerConsole.Log("Signature id is already set", Severity.CRITICAL);
 	}	
+	
+	// calculate hash of the transaction
+	public abstract String calculateHash();
+		
+	// transaction can be signed only once
+	public abstract void signTransaction(String privateKey);
+	
+	// verfying signature
+	public abstract boolean verifySignature();
+
 }

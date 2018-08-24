@@ -4,41 +4,36 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 
 import Crypto.CryptoUtil;
+import ServiceBus.*;
 
 // simple transaction, executing one rule
-public class StateRuleTransaction extends  StateTransaction{
-	public final PublicKey effectedAddress; // address of the variable that will be changedr
-	public final String ruleCode; // code of the rule
+public class StateRuleTransaction extends  StateTransaction {
+	public final String address; // address of the variable that will be changedr
+	public final String code; // code of the rule
 
-	public StateRuleTransaction(PublicKey _effectedAddress, String _ruleCode ) {
-		this.effectedAddress = _effectedAddress;
-		this.ruleCode = _ruleCode;
-		setTransactionId(calulateHash());
+	public StateRuleTransaction(String _address, String _code ) {
+		this.address = _address;
+		this.code = _code;
+		setTransactionId(calculateHash());
 	}
-	
 	
 	// This Calculates the transaction hash (which will be used as its Id)
-	private String calulateHash() {
-		return CryptoUtil.applySha256(
-				ruleCode
-				);
+	public String calculateHash() {
+		return ServiceBus.crypto.applyHash((
+				address +
+				code
+				));
+	}	
+		
+	// transaction can be signed only once
+	public void signTransaction(String privateKey) {
+		String data = ServiceBus.crypto.applyHash(this.address + this.code);
+		this.setSignature(ServiceBus.crypto.applySignature(privateKey, data));		
 	}
 	
-	public String GetEffectedAddressString() {
-		return CryptoUtil.getStringFromKey(this.effectedAddress);
-	}
-
-	//Signs all the data we dont wish to be tampered with.
-	public void generateSignature(PrivateKey privateKey) {
-		String data = CryptoUtil.getStringFromKey(effectedAddress) + ruleCode + Integer.toString(this.getNonce());
-		setSignature(CryptoUtil.applyECDSASig(privateKey,data));		
-	}
-	
-	//Verifies the data we signed hasnt been tampered with
-	public boolean verifiySignature() {
-		String data = CryptoUtil.getStringFromKey(effectedAddress) + ruleCode + Integer.toString(this.getNonce());
-		return CryptoUtil.verifyECDSASig(effectedAddress, data, getSignature());
-	}
-			
-	
+	// verfying signature
+	public boolean verifySignature() {
+		String data = ServiceBus.crypto.applyHash(this.address + this.code);
+		return ServiceBus.crypto.verifySignature(this.address, data, this.getSignature());
+	}	
 }
