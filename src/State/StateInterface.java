@@ -1,6 +1,8 @@
 package State;
 
 import java.util.ArrayList;
+import Transaction.*;
+
 
 // public interface for the functionalities of a blockchain state
 public interface StateInterface {
@@ -28,4 +30,14 @@ public interface StateInterface {
 	
 	// getting the number of accounts
 	public int getAccounsSize();
+	
+	//checks if a certain transaction is compatible with a give state
+	// CALLED: at validation
+	public boolean isTransactionValid(TransactionInterface tr);
+
+	// applying the transaction to the state
+	// CALLED: by Miner at assigning transactions to state
+	// returning false if the transaction could not apply to the state
+	public boolean applyTransaction(TransactionInterface tr);
+
 }

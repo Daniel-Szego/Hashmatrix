@@ -3,14 +3,14 @@ package Transaction;
 public interface TransactionPoolInterface {
 
 	// adding transaction to the pool
-	public void addTransaction(StateTransaction tr);
+	public void addTransaction(TransactionInterface tr);
 	
 	// getting state transaction by transaction id
-	public StateTransaction getTransactionByTrId(String trId);
+	public TransactionInterface getTransactionByTrId(String trId);
 	
 	// getting transaction based on the transaction address
 	// it is the from address in case of a Transfer transaction
-	public StateTransaction getTransactionByAddress(String trAddress);
+	public TransactionInterface getTransactionByAddress(String trAddress);
 	
 	// transaction id is contained in the pool
 	public boolean containsId(String trId);
