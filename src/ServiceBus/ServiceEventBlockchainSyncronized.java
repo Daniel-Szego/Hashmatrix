@@ -1,6 +1,6 @@
 package ServiceBus;
 
-import Block.Block;
+import Block.BlockBase;
 import Utils.Severity;
 
 // event if the blockchain gets syncronized

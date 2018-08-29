@@ -13,7 +13,7 @@ import Utils.*;
 public class StateTransformer {
 
 	// copying the whole state -> it is pretty much inefficient
-	public static void copyState(Block previousBlock, Block currentBlock){
+	public static void copyState(BlockBase previousBlock, BlockBase currentBlock){
 		if (previousBlock != null) {
 			
 		}

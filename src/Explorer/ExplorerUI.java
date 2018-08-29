@@ -44,7 +44,7 @@ public class ExplorerUI extends Frame {
 		setVisible(true);//now frame will be visible, by default not visible
 	}
 	
-	public void addBlock(Block _block) {
+	public void addBlock(BlockBase _block) {
 		lstBlocks.add("Block added " + _block.blockId);
 	}
 

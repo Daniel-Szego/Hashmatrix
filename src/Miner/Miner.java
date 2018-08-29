@@ -13,6 +13,6 @@ public abstract class Miner {
 		this.node = _node;
 	}
 	
-	public abstract Block mineNextBlock(Block previousBlock, TransactionPool pool);
+	public abstract BlockBase mineNextBlock(BlockBase previousBlock, TransactionPool pool);
 
 }

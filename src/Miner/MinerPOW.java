@@ -15,9 +15,9 @@ public class MinerPOW extends Miner{
 		super(_node);
 	}	
 	
-	public Block mineNextBlock(Block previousBlock, TransactionPool pool) {
+	public BlockBase mineNextBlock(BlockBase previousBlock, TransactionPool pool) {
 		// blank block
-		Block newBlock = new Block();
+		BlockBase newBlock = new BlockBase();
 		
 		// copy old state -> copying the accounts
 		StateTransformer.copyState(previousBlock, newBlock);		

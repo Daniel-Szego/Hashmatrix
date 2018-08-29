@@ -11,7 +11,7 @@ import java.util.Collections;
 import Utils.*;
 
 
-import Block.Block;
+import Block.BlockBase;
 import Chain.*;
 import Transaction.*;
 
@@ -85,7 +85,7 @@ public class Network implements NetworkInterface  {
     }
     
     // getting a broadcasted block from another peer
-    public void broadcastBlock(Block block) {
+    public void broadcastBlock(BlockBase block) {
 		// SINGLE HOP -> transactions are not propagated further
     	// can be used in fully connected networks    	
     	node.serviceBus.addEvent("bradcast block called, transaction Id :" + block.blockId);
@@ -114,7 +114,7 @@ public class Network implements NetworkInterface  {
     }
     
     // getting a block specified by the Id
-    public Block getBlock(String blockId) {
+    public BlockBase getBlock(String blockId) {
     	node.serviceBus.addEvent("getBloock has been called, Id : " + blockId);
     	for(ExtendedBlock block: node.blockchain.getBlockchain()) {
     		if (block.internBlock.blockId.equals(blockId)) {

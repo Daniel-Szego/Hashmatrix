@@ -124,7 +124,7 @@ public class Cli {
 			HashLink hashLink = new HashLink(hashOne, hashTwo, resetPolicy, resetCount,lastResetedHash, singleHash, difficulty);
 			
 			// genesis block
-			Block genesisBlock = new Block();
+			BlockBase genesisBlock = new BlockBase();
 			genesisBlock.accounts.add(accountWallet.account);			
 			genesisBlock.matrix.add(hashLink);
 			genesisBlock.calculateStateRoot();

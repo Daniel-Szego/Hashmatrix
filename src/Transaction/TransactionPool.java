@@ -80,4 +80,10 @@ public class TransactionPool implements TransactionPoolInterface {
 		return transactions.size();
 	}
 
+	//getting the transactions
+	//it is needed for validations, transactions can be validated only with the state
+	public ArrayList<TransactionInterface> getTransactions() {
+		return transactions;
+	}
+	
 }

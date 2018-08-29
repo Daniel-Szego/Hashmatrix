@@ -1,5 +1,7 @@
 package Block;
 
+import java.util.ArrayList;
+
 import State.*;
 import Transaction.*;
 
@@ -8,14 +10,17 @@ import Transaction.*;
 public interface BlockInterface {
 	
 	// getting previous block 
-	public Block getPreviousBlock();
+	public BlockInterface getPreviousBlock();
 		
 	// previous block might be not seted at stale blocks
 	// but previous block should be seted only once
-	// if a block arrives on the network, the block is still not setted
+	// if a block arrives on the network, the block is still not seted
 	// Used by: Network, 
 	public void setPreviousBlock(BlockInterface block);
-	
+
+	// based on the hash structure indentifies if block one is 
+	public boolean isPreviousBlockHash(BlockInterface block);
+		
 	// adding transaction to the block
 	// Used by: miner
 	public void addTransaction (TransactionInterface tr);
@@ -27,12 +32,16 @@ public interface BlockInterface {
 	// validating the whole block
 	public boolean validateBlock();
 	
-	// setting nonce
+	// setting nonce for mining
 	// in a multihash blockchain, there can be different nonces at different positions
 	public void setNonce(int nonce, int position);
 	
 	// if block matches with the difficulty
-	public boolean hashMatchesDifficulty(int difficulty, int position);
+	public boolean hashMatchesDifficulty(int difficulty, int position);	
 	
+	// getting the accounts
+	public ArrayList<AccountInterface> getState();
 	
+	// getting the transactions
+	public ArrayList<TransactionInterface> getTransactions();
 }

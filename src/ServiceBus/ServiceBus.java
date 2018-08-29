@@ -61,7 +61,7 @@ public class ServiceBus {
 		}
 	}
 
-	public void addEventBlockMined(String _message, Service _source, Block _block , boolean async)  {
+	public void addEventBlockMined(String _message, Service _source, BlockBase _block , boolean async)  {
 		ServiceEventBlockMined event = new ServiceEventBlockMined(_message,_source, _block);
 		events.add(event);
 				
@@ -81,7 +81,7 @@ public class ServiceBus {
 		}	
 	}
 
-	public void addEventBlockValidated(String _message, Service _source, Block _block , boolean async)  {
+	public void addEventBlockValidated(String _message, Service _source, BlockBase _block , boolean async)  {
 		ServiceEventBlockValidated event = new ServiceEventBlockValidated(_message,_source, _block);
 		events.add(event);
 				
@@ -102,7 +102,7 @@ public class ServiceBus {
 	}
 
 	
-	public void addEventBlockReceived(String _message, Service _source, Block _block , boolean async)  {
+	public void addEventBlockReceived(String _message, Service _source, BlockBase _block , boolean async)  {
 		ServiceEventBlockReceived event = new ServiceEventBlockReceived(_message,_source, _block);
 		events.add(event);
 				

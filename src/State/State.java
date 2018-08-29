@@ -107,6 +107,8 @@ public class State implements StateInterface {
 		return accounts.size();
 	}
 	
+	// STANDARD VALIDATION
+	
 	// checks if a certain transaction is compatible with a give state
 	public boolean isTransactionValid(TransactionInterface tr) {
 		if (!tr.verifySignature()) {
@@ -346,37 +348,35 @@ public class State implements StateInterface {
 		return false;
 	}
 	
+	// EXTENDED VALIDATION
+	// ADDS ACCOUNT TO THE STATE
+
 	
-	// applying the transaction to the state after validation
-	public boolean applyTransaction(TransactionInterface tr) {
+	public boolean isTransactionValidEx(TransactionInterface tr) {
 		if (!tr.verifySignature()) {
 			ServiceBus.logger.log("Signature is not valid, Id : " + tr.getTransctionId(), Severity.ERROR);
 			return false;
 		}		
 		
 		if (tr instanceof StateDataTransaction) {
-			if (this.isDataTransactionValid((StateDataTransaction)tr)){
-				return this.applyDataTransaction((StateDataTransaction)tr);
-			}
+			return this.isDataTransactionValidEx((StateDataTransaction)tr);
 		}
 		else if (tr instanceof StateTransferTransaction) {
-			if (this.isTransferTransactionValid((StateTransferTransaction)tr)) {
-				return this.applyTransferTransaction((StateTransferTransaction)tr);
-			}
+			return this.isTransferTransactionValidEx((StateTransferTransaction)tr);
 		}
 		else if (tr instanceof StateRuleTransaction) {
-			if (this.isRuleTransactionValid((StateRuleTransaction)tr)) {
-				return this.applyRuleTransaction((StateRuleTransaction)tr);
-			}
+			return this.isRuleTransactionValidEx((StateRuleTransaction)tr);
 		}
 		else {
 			ServiceBus.logger.log("Unknown transaction, Id : " + tr.getTransctionId() , Severity.WARNING);
 		}
-		return false;		
+		return false;
 	}
 	
-	// applying the data transaction to the state after validation
-	protected boolean applyDataTransaction(StateDataTransaction tr) {
+	
+	
+	// validation function for data transaction
+	protected boolean isDataTransactionValidEx(StateDataTransaction tr) {
 		String address = ((StateDataTransaction)tr).address;
 		String newData = ((StateDataTransaction)tr).newValue;
 		int transactionNonce = ((StateDataTransaction)tr).getNonce();
@@ -423,15 +423,15 @@ public class State implements StateInterface {
 					((StateDataTransaction)tr).getNonce(),
 					((StateDataTransaction)tr).newValue,
 					0,
-					new char[] {'D','F','T'});			
+					new char[] {'D','F','T'});	
+			accounts.add(account);
 		}		
 		// if nothing matches return false
 		return false;
-		
 	}
 	
-	// applying the transfer transaction to the state after validation
-	protected boolean applyTransferTransaction(StateTransferTransaction tr) {
+	// validation function for a transfer transaction
+	protected boolean isTransferTransactionValidEx(StateTransferTransaction tr) {
 		String fromAddressPublicKey = ((StateTransferTransaction)tr).from;
 		String toAddressPublicKey = ((StateTransferTransaction)tr).to;				
 		double amount = ((StateTransferTransaction)tr).amount;
@@ -498,9 +498,17 @@ public class State implements StateInterface {
 			accountToIsGood = true;
 				
 		}else if (accountToModifyFound == 0) {
-			// error, if the account does not exist, you can not transfer money from that
-			ServiceBus.logger.log("The to account does not exist, TrID : " + tr.getTransctionId());
-			return false;
+			// to account can be added to the state, asset type logic is questionable
+			
+			AccountBase account = new AccountBase(
+					((StateTransferTransaction)tr).from,
+					((StateTransferTransaction)tr).getNonce(),
+					"",
+					((StateTransferTransaction)tr).amount,
+					accountFromModify.getAssetType());	
+			accounts.add(account);
+			
+			accountToIsGood = true;
 		}
 		
 		// transfer is only possible if the asset type is the same, otherwise it is an exchange
@@ -519,8 +527,171 @@ public class State implements StateInterface {
 		return false;			
 	}
 
-	// applying the rule transaction to the state after validation
-	protected boolean applyRuleTransaction(StateRuleTransaction tr) {
+	// validation function for a rule transaction
+	protected boolean isRuleTransactionValidEx(StateRuleTransaction tr) {
+		String addressEffect = ((StateRuleTransaction)tr).address;
+		String ruleCode = ((StateRuleTransaction)tr).code;
+		int transactionNonce = ((StateRuleTransaction)tr).getNonce();
+				
+		if (ruleCode.equals("")){
+			// checking null data, is that an error ?
+			ServiceBus.logger.log("rule must containt information, Id : " +tr.getTransctionId());
+		}
 		
+		SimpleRule rule = new SimpleRule(ruleCode);
+		
+		int accountFound = 0;
+		boolean effectAccountFound = false;
+		// getting the account to be modified
+		AccountInterface accountToModify = null;
+		for(AccountInterface account: accounts) {
+			String accountAddressString = account.getAddress();
+			if (accountAddressString.equals(addressEffect)){
+				accountToModify = account;
+				accountFound++;
+			}
+		}
+		
+		if (accountFound > 1) {
+			// more than one account matches -> error
+			ServiceBus.logger.log("more than one account has been found, Id : " + tr.getTransctionId());
+			return false;
+		}
+		else if (accountFound == 1) {
+			// one account has been found to match
+			if (tr.getNonce() != accountToModify.getNonce() + 1){
+				// nonce is not valid, possible replay attack
+				ServiceBus.logger.log("Nonce is not valid at transaction, possible replay aatack");
+				return false;
+			}
+			else {
+				// seems everything cool
+				effectAccountFound = true;
+			}
+			
+		}else if (accountFound == 0){
+			ServiceBus.logger.log("Effected account not found, Id : " + tr.getTransctionId());
+			return false;
+		}		
+		
+		boolean conditionAccountFound = false;
+		accountFound = 0;
+		// getting the account to be modified
+		AccountInterface accountCondition = null;
+		for(AccountInterface account: accounts) {
+			String accountAddressString = account.getAddress();
+			if (accountAddressString.equals(rule.account_condition)){
+				accountCondition = account;
+				accountFound++;
+			}
+		}
+		
+		if (accountFound > 1) {
+			// more than one account matches -> error
+			ServiceBus.logger.log("more than one condition account has been found, Id : " + tr.getTransctionId());
+			return false;
+		}
+		else if (accountFound == 1) {
+			conditionAccountFound = true;
+			
+		}else if (accountFound == 0){
+			ServiceBus.logger.log("Condition account not found, Id : " + tr.getTransctionId());
+			return false;
+		}		
+
+		if (conditionAccountFound && effectAccountFound)
+			return true;
+
+		// if nothing matches return false
+		return false;
+	}
+	
+	
+	// APPLY TRANSACTION -> TRANSFORM STATE
+	
+	// applying the transaction to the state after validation
+	public boolean applyTransaction(TransactionInterface tr) {
+		if (!tr.verifySignature()) {
+			ServiceBus.logger.log("Signature is not valid, Id : " + tr.getTransctionId(), Severity.ERROR);
+			return false;
+		}		
+		
+		if (tr instanceof StateDataTransaction) {
+			if (this.isDataTransactionValidEx((StateDataTransaction)tr)){
+				return this.applyDataTransaction((StateDataTransaction)tr);
+			}
+		}
+		else if (tr instanceof StateTransferTransaction) {
+			if (this.isTransferTransactionValidEx((StateTransferTransaction)tr)) {
+				return this.applyTransferTransaction((StateTransferTransaction)tr);
+			}
+		}
+		else if (tr instanceof StateRuleTransaction) {
+			if (this.isRuleTransactionValidEx((StateRuleTransaction)tr)) {
+				return this.applyRuleTransaction((StateRuleTransaction)tr);
+			}
+		}
+		else {
+			ServiceBus.logger.log("Unknown transaction, Id : " + tr.getTransctionId() , Severity.WARNING);
+		}
+		return false;		
+	}
+	
+	// applying the data transaction to the state after validation
+	protected boolean applyDataTransaction(StateDataTransaction tr) {
+		String address = ((StateDataTransaction)tr).address;
+		String newData = ((StateDataTransaction)tr).newValue;
+
+		for(AccountBase account: accounts) {
+			if (account.getAddress().equals(address)){
+				account.setData(newData);
+				account.increaseNonce();							
+			}
+		}
+		return true;
+	}
+	
+	// applying the transfer transaction to the state after validation
+	protected boolean applyTransferTransaction(StateTransferTransaction tr) {
+		String fromAddress = ((StateTransferTransaction)tr).from;
+		String toAddress = ((StateTransferTransaction)tr).to;				
+		Double amount = ((StateTransferTransaction)tr).amount;
+
+		for(AccountBase account: accounts) {
+			if (account.getAddress().equals(fromAddress)){
+				account.decreaseBalance(amount);
+				account.decreaseBalance(amount);							
+			}
+		}
+
+		for(AccountBase account: accounts) {
+			if (account.getAddress().equals(toAddress)){
+				account.decreaseBalance(amount);
+			}
+		}
+		return true;
+	}
+
+	// applying the rule transaction to the state after validation
+	protected boolean applyRuleTransaction(StateRuleTransaction tr) {	
+		String ruleCode = ((StateRuleTransaction)tr).code;
+		SimpleRule rule = new SimpleRule(ruleCode);
+		
+		boolean isConditionValid = false;
+		for(AccountBase account: accounts) {
+			if (account.getAddress().equals(rule.account_condition)){
+				isConditionValid = rule.validateOperand(account.data); 
+			}
+		}
+
+		if (isConditionValid) {
+			for(AccountBase account: accounts) {
+				if (account.getAddress().equals(rule.account_effect)){
+					account.data = rule.value_effect;
+					account.increaseNonce();							
+				}
+			}
+		}
+		return true;	
 	}	
 }

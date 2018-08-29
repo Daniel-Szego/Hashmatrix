@@ -1,5 +1,7 @@
 package Transaction;
 
+import java.util.ArrayList;
+
 public interface TransactionPoolInterface {
 
 	// adding transaction to the pool
@@ -26,4 +28,8 @@ public interface TransactionPoolInterface {
 		
 	// getting the size of the pool
 	public int getPoolSize();
+	
+	//getting the transactions
+	//it is needed for validations, transactions can be validated only with the state
+	public ArrayList<TransactionInterface> getTransactions();
 }

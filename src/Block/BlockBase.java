@@ -4,25 +4,106 @@ import Utils.*;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Date;
+import ServiceBus.*;
 
 import Crypto.CryptoUtil;
 import Crypto.StringUtil;
 import State.AccountBase;
+import State.AccountInterface;
 import State.State;
 import Transaction.*;
 
-public class Block implements Serializable {
+// basic block implmementation
+public class BlockBase implements Serializable, BlockInterface {
 
-	public String blockId;
-	public ArrayList<HashLink> matrix = new ArrayList<HashLink>();
- 	public ArrayList<StateTransaction> transactions = new ArrayList<StateTransaction>();
- 	public ArrayList<AccountBase> accounts = new ArrayList<AccountBase>();
-	public String stateRoot;
-	public String transactionRoot;
+	protected String blockId;
+	// base implementation will be only a simple hash
+	protected BlockInterface previousBlock;
+	protected final TransactionPool transactions;
+	protected final State state;
+	
+	protected String stateRoot;
+	protected String transactionRoot;
 		
-	//Creating a blanck Block 
-	public Block() {
+	//Creating a blank Block 
+	public BlockBase() {
+		state = new State();
+		transactions = new TransactionPool(null);
 	}
+	
+	// getting previous block 
+	public BlockInterface getPreviousBlock() {
+		return this.previousBlock;
+	}
+		
+	// previous block might be not seted at stale blocks
+	// but previous block should be seted only once
+	// if a block arrives on the network, the block is still not seted
+	// Used by: Network, 
+	public void setPreviousBlock(BlockInterface block) {
+		if (this.previousBlock == null) {
+			this.previousBlock = block;
+		}
+		else{
+			ServiceBus.logger.log("Previousblock can be set only once", Severity.ERROR);
+		}
+	}
+
+	// based on the hash structure indentifies if block one is 
+	public boolean isPreviousBlockHash(BlockInterface block) {
+		
+	}
+		
+	// adding transaction to the block
+	// only if valid 
+	// and transfer the state
+	// Used by: miner
+	public void addTransaction (TransactionInterface tr) {
+		if (state.isTransactionValidEx(tr)) {
+			if(state.applyTransaction(tr)) {
+				transactions.addTransaction(tr);
+			}	
+		}
+	}
+	
+	// block id is the block hash
+	// or in case of a multi hashing, the hash of the different block headers
+	public String getBlockId() {
+		return blockId;
+	}
+
+	// validating the whole block
+	public boolean validateBlock() {
+		// validate transactions against the state
+		for(TransactionInterface tr :transactions.getTransactions()) {
+			if(!state.isTransactionValid(tr))
+				return false;
+		}
+		
+		// validate state root
+		
+		// validate transaction root
+		
+		// validate block id
+		
+		// validate previous block 
+		
+	}
+	
+	// setting nonce for mining
+	// in a multihash blockchain, there can be different nonces at different positions
+	public void setNonce(int nonce, int position);
+	
+	// if block matches with the difficulty
+	public boolean hashMatchesDifficulty(int difficulty, int position);	
+	
+	// getting the accounts
+	public ArrayList<AccountInterface> getState();
+	
+	// getting the transactions
+	public ArrayList<TransactionInterface> getTransactions();
+
+	
 	
 	// calculating state root
 	public String calculateStateRoot() {

@@ -3,17 +3,17 @@ package Chain;
 import java.util.ArrayList;
 import java.util.Date;
 
-import Block.Block;
+import Block.BlockBase;
 
 // handling blocks with further information
 public class ExtendedBlock {
 	
-	public Block internBlock;
+	public BlockBase internBlock;
 	public ExtendedBlock previousBlock;
 	public ArrayList<ExtendedBlock> nextBlocks;
 	public int blockHeight;
 	
-	public ExtendedBlock(Block _block, ExtendedBlock _previousBlock, ArrayList<ExtendedBlock> _nextBlocks) {
+	public ExtendedBlock(BlockBase _block, ExtendedBlock _previousBlock, ArrayList<ExtendedBlock> _nextBlocks) {
 		internBlock = _block;
 		previousBlock = _previousBlock;	
 		nextBlocks = _nextBlocks;
@@ -21,11 +21,11 @@ public class ExtendedBlock {
 		blockHeight = -1;
 	}
 
-	public ExtendedBlock(Block _block, ExtendedBlock _previousBlock) {
+	public ExtendedBlock(BlockBase _block, ExtendedBlock _previousBlock) {
 		this(_block, _previousBlock, null);
 	}
 	
-	public ExtendedBlock(Block _block) {
+	public ExtendedBlock(BlockBase _block) {
 		this(_block, null, null);
 	}	
 	

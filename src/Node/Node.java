@@ -61,7 +61,7 @@ public class Node {
 	}
 	
 	// broadcasting a block to the network
-	public void broadcastBlock(Block _block) {	
+	public void broadcastBlock(BlockBase _block) {	
 		// gossiping the block on the network
 		for(Peer pr: this.network.peers) {
 			if (!(this.network.selfPeer.peerHost.equals(pr.peerHost) &&
@@ -73,7 +73,7 @@ public class Node {
 	
 	// starting the miner - only one round implementation
 	public ExtendedBlock startMinerOneRound() {
-		Block proposedBlock = miner.mineNextBlock(this.blockchain.getTopBlock().internBlock, this.pool);
+		BlockBase proposedBlock = miner.mineNextBlock(this.blockchain.getTopBlock().internBlock, this.pool);
 		ExtendedBlock exBlock = this.blockchain.addBlock(proposedBlock);
 		// syncing the state is should not necessarily be here, as we still do not know if we won the race
 		wallet.syncAccounts();
@@ -114,7 +114,7 @@ public class Node {
 				ArrayList<String> alreadyAdded = new ArrayList<String>();
 				for(Peer peer: this.network.peers){
 					if (!alreadyAdded.contains(Id)) {
-						Block block = peer.getBlock(Id);
+						BlockBase block = peer.getBlock(Id);
 						if (block != null) {
 							if (Id.equals(genesisBlock))
 								this.blockchain.addGenesisBlock(block);

@@ -2,7 +2,7 @@ package Node;
 
 import java.util.ArrayList;
 
-import Block.Block;
+import Block.BlockBase;
 import Crypto.CryptoUtil;
 import Transaction.*;
 import Utils.LoggerConsole;
@@ -84,7 +84,7 @@ public class Peer implements NetworkInterface, Serializable  {
 			}	    	
 	    }
 	    
-	    public void broadcastBlock(Block block) {
+	    public void broadcastBlock(BlockBase block) {
 			try {
 				Registry registry = LocateRegistry.getRegistry(peerHost,peerPort);
 				NetworkInterface stub = (NetworkInterface)registry.lookup(Network.serverNameBase+peerPort);
@@ -118,7 +118,7 @@ public class Peer implements NetworkInterface, Serializable  {
 	    }
 	    
 	    // getting a block specified by the Id
-	    public Block getBlock(String blockId) {
+	    public BlockBase getBlock(String blockId) {
 	    	try {
 				Registry registry = LocateRegistry.getRegistry(peerHost,peerPort);
 				NetworkInterface stub = (NetworkInterface)registry.lookup(Network.serverNameBase+peerPort);

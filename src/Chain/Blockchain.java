@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 import com.google.gson.*;
 
-import Block.Block;
+import Block.BlockBase;
 import Node.*;
 import Transaction.*;
 import Utils.LoggerConsole;
@@ -29,7 +29,7 @@ public class Blockchain {
 	// simple implementation: future: forking has to be considrered
 	public static ArrayList<ExtendedBlock> blocklist = new ArrayList<ExtendedBlock>();
 	
-	public void addGenesisBlock(Block _block) {
+	public void addGenesisBlock(BlockBase _block) {
 		ExtendedBlock newExtendedblock = new ExtendedBlock(_block);
 		newExtendedblock.blockHeight = 0;
 		blocklist.add(newExtendedblock);		
@@ -37,7 +37,7 @@ public class Blockchain {
 
 	// adding a block to the chain, only if it can be put to the chain
 	// only one hashlink is considered as previous link, however that should be enoguh
-	public ExtendedBlock addBlock(Block _block) {
+	public ExtendedBlock addBlock(BlockBase _block) {
 		ExtendedBlock newExtendedblock = new ExtendedBlock(_block);
 		if (blocklist.size() < 1)
 			blocklist.add(newExtendedblock);
