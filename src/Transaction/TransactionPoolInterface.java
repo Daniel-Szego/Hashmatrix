@@ -32,4 +32,7 @@ public interface TransactionPoolInterface {
 	//getting the transactions
 	//it is needed for validations, transactions can be validated only with the state
 	public ArrayList<TransactionInterface> getTransactions();
+	
+	// getting the hash root or merkle root of the transactions in the pool
+	public String getTransactionRoot();
 }

@@ -8,20 +8,26 @@ import ServiceBus.*;
 
 import Crypto.CryptoUtil;
 import Crypto.StringUtil;
-import State.AccountBase;
-import State.AccountInterface;
-import State.State;
+import State.*;
 import Transaction.*;
 
 // basic block implmementation
+// nonce is a simple integer
+// blockid is the hash of the block header: 
+// H(previousblockId, stateRoot, TransactionRoot, nonce)
 public class BlockBase implements Serializable, BlockInterface {
 
+	// BLOCK HEADER
 	protected String blockId;
 	// base implementation will be only a simple hash
 	protected BlockInterface previousBlock;
-	protected final TransactionPool transactions;
-	protected final State state;
+	protected final TransactionPoolInterface transactions;
+	protected final StateInterface state;
 	
+	// simple blockbase, only simple nonce
+	protected int nonce;
+	
+	// BLOCK BODY
 	protected String stateRoot;
 	protected String transactionRoot;
 		
@@ -33,7 +39,12 @@ public class BlockBase implements Serializable, BlockInterface {
 	
 	// getting previous block 
 	public BlockInterface getPreviousBlock() {
-		return this.previousBlock;
+		if (this.previousBlock == null) {
+			ServiceBus.logger.log("Previousblock has been queried but it is null", Severity.ERROR);
+			return null;
+		}
+		else
+			return this.previousBlock;
 	}
 		
 	// previous block might be not seted at stale blocks
@@ -47,11 +58,21 @@ public class BlockBase implements Serializable, BlockInterface {
 		else{
 			ServiceBus.logger.log("Previousblock can be set only once", Severity.ERROR);
 		}
+		// recalculating hashes
 	}
 
 	// based on the hash structure indentifies if block one is 
 	public boolean isPreviousBlockHash(BlockInterface block) {
 		
+		String calculatedId = ServiceBus.crypto.applyHash(this.stateRoot +
+				this.transactionRoot +
+				nonce +
+				block.getBlockId());
+		
+		if (calculatedId.equals(this.blockId))
+			return true;
+		
+		return false;
 	}
 		
 	// adding transaction to the block
@@ -64,6 +85,8 @@ public class BlockBase implements Serializable, BlockInterface {
 				transactions.addTransaction(tr);
 			}	
 		}
+		// recalculating hashes
+		setHashes();
 	}
 	
 	// block id is the block hash
@@ -81,125 +104,66 @@ public class BlockBase implements Serializable, BlockInterface {
 		}
 		
 		// validate state root
+		if (!this.stateRoot.equals(state.getStateRoot()))
+			return false;
 		
 		// validate transaction root
+		if (!this.transactionRoot.equals(transactions.getTransactionRoot()))
+			return false;
 		
 		// validate block id
+		String calculatedId = ServiceBus.crypto.applyHash(this.stateRoot +
+				this.transactionRoot +
+				nonce +
+				previousBlock.getBlockId());
 		
-		// validate previous block 
+		if (!calculatedId.equals(this.blockId))
+			return false;
 		
+		return true;
 	}
 	
 	// setting nonce for mining
 	// in a multihash blockchain, there can be different nonces at different positions
-	public void setNonce(int nonce, int position);
+	// recalculates the hashes as well
+	public void setNonce(int nonce, int position) {
+		if (position != 0)
+			ServiceBus.logger.log("Blockbase contains an only one hashlink scheme", Severity.ERROR);
+		this.nonce = nonce;
+		setHashes();
+	}
 	
 	// if block matches with the difficulty
-	public boolean hashMatchesDifficulty(int difficulty, int position);	
+	public boolean matchesDifficulty(int difficulty, int position) {
+		String target = new String(new char[difficulty]).replace('\0', '0'); //Create a string with difficulty * "0" 
+		if(blockId.substring( 0, difficulty).equals(target))
+			return true;
+		return false;
+	}
 	
 	// getting the accounts
-	public ArrayList<AccountInterface> getState();
+	public ArrayList<AccountInterface> getState() {
+		return state.getAccounts();
+	}
 	
 	// getting the transactions
-	public ArrayList<TransactionInterface> getTransactions();
-
-	
-	
-	// calculating state root
-	public String calculateStateRoot() {
-		int count = accounts.size();
-		ArrayList<String> previousTreeLayer = new ArrayList<String>();
-		for(AccountBase account : accounts) {
-			previousTreeLayer.add(account.getAddress());
-		}
-		
-		ArrayList<String> treeLayer = previousTreeLayer;
-		while(count > 1) {
-			treeLayer = new ArrayList<String>();
-			for(int i=1; i < previousTreeLayer.size(); i++) {
-				treeLayer.add(CryptoUtil.applySha256(previousTreeLayer.get(i-1) + previousTreeLayer.get(i)));
-			}
-			count = treeLayer.size();
-			previousTreeLayer = treeLayer;
-		}
-		String merkleRoot = (treeLayer.size() == 1) ? treeLayer.get(0) : "";
-		stateRoot = merkleRoot;
-		return merkleRoot;
-	}
-	
-	// calculating transaction root
-	public String calculateTransactionRoot() {
-		int count = accounts.size();
-		ArrayList<String> previousTreeLayer = new ArrayList<String>();
-		for(StateTransaction tr : transactions) {
-			previousTreeLayer.add(tr.getTransctionId());
-		}
-		
-		ArrayList<String> treeLayer = previousTreeLayer;
-		while(count > 1) {
-			treeLayer = new ArrayList<String>();
-			for(int i=1; i < previousTreeLayer.size(); i++) {
-				treeLayer.add(CryptoUtil.applySha256(previousTreeLayer.get(i-1) + previousTreeLayer.get(i)));
-			}
-			count = treeLayer.size();
-			previousTreeLayer = treeLayer;
-		}
-		String merkleRoot = (treeLayer.size() == 1) ? treeLayer.get(0) : "";
-		transactionRoot = merkleRoot;
-		return merkleRoot;
-	} 
-
-		
-	// aplying transactions to the state if they have a valid sginature
-	// supposing that state is copied from the previous block
-	public void calculateNewState(){
-		for(StateTransaction tr : transactions) {
-			if (tr instanceof StateDataTransaction) {
-				if(TransactionValidator.validateDataTransaction((StateDataTransaction)tr, accounts)){
-					StateTransformer.applyDataTransactionToState((StateDataTransaction)tr, accounts);	
-				}
-				else {
-					// non valid transaction in the proposed transactions ? error ?
-					LoggerConsole.Log("non valid transaction in the proposed block, TrID : " + tr.getTransctionId());
-				}
-			}
-			else if(tr instanceof StateTransferTransaction) {
-				if(TransactionValidator.validateTransferTransaction((StateTransferTransaction)tr, accounts)){
-					StateTransformer.applyTransferTransactionToState((StateTransferTransaction)tr, accounts);	
-				}
-				else {
-					// non valid transaction in the proposed transactions ? error ?
-					LoggerConsole.Log("non valid transaction in the proposed block, TrID : " + tr.getTransctionId());
-				}				
-			}
-			else if(tr instanceof StateRuleTransaction) {
-				if(TransactionValidator.validateRuleTransaction((StateRuleTransaction)tr, accounts)){
-					StateTransformer.applyRuleTransactionToState((StateRuleTransaction)tr, accounts);	
-				}
-				else {
-					// non valid transaction in the proposed transactions ? error ?
-					LoggerConsole.Log("non valid transaction in the proposed block, TrID : " + tr.getTransctionId());
-				}				
-			}
-			else {
-				// unknown transaction -> error handing
-				LoggerConsole.Log("unknown transaction");
-			}
-		}	
+	public ArrayList<TransactionInterface> getTransactions() {
+		return transactions.getTransactions();
 	}	
+		
 	
-	public void setBlockId(){
-		blockId = calculateBlockId();
-	}
-	
-	public String calculateBlockId () {
-		String hashLinkStrings = null;
-		for(HashLink link: matrix) {
-			hashLinkStrings += link.hashOne;
-			hashLinkStrings += link.hashTwo;			
-		}				
-	return CryptoUtil.applySha256(hashLinkStrings);
-	}
+	// calculates and sets the hashes of the block
+	// used in the miner for building up the chain
+	protected String setHashes () {
+		this.stateRoot = state.getStateRoot();
+		this.transactionRoot = transactions.getTransactionRoot();
+		String relevantData = this.stateRoot +
+				this.transactionRoot +
+				nonce +
+				previousBlock.getBlockId();
+		this.blockId = ServiceBus.crypto.applyHash(relevantData);
+		return this.blockId;	
+	}	
 }
 
 

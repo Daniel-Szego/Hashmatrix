@@ -8,22 +8,19 @@ import Transaction.*;
 public interface StateInterface {
 	
 	// adding an account to the state
-	public void addAccount(AccountBase _account);
+	public void addAccount(AccountInterface _account);
 	
 	// querying if an account is in the state 
-	public boolean isAccountContained(AccountBase _account);
+	public boolean isAccountContained(AccountInterface _account);
 	
 	// querying if an account is in the state 
 	public boolean isAccountContained(String _address);
 	
 	// getting an account based on the address
-	public AccountBase getAccount(String _address);
+	public AccountInterface getAccount(String _address);
 	
-	// gettint merkle root of the state
-	public String getMerkleRoot();
-
 	// return all the accounts
-	public ArrayList<AccountBase> getAccounts();
+	public ArrayList<AccountInterface> getAccounts();
 	
 	// creating a new state by copying the exiting one
 	public State copyState();
@@ -43,5 +40,7 @@ public interface StateInterface {
 	// CALLED: by Miner at assigning transactions to state
 	// returning false if the transaction could not apply to the state
 	public boolean applyTransaction(TransactionInterface tr);
-
+	
+	// calculcate the state root or transaction root of the states
+	public String getStateRoot();
 }

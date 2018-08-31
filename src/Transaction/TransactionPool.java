@@ -2,6 +2,7 @@ package Transaction;
 
 import java.util.ArrayList;
 
+import Crypto.CryptoUtil;
 import Node.*;
 
 // transaction pool for the incomming but still not processed transactions
@@ -84,6 +85,27 @@ public class TransactionPool implements TransactionPoolInterface {
 	//it is needed for validations, transactions can be validated only with the state
 	public ArrayList<TransactionInterface> getTransactions() {
 		return transactions;
+	}
+	
+	// getting the hash root or merkle root of the transactions in the pool
+	public String getTransactionRoot() {
+		int count = transactions.size();
+		ArrayList<String> previousTreeLayer = new ArrayList<String>();
+		for(TransactionInterface tr : transactions) {
+			previousTreeLayer.add(tr.getTransctionId());
+		}
+		
+		ArrayList<String> treeLayer = previousTreeLayer;
+		while(count > 1) {
+			treeLayer = new ArrayList<String>();
+			for(int i=1; i < previousTreeLayer.size(); i++) {
+				treeLayer.add(CryptoUtil.applySha256(previousTreeLayer.get(i-1) + previousTreeLayer.get(i)));
+			}
+			count = treeLayer.size();
+			previousTreeLayer = treeLayer;
+		}
+		String merkleRoot = (treeLayer.size() == 1) ? treeLayer.get(0) : "";
+		return merkleRoot;
 	}
 	
 }

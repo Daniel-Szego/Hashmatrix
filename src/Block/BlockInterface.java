@@ -37,7 +37,7 @@ public interface BlockInterface {
 	public void setNonce(int nonce, int position);
 	
 	// if block matches with the difficulty
-	public boolean hashMatchesDifficulty(int difficulty, int position);	
+	public boolean matchesDifficulty(int difficulty, int position);	
 	
 	// getting the accounts
 	public ArrayList<AccountInterface> getState();

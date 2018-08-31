@@ -15,7 +15,7 @@ import Utils.Severity;
 
 public class State implements StateInterface {
 
-	protected ArrayList<AccountBase> accounts = new ArrayList<AccountBase>();
+	protected ArrayList<AccountInterface> accounts = new ArrayList<AccountInterface>();
 	public final String stateId;
 
 	// default constructor, state id is initialized
@@ -28,40 +28,40 @@ public class State implements StateInterface {
 	}
 	
 	// adding an account to the state
-	public void addAccount(AccountBase _account) {
+	public void addAccount(AccountInterface _account) {
 		if (!isAccountContained(_account)) {
 			accounts.add(_account);
 		}
 	}
 	
 	// querying if an account is in the state 
-	public boolean isAccountContained(AccountBase _account) {
-		return isAccountContained(_account.address);
+	public boolean isAccountContained(AccountInterface _account) {
+		return isAccountContained(_account.getAddress());
 	}
 	
 	// querying if an account is in the state 
 	public boolean isAccountContained(String _address) {
-		for (AccountBase account: accounts) {
-			if (account.address.equals(_address))
+		for (AccountInterface account: accounts) {
+			if (account.getAddress().equals(_address))
 				return true;
 		}
 		return false;
 	}
 
 	// getting an account based on the address
-	public AccountBase getAccount(String _address) {
-		for (AccountBase account: accounts) {
-			if (account.address.equals(_address))
+	public AccountInterface getAccount(String _address) {
+		for (AccountInterface account: accounts) {
+			if (account.getAddress().equals(_address))
 				return account;
 		}
 		return null;		
 	}
 	
-	// gettint merkle root of the state
-	public String getMerkleRoot() {
+	// calculcate the state root or transaction root of the states
+	public String getStateRoot() {
 		int count = accounts.size();
 		ArrayList<String> previousTreeLayer = new ArrayList<String>();
-		for(AccountBase account : accounts) {
+		for(AccountInterface account : accounts) {
 			previousTreeLayer.add(account.getAddress());
 		}
 		
@@ -79,14 +79,14 @@ public class State implements StateInterface {
 	}
 
 	// return all the accounts
-	public ArrayList<AccountBase> getAccounts() {
+	public ArrayList<AccountInterface> getAccounts() {
 		return accounts;
 	}
 	
 	// hard copy a state with all of the accounts
 	public State copyState() {
 		State newState = new State();
-		for (AccountBase account: accounts) {
+		for (AccountInterface account: accounts) {
 			AccountBase newAccount = account.copyAccount();
 			newState.addAccount(newAccount);
 		}
@@ -642,7 +642,7 @@ public class State implements StateInterface {
 		String address = ((StateDataTransaction)tr).address;
 		String newData = ((StateDataTransaction)tr).newValue;
 
-		for(AccountBase account: accounts) {
+		for(AccountInterface account: accounts) {
 			if (account.getAddress().equals(address)){
 				account.setData(newData);
 				account.increaseNonce();							
@@ -657,14 +657,14 @@ public class State implements StateInterface {
 		String toAddress = ((StateTransferTransaction)tr).to;				
 		Double amount = ((StateTransferTransaction)tr).amount;
 
-		for(AccountBase account: accounts) {
+		for(AccountInterface account: accounts) {
 			if (account.getAddress().equals(fromAddress)){
 				account.decreaseBalance(amount);
 				account.decreaseBalance(amount);							
 			}
 		}
 
-		for(AccountBase account: accounts) {
+		for(AccountInterface account: accounts) {
 			if (account.getAddress().equals(toAddress)){
 				account.decreaseBalance(amount);
 			}
@@ -678,20 +678,21 @@ public class State implements StateInterface {
 		SimpleRule rule = new SimpleRule(ruleCode);
 		
 		boolean isConditionValid = false;
-		for(AccountBase account: accounts) {
+		for(AccountInterface account: accounts) {
 			if (account.getAddress().equals(rule.account_condition)){
-				isConditionValid = rule.validateOperand(account.data); 
+				isConditionValid = rule.validateOperand(account.getData()); 
 			}
 		}
 
 		if (isConditionValid) {
-			for(AccountBase account: accounts) {
+			for(AccountInterface account: accounts) {
 				if (account.getAddress().equals(rule.account_effect)){
-					account.data = rule.value_effect;
+					account.setAssetType(rule.value_effect);
 					account.increaseNonce();							
 				}
 			}
 		}
 		return true;	
-	}	
+	}
+	
 }
