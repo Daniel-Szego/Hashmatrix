@@ -17,7 +17,7 @@ public class Node {
 	
 	public final RandomWallet wallet;
 	public final MinerPOW miner ;
-	public final Blockchain blockchain;
+	public final BlockchainBase blockchain;
 	public final TransactionPool pool;
 	public final Explorer explorer;
 	public final Network network;
@@ -29,7 +29,7 @@ public class Node {
 	public Node() {
 		wallet = new RandomWallet(this);
 		miner = new MinerPOW(this);
-		blockchain = new Blockchain(this);
+		blockchain = new BlockchainBase(this);
 		pool = new TransactionPool(this);		
 		explorer = new Explorer(this);
 		network = new Network(this);

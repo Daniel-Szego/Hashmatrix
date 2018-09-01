@@ -4,7 +4,7 @@ import java.security.*;
 import java.util.ArrayList;
 
 import CLI.*;
-import Chain.Blockchain;
+import Chain.BlockchainBase;
 import Chain.ExtendedBlock;
 import Crypto.*;
 import Node.*;

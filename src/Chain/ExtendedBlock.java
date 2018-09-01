@@ -3,24 +3,28 @@ package Chain;
 import java.util.ArrayList;
 import java.util.Date;
 
-import Block.BlockBase;
+import Block.*;
 
 // handling blocks with further information
-public class ExtendedBlock {
+// used only in blockchain
+public class ExtendedBlock implements ExtendedBlockInterface {
 	
-	public BlockBase internBlock;
-	public ExtendedBlock previousBlock;
-	public ArrayList<ExtendedBlock> nextBlocks;
-	public int blockHeight;
+	protected BlockInterface internBlock;
+	protected ArrayList<ExtendedBlockInterface> nextBlocks;
+	protected int blockHeight;
 	
-	public ExtendedBlock(BlockBase _block, ExtendedBlock _previousBlock, ArrayList<ExtendedBlock> _nextBlocks) {
+	// constructors
+	public ExtendedBlock(BlockInterface _block, ExtendedBlockInterface _previousBlock, ArrayList<ExtendedBlockInterface> _nextBlocks) {
 		internBlock = _block;
-		previousBlock = _previousBlock;	
+		internBlock.setPreviousBlock(_previousBlock.getInternBlock());	
 		nextBlocks = _nextBlocks;
-		nextBlocks = new ArrayList<ExtendedBlock>();
-		blockHeight = -1;
+		if (_previousBlock == null)
+			blockHeight = -1;
+		else
+			blockHeight = _previousBlock.getBlockHeight() + 1;
 	}
 
+	
 	public ExtendedBlock(BlockBase _block, ExtendedBlock _previousBlock) {
 		this(_block, _previousBlock, null);
 	}
@@ -29,11 +33,43 @@ public class ExtendedBlock {
 		this(_block, null, null);
 	}	
 	
+	
+	// getting the internal block
+	public BlockInterface getInternBlock() {
+		return internBlock;
+	}
+	
+	// adding the next block if it still does not exist
+	public void addNextBlock(ExtendedBlockInterface nextBlock) {
+		if(!this.nextBlockContains(nextBlock.getInternBlock().getBlockId()))
+			nextBlocks.add(nextBlock);
+	}
+	
+	// getting the next blocks
+	public ArrayList<ExtendedBlockInterface> getNextBlocks() {
+		return nextBlocks;
+	}
+	
+	// getting the next blocks
+	public boolean nextBlockContains(String blockId) {
+		for (ExtendedBlockInterface nBlock: nextBlocks) {
+			if(nBlock.getInternBlock().getBlockId().equals(blockId))
+				return true;
+		}
+		return false;
+	}
+	
+	// getting the block height
+	public int getBlockHeight() {
+		return this.blockHeight;
+	}
+	
+	// getting the next blocks
 	public boolean nextBlockContains (ExtendedBlock _block) {
 		if (nextBlocks.size() == 0)
 			return false;	
-		for (ExtendedBlock block: nextBlocks){
-			if (block.internBlock.equals(_block))
+		for (ExtendedBlockInterface block: nextBlocks){
+			if (block.getInternBlock().equals(_block))
 				return true;			
 		}
 		return false;

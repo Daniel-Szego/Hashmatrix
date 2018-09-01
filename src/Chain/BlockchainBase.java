@@ -8,6 +8,7 @@ import com.google.gson.*;
 
 import Block.BlockBase;
 import Node.*;
+import ServiceBus.*;
 import Transaction.*;
 import Utils.LoggerConsole;
 import Wallet.Wallet;
@@ -15,13 +16,14 @@ import Wallet.Wallet;
 import java.security.*;
 import org.bouncycastle.*;
 
+// blockchain base
 // due to forking this is actually a set of chains
-public class Blockchain {
+public class BlockchainBase extends Service implements BockchainServiceInterface {
 	
 	public final Node node;
 	public boolean isSynced;
 	
-	public Blockchain(Node _node) {
+	public BlockchainBase(Node _node) {
 		this.node = _node;
 		this.isSynced = false;
 	}
