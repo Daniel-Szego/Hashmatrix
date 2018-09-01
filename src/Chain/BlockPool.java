@@ -8,7 +8,7 @@ import ServiceBus.ServiceBus;
 import Utils.Severity;
 
 // pool for storing blocks 
-public class BlockPool {
+public class BlockPool implements BlockPoolInterface{
 	
 	protected Node node;
 	protected ArrayList<BlockInterface> blocks;
@@ -18,12 +18,12 @@ public class BlockPool {
 	}
 	
 	// getting the blocks of the pool
-	public ArrayList<BlockInterface> getBlocks() {
+	public ArrayList<BlockInterface> getBlocksFromPool() {
 		return this.blocks;
 	}
 	
 	// adding block to the chain if already not exist in the pool
-	public void addBlock(BlockInterface _block) {
+	public void addBlockToPool(BlockInterface _block) {
 		for (BlockInterface block:blocks) {
 			if (block.getBlockId().equals(_block.getBlockId()))
 				return;
@@ -32,7 +32,7 @@ public class BlockPool {
 	}
 	
 	// deleting a block based on the block id
-	public void deleteBlockById(String blockId) {
+	public void deleteBlockByIdFromPool(String blockId) {
 		BlockInterface toDelete = null;
 		for (BlockInterface block:blocks) {
 			if (block.getBlockId().equals(blockId))
@@ -45,7 +45,7 @@ public class BlockPool {
 	}	
 	
 	// deleting the block from the block pool
-	public void deleteBlock(BlockInterface _block) {
-		this.deleteBlockById(_block.getBlockId());
+	public void deleteBlockFromPool(BlockInterface _block) {
+		this.deleteBlockByIdFromPool(_block.getBlockId());
 	}
 }

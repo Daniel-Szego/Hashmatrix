@@ -25,11 +25,11 @@ public class ExtendedBlock implements ExtendedBlockInterface {
 	}
 
 	
-	public ExtendedBlock(BlockBase _block, ExtendedBlock _previousBlock) {
+	public ExtendedBlock(BlockInterface _block, ExtendedBlockInterface _previousBlock) {
 		this(_block, _previousBlock, null);
 	}
 	
-	public ExtendedBlock(BlockBase _block) {
+	public ExtendedBlock(BlockInterface _block) {
 		this(_block, null, null);
 	}	
 	

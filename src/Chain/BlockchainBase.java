@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 import com.google.gson.*;
 
-import Block.BlockBase;
 import Node.*;
 import ServiceBus.*;
 import Transaction.*;
@@ -17,36 +16,33 @@ import java.security.*;
 import org.bouncycastle.*;
 
 // blockchain base
-// due to forking this is actually a set of chains
-public class BlockchainBase extends Service implements BockchainServiceInterface {
+// blockchain as a data structure and services
+public class BlockchainBase implements BockchainInterface {
 	
-	public final Node node;
-	public boolean isSynced;
+	// all blocks that can be associated to another one is here
+	// tree structure -> chain has to be derived
+	public static ArrayList<ExtendedBlockInterface> blocklist = new ArrayList<ExtendedBlockInterface>();
 	
-	public BlockchainBase(Node _node) {
-		super(ServiceBus.crypto.getRandomString());
-		this.node = _node;
-		this.isSynced = false;
+	public BlockchainBase() {
 	}
 	
-	// simple implementation: future: forking has to be considrered
-	public static ArrayList<ExtendedBlock> blocklist = new ArrayList<ExtendedBlock>();
-	
-	public void addGenesisBlock(BlockBase _block) {
+	// adding the genesis block to the blockchain
+	public ExtendedBlockInterface addGenesisBlock(GenesisBlockInterface _block){
 		ExtendedBlock newExtendedblock = new ExtendedBlock(_block);
 		newExtendedblock.blockHeight = 0;
-		blocklist.add(newExtendedblock);		
+		blocklist.add(newExtendedblock);	
+		return newExtendedblock;
 	}
 
 	// adding a block to the chain, only if it can be put to the chain
 	// only one hashlink is considered as previous link, however that should be enoguh
-	public ExtendedBlock addBlock(BlockBase _block) {
+	public ExtendedBlockInterface addBlock(BlockInterface _block) {
 		ExtendedBlock newExtendedblock = new ExtendedBlock(_block);
 		if (blocklist.size() < 1)
 			blocklist.add(newExtendedblock);
 		// finding previous and next blocks
 		boolean isStaleBlock = true;
-		for (ExtendedBlock prevBlock: blocklist) {
+		for (BlockInterface prevBlock: blocklist) {
 			// matching only based on one top hashlink
 			// we need both hashes to find the previous
 			// becasue sometimes it can be reseted

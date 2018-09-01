@@ -8,15 +8,15 @@ import Block.*;
 public interface BlockPoolInterface {
 
 	// getting the blocks of the pool
-	public ArrayList<BlockInterface> getBlocks();
+	public ArrayList<BlockInterface> getBlocksFromPool();
 	
 	// adding block to the chain if already not exist in the pool
-	public void addBlock(BlockInterface _block);
+	public void addBlockToPool(BlockInterface _block);
 	
 	// deleting a block based on the block id
-	public void deleteBlockById(String blockId); 
+	public void deleteBlockByIdFromPool(String blockId); 
 	
 	// deleting the block from the block pool
-	public void deleteBlock(BlockInterface _block);
+	public void deleteBlockFromPool(BlockInterface _block);
 	
 }
