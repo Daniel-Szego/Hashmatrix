@@ -24,6 +24,7 @@ public class BlockchainBase extends Service implements BockchainServiceInterface
 	public boolean isSynced;
 	
 	public BlockchainBase(Node _node) {
+		super(ServiceBus.crypto.getRandomString());
 		this.node = _node;
 		this.isSynced = false;
 	}

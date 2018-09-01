@@ -96,10 +96,7 @@ public class State implements StateInterface {
 	// generating a state id string
 	// first implementation, random and hash
 	protected String generateStateId() {
-		Random rand = new Random();
-		int  n = rand.nextInt(60000);
-		String Id = ServiceBus.crypto.applyHash(String.valueOf(n));
-		return Id;
+		return ServiceBus.crypto.getRandomString();
 	}
 	
 	// getting the number of accounts

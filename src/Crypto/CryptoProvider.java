@@ -6,11 +6,13 @@ public class CryptoProvider implements CryptoInterface {
 	public HashFunctionInterface hashProvider;
 	public AsymmetricCryptoInterface asymmProvider;
 	public SymmetricCryptoInterface symmProvider;
+	public RandomInterface randomProvider;
 	
 	public CryptoProvider() {
 		hashProvider = new SHAProvider();
 		asymmProvider = new ECDSAProvider();
 		symmProvider = new AESProvider();
+		randomProvider = new RandomProvider();
 	}
 	
 	// applying has function to an input
@@ -53,5 +55,16 @@ public class CryptoProvider implements CryptoInterface {
 	public String decryptInput(String key, String input) {
 		return symmProvider.decryptInput(key, input);
 	}
+	
+	// generating a random Id as a string
+	// non cryptographic random generator
+	public String getRandomString() {
+		return randomProvider.getRandomString();
+	}
+	
+	// getting the cryptographic version of it
+	public String getCryptographicRandomString() {
+		return randomProvider.getCryptographicRandomString();
+	}	
 
 }
