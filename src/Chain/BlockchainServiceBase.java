@@ -10,14 +10,12 @@ import ServiceBus.*;
 // implements and agregates services related to the blockchain and block pool
 public class BlockchainServiceBase extends ServiceBase  implements BockchainServiceInterface, BlockchainInterface, BlockPoolInterface {
 
-	protected NodeServiceInterface node;
 	protected BlockchainInterface blockchain;
 	protected BlockPoolInterface pool;
 	protected boolean isSynced;
 	
-	public BlockchainServiceBase(NodeServiceInterface _node) {
-		super(ServiceBus.crypto.getRandomString());
-		this.node = _node;
+	public BlockchainServiceBase(ServiceBus _bus) {
+		super(ServiceBus.crypto.getRandomString(), _bus);
 		this.isSynced = false;
 	}
 	

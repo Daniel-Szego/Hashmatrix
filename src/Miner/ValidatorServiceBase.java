@@ -10,13 +10,11 @@ import Utils.Severity;
 // base class for validator services
 public class ValidatorServiceBase extends ServiceBase implements ValidatorServiceInterface {
 	
-	public final ServiceBus bus;
 	protected final ValidatorInterface miner;
 	protected Thread minerThread;
 	
-	public ValidatorServiceBase(ServiceBus _bus) {
-		super(ServiceBus.crypto.getRandomString());
-		this.bus = _bus;
+	public ValidatorServiceBase(ServiceBus _bus) {		
+		super(ServiceBus.crypto.getRandomString(), _bus);
 		this.miner = new MinerPOWSimple();
 	}
 
