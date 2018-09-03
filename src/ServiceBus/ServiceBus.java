@@ -3,6 +3,7 @@ package ServiceBus;
 import java.util.ArrayList;
 
 import Block.*;
+import Chain.BlockchainServiceBase;
 import Chain.BockchainServiceInterface;
 import Crypto.*;
 import Miner.ValidatorServiceInterface;
@@ -30,15 +31,18 @@ public class ServiceBus {
 	ArrayList<ServiceListenerInfo> listeners;
 	
 	// Named services
-	public BockchainServiceInterface blockchain;
-	public WalletServiceInterface wallet;
-	public NetworkServiceInterface network;
-	public ValidatorServiceInterface miner;
+	public BockchainServiceInterface blockchainService;
+	public WalletServiceInterface walletService;
+	public NetworkServiceInterface networkService;
+	public ValidatorServiceInterface minerService;
 	
 	public ServiceBus (Node _node) {
 		this.node = _node;
 		listeners = new ArrayList<ServiceListenerInfo>();
 		events = new ArrayList<ServiceEvent>();
+		
+		// setting up services
+		blockchainService = new BlockchainServiceBase(_node);
 	}	
 
 	public void addEvent(String _message, Service _source, Severity _severity, boolean async)  {

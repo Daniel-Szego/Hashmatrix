@@ -36,12 +36,18 @@ public interface BlockInterface {
 	// in a multihash blockchain, there can be different nonces at different positions
 	public void setNonce(int nonce, int position);
 	
+	// getting the nonce
+	public int getNonce();
+	
 	// if block matches with the difficulty
 	public boolean matchesDifficulty(int difficulty, int position);	
 	
 	// getting the accounts
-	public ArrayList<AccountInterface> getState();
+	public StateInterface getState();
 	
 	// getting the transactions
-	public ArrayList<TransactionInterface> getTransactions();
+	public TransactionPoolInterface getTransactions();
+	
+	// mining functionality at creating a new block the old one has to copied
+ 	public void copyState(BlockInterface previousBlock); 
 }

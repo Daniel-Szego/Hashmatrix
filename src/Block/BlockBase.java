@@ -22,7 +22,7 @@ public class BlockBase implements Serializable, BlockInterface {
 	// base implementation will be only a simple hash
 	protected BlockInterface previousBlock;
 	protected final TransactionPoolInterface transactions;
-	protected final StateInterface state;
+	protected StateInterface state;
 	
 	// simple blockbase, only simple nonce
 	protected int nonce;
@@ -123,6 +123,10 @@ public class BlockBase implements Serializable, BlockInterface {
 		return true;
 	}
 	
+	public int getNonce() {
+		return this.nonce;
+	}
+	
 	// setting nonce for mining
 	// in a multihash blockchain, there can be different nonces at different positions
 	// recalculates the hashes as well
@@ -142,16 +146,15 @@ public class BlockBase implements Serializable, BlockInterface {
 	}
 	
 	// getting the accounts
-	public ArrayList<AccountInterface> getState() {
-		return state.getAccounts();
+	public StateInterface getState() {
+		return this.state;
 	}
 	
 	// getting the transactions
-	public ArrayList<TransactionInterface> getTransactions() {
-		return transactions.getTransactions();
+	public TransactionPoolInterface getTransactions() {
+		return this.transactions;
 	}	
-		
-	
+			
 	// calculates and sets the hashes of the block
 	// used in the miner for building up the chain
 	protected String setHashes () {
@@ -164,6 +167,16 @@ public class BlockBase implements Serializable, BlockInterface {
 		this.blockId = ServiceBus.crypto.applyHash(relevantData);
 		return this.blockId;	
 	}	
+	
+	
+	// mining functionality at creating a new block the old one has to copied
+ 	public void copyState(BlockInterface previousBlock) {
+ 		if ((state == null) || (state.getAccountsSize() == 0)) {
+ 			this.state = previousBlock.getState().copyState();	
+ 		}
+ 		else
+ 			ServiceBus.logger.log("The state for a block cannot be copied if it is non-zero", Severity.ERROR);
+ 	} 
 }
 
 

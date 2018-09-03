@@ -84,8 +84,8 @@ public class State implements StateInterface {
 	}
 	
 	// hard copy a state with all of the accounts
-	public State copyState() {
-		State newState = new State();
+	public StateInterface copyState() {
+		StateInterface newState = new State();
 		for (AccountInterface account: accounts) {
 			AccountBase newAccount = account.copyAccount();
 			newState.addAccount(newAccount);
@@ -100,7 +100,7 @@ public class State implements StateInterface {
 	}
 	
 	// getting the number of accounts
-	public int getAccounsSize() {
+	public int getAccountsSize() {
 		return accounts.size();
 	}
 	

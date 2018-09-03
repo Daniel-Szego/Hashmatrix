@@ -23,10 +23,10 @@ public interface StateInterface {
 	public ArrayList<AccountInterface> getAccounts();
 	
 	// creating a new state by copying the exiting one
-	public State copyState();
+	public StateInterface copyState();
 	
 	// getting the number of accounts
-	public int getAccounsSize();
+	public int getAccountsSize();
 	
 	//checks if a certain transaction is compatible with a given state
 	// CALLED: at validation
