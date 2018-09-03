@@ -18,9 +18,9 @@ import Utils.LoggerConsole;
 public abstract class Wallet {
 	
 	protected ArrayList<AccountWallet> accounts = new ArrayList<AccountWallet>(); 
-	private Node node;		
+	private NodeBase node;		
 	
-	public Wallet(Node _node) {
+	public Wallet(NodeBase _node) {
 		this.node = _node;
 	}
 	

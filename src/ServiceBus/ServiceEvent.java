@@ -5,17 +5,17 @@ import Utils.*;
 // ancestor class of every service event
 public class ServiceEvent {
 	public final String message;
-	public final Service source; 
+	public final ServiceBase source; 
 	public final Severity severity;
 	private byte[] signature; // messages must be signed by the node private key
 	 	
-    public ServiceEvent(String _message, Service _source, Severity _severity) {
+    public ServiceEvent(String _message, ServiceBase _source, Severity _severity) {
         this.message = _message;
         this.source = _source;
         this.severity = _severity;
     }
    
-    public ServiceEvent(String _message, Service _source) {
+    public ServiceEvent(String _message, ServiceBase _source) {
     	this(_message, _source, Severity.INFO);
     }
 

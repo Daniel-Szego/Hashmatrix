@@ -15,7 +15,7 @@ import Utils.*;
 // command line interface
 public class Cli {
 
-	public static Node node;
+	public static NodeBase node;
 
 	public static void main(String[] args) {
 		CliArgs cliArgs = new CliArgs(args);
@@ -25,7 +25,7 @@ public class Cli {
 		
 		// creating a test node, but only if still not exisit 
 		if (node == null)
-			node = new Node();
+			node = new NodeBase();
 		
 		// starting network interface
 		if (cliArgs.switchPresent("-startNetwork")){

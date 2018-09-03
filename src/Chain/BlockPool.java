@@ -10,10 +10,10 @@ import Utils.Severity;
 // pool for storing blocks 
 public class BlockPool implements BlockPoolInterface{
 	
-	protected Node node;
+	protected NodeBase node;
 	protected ArrayList<BlockInterface> blocks;
 	
-	public BlockPool(Node _node) {
+	public BlockPool(NodeBase _node) {
 		this.node = _node;
 	}
 	

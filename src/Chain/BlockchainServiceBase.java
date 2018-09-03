@@ -8,18 +8,17 @@ import Node.*;
 import ServiceBus.*;
 
 // implements and agregates services related to the blockchain and block pool
-public class BlockchainServiceBase extends Service  implements BockchainServiceInterface, BlockchainInterface, BlockPoolInterface {
+public class BlockchainServiceBase extends ServiceBase  implements BockchainServiceInterface, BlockchainInterface, BlockPoolInterface {
 
-	protected Node node;
+	protected NodeServiceInterface node;
 	protected BlockchainInterface blockchain;
 	protected BlockPoolInterface pool;
 	protected boolean isSynced;
 	
-	public BlockchainServiceBase(Node _node) {
+	public BlockchainServiceBase(NodeServiceInterface _node) {
 		super(ServiceBus.crypto.getRandomString());
 		this.node = _node;
 		this.isSynced = false;
-		node = _node;
 	}
 	
 	// BLOCKCHAIN SERVICES
@@ -94,5 +93,16 @@ public class BlockchainServiceBase extends Service  implements BockchainServiceI
 		return serviceId;
 	}
 	
+	
+	// getting the blockchain
+	public BlockchainInterface getInternalBlockchain() {
+		return this.blockchain;
+	}
+	
+	// getting the block pool
+	public BlockPoolInterface getInternalBlockPool() {
+		return this.pool;
+	}
+
 	
 }

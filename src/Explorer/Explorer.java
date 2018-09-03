@@ -15,10 +15,10 @@ import Transaction.*;
 // explorer functionalities for the blockchain
 public class Explorer implements ServiceListenerInterface {
 	
-	public final Node node;
+	public final NodeBase node;
 	public ExplorerUI ui;
 	
-	public Explorer(Node _node) {
+	public Explorer(NodeBase _node) {
 		this.node = _node;
 	}
 	

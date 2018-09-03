@@ -9,7 +9,7 @@ public class ServiceEventTransactionReceived extends ServiceEvent {
 	
 	public final StateTransaction transaction;
 	
-	public ServiceEventTransactionReceived(String _message, Service _source, StateTransaction _transaction) {
+	public ServiceEventTransactionReceived(String _message, ServiceBase _source, StateTransaction _transaction) {
 		super(_message, _source, Severity.INFO);
 		this.transaction = _transaction;
 	}

@@ -26,7 +26,7 @@ public class ServiceBus {
 		crypto = new CryptoProvider();
 	}
 	
-	public final Node node;
+	public final NodeServiceInterface node;
 	ArrayList<ServiceEvent> events;
 	ArrayList<ServiceListenerInfo> listeners;
 	
@@ -35,17 +35,19 @@ public class ServiceBus {
 	public WalletServiceInterface walletService;
 	public NetworkServiceInterface networkService;
 	public ValidatorServiceInterface minerService;
+	public TransactionPoolInterface trPool;
 	
-	public ServiceBus (Node _node) {
+	public ServiceBus (NodeServiceInterface _node) {
 		this.node = _node;
 		listeners = new ArrayList<ServiceListenerInfo>();
 		events = new ArrayList<ServiceEvent>();
 		
 		// setting up services
 		blockchainService = new BlockchainServiceBase(_node);
+		trPool = new TransactionPool();
 	}	
 
-	public void addEvent(String _message, Service _source, Severity _severity, boolean async)  {
+	public void addEvent(String _message, ServiceBase _source, Severity _severity, boolean async)  {
 		ServiceEvent event = new ServiceEvent(_message,_source, _severity);
 		events.add(event);
 		
@@ -65,7 +67,7 @@ public class ServiceBus {
 		}
 	}
 
-	public void addEventBlockMined(String _message, Service _source, BlockBase _block , boolean async)  {
+	public void addEventBlockMined(String _message, ServiceBase _source, BlockInterface _block , boolean async)  {
 		ServiceEventBlockMined event = new ServiceEventBlockMined(_message,_source, _block);
 		events.add(event);
 				
@@ -85,7 +87,7 @@ public class ServiceBus {
 		}	
 	}
 
-	public void addEventBlockValidated(String _message, Service _source, BlockBase _block , boolean async)  {
+	public void addEventBlockValidated(String _message, ServiceBase _source, BlockInterface _block , boolean async)  {
 		ServiceEventBlockValidated event = new ServiceEventBlockValidated(_message,_source, _block);
 		events.add(event);
 				
@@ -106,7 +108,7 @@ public class ServiceBus {
 	}
 
 	
-	public void addEventBlockReceived(String _message, Service _source, BlockBase _block , boolean async)  {
+	public void addEventBlockReceived(String _message, ServiceBase _source, BlockInterface _block , boolean async)  {
 		ServiceEventBlockReceived event = new ServiceEventBlockReceived(_message,_source, _block);
 		events.add(event);
 				
@@ -126,7 +128,7 @@ public class ServiceBus {
 		}	
 	}
 
-	public void addEventTransactionReceived(String _message, Service _source, StateTransaction _transaction , boolean async)  {
+	public void addEventTransactionReceived(String _message, ServiceBase _source, StateTransaction _transaction , boolean async)  {
 		ServiceEventTransactionReceived event = new ServiceEventTransactionReceived(_message,_source, _transaction);
 		events.add(event);
 				
@@ -146,7 +148,7 @@ public class ServiceBus {
 		}	
 	}
 	
-	public void addEventTransactionInitiated(String _message, Service _source, StateTransaction _transaction , boolean async)  {
+	public void addEventTransactionInitiated(String _message, ServiceBase _source, StateTransaction _transaction , boolean async)  {
 		ServiceEventTransactionInitiated event = new ServiceEventTransactionInitiated(_message,_source, _transaction);
 		events.add(event);
 				
@@ -166,7 +168,7 @@ public class ServiceBus {
 		}	
 	}
 
-	public void addEventBlockchainSyncronized(String _message, Service _source, boolean async)  {
+	public void addEventBlockchainSyncronized(String _message, ServiceBase _source, boolean async)  {
 		ServiceEventBlockchainSyncronized event = new ServiceEventBlockchainSyncronized(_message,_source);
 		events.add(event);
 				
@@ -187,11 +189,11 @@ public class ServiceBus {
 	}
 
 	
-	public void addEvent(String _message, Service _source, Severity _severity){
+	public void addEvent(String _message, ServiceBase _source, Severity _severity){
 		addEvent(_message, _source, _severity, true);
 	}
 	
-	public void addEvent(String _message, Service _source)  {
+	public void addEvent(String _message, ServiceBase _source)  {
 		addEvent(_message, _source, Severity.INFO, true);
 	}
 	

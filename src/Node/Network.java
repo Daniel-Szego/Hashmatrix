@@ -24,7 +24,7 @@ public class Network implements NetworkInterface  {
 	public static int peerLimit = 1;
 		
 	public int usedPort;
-	public final Node node;
+	public final NodeBase node;
 	public String clientVersion = "0.0.2";
 	public boolean networkStarted = false;
 	public Registry registry;
@@ -37,7 +37,7 @@ public class Network implements NetworkInterface  {
 		selfPeer = masterPeer;
 	}
 	
-	public Network(Node _node) {
+	public Network(NodeBase _node) {
 		this.node = _node;		
 	}
 	

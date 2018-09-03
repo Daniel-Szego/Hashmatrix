@@ -1,14 +1,14 @@
 package ServiceBus;
 
-import Block.BlockBase;
+import Block.*;
 import Utils.Severity;
 
 // event if the new block has been validated
 public class ServiceEventBlockValidated extends ServiceEvent {
 
-	public final BlockBase block;
+	public final BlockInterface block;
 	
-	public ServiceEventBlockValidated(String _message, Service _source, BlockBase _block) {
+	public ServiceEventBlockValidated(String _message, ServiceBase _source, BlockInterface _block) {
 		super(_message,_source,Severity.INFO);
 		this.block = _block;
 	}				

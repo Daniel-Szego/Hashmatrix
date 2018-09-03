@@ -13,7 +13,7 @@ import Wallet.*;
 import Explorer.*;
 
 // initial version of the node
-public class Node {
+public class NodeBase {
 	
 	public final RandomWallet wallet;
 	public final MinerPOW miner ;
@@ -26,7 +26,7 @@ public class Node {
 	public final LoggerConsole logger;
 	
 	// starting the node - test code, no persistance or communiction
-	public Node() {
+	public NodeBase() {
 		wallet = new RandomWallet(this);
 		miner = new MinerPOW(this);
 		blockchain = new BlockchainBase(this);
@@ -132,4 +132,10 @@ public class Node {
 		serviceBus.addEvent("Blockchain synced : " + this.blockchain.getBlockchinHeight());
 		this.blockchain.isSynced = true;
 	}
+	
+	// getting the service bus
+	public ServiceBus getServiceBus() {
+		return this.serviceBus;
+	}
+
 }

@@ -8,10 +8,8 @@ import Node.*;
 // transaction pool for the incomming but still not processed transactions
 public class TransactionPool implements TransactionPoolInterface {
 	
-	public final Node node;
 	
-	public TransactionPool(Node _node) {
-		this.node = _node;
+	public TransactionPool() {
 	}
 	
 	protected ArrayList<TransactionInterface> transactions = new ArrayList<TransactionInterface>();

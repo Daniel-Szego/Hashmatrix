@@ -34,7 +34,7 @@ public class BlockBase implements Serializable, BlockInterface {
 	//Creating a blank Block 
 	public BlockBase() {
 		state = new State();
-		transactions = new TransactionPool(null);
+		transactions = new TransactionPool();
 	}
 	
 	// getting previous block 

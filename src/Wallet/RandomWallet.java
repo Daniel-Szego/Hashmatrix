@@ -8,7 +8,7 @@ import State.*;
 // implementation of a random wallet
 public class RandomWallet extends Wallet{
 
-	public RandomWallet(Node _node) {
+	public RandomWallet(NodeBase _node) {
 		super(_node);
 	}
 	

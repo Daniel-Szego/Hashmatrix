@@ -20,14 +20,14 @@ public class TestStateServices {
 		newState.addAccount(newAccount2);
 		newState.addAccount(newAccount3);
 		
-		assertTrue(newState.getAccounsSize() == 3);
+		assertTrue(newState.getAccountsSize() == 3);
 		
-		State newestState = newState.copyState();
+		StateInterface newestState = newState.copyState();
 		AccountBase newAccount4 = new AccountBase("testkey4"); 
 		newestState.addAccount(newAccount4);
 		
-		assertTrue(newState.getAccounsSize() == 3);
-		assertTrue(newestState.getAccounsSize() == 4);
+		assertTrue(newState.getAccountsSize() == 3);
+		assertTrue(newestState.getAccountsSize() == 4);
 		assertTrue(newestState.getAccount("testkey4") != null);		
 			
 	}
