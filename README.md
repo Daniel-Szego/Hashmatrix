@@ -5,6 +5,9 @@ Cryptography:
  - Elliptic Curve Cryptography for signing transactions
  - SHA-256 for hash pointers between hashed
  
+ Network:
+ - Java remoting
+ 
  State:
  - Extended account/balance based system 
  - Each account has a balance that can be transferred from

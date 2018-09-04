@@ -18,18 +18,19 @@ import java.rmi.server.UnicastRemoteObject;
 // class for representing a peer -> implicitely as a client
 public class Peer implements NetworkRemoteInterface, Serializable  {
 	  
-	// peerId -> known peer implementation
-	public String peerId;
-	public final String peerHost;
-	public final int peerPort;
-	public boolean active;
+	// unique identifier for the peer
+	public final String peerId;
 	
-	public Peer(String _peerHost, int _peerPort){
-		peerHost = _peerHost;
-		peerPort = _peerPort;
+	public ClientConfiguration clientConfig;
+
+	public Peer(String _peerHost, int _peerPort, boolean isLocal){
+		clientConfig = new ClientConfiguration();	
+		clientConfig.peerHost = _peerHost;
+		clientConfig.usedPort = _peerPort;
+		clientConfig.isAlive = isLocal;
 		peerId = ServiceBus.crypto.applyHash(
-				peerHost +
-				peerPort
+				clientConfig.peerHost +
+				clientConfig.usedPort
 				);
 	}
 	
@@ -37,8 +38,8 @@ public class Peer implements NetworkRemoteInterface, Serializable  {
 	//getting the client version
 	public String getClienVersion() {
 			try {
-				Registry registry = LocateRegistry.getRegistry(peerHost,peerPort);
-				NetworkRemoteInterface stub = (NetworkRemoteInterface)registry.lookup(Constants.ServerNameBase + peerPort);
+				Registry registry = LocateRegistry.getRegistry(clientConfig.peerHost,clientConfig.usedPort);
+				NetworkRemoteInterface stub = (NetworkRemoteInterface)registry.lookup(Constants.ServerNameBase + clientConfig.usedPort);
 				String clientVersion = stub.getClienVersion();
 				return clientVersion;
 			} catch (Exception e) {
@@ -51,8 +52,8 @@ public class Peer implements NetworkRemoteInterface, Serializable  {
 	    public ArrayList<Peer> getPeerList (Peer _callee) 
 	    {
 			try {
-				Registry registry = LocateRegistry.getRegistry(peerHost,peerPort);
-				NetworkRemoteInterface stub = (NetworkRemoteInterface)registry.lookup(Constants.ServerNameBase + peerPort);
+				Registry registry = LocateRegistry.getRegistry(clientConfig.peerHost,clientConfig.usedPort);
+				NetworkRemoteInterface stub = (NetworkRemoteInterface)registry.lookup(Constants.ServerNameBase + clientConfig.usedPort);
 				ArrayList<Peer> peerList = stub.getPeerList(_callee);
 				return peerList;
 			} catch (Exception e) {
@@ -64,8 +65,8 @@ public class Peer implements NetworkRemoteInterface, Serializable  {
 	    //checking if peer is alive
 	    public boolean isPeerAlive() {
 			try {
-				Registry registry = LocateRegistry.getRegistry(peerHost,peerPort);
-				NetworkRemoteInterface stub = (NetworkRemoteInterface)registry.lookup(Constants.ServerNameBase + peerPort);
+				Registry registry = LocateRegistry.getRegistry(clientConfig.peerHost,clientConfig.usedPort);
+				NetworkRemoteInterface stub = (NetworkRemoteInterface)registry.lookup(Constants.ServerNameBase + clientConfig.usedPort);
 				boolean isPeerAlive = stub.isPeerAlive();
 				return isPeerAlive;
 			} catch (Exception e) {
@@ -77,8 +78,8 @@ public class Peer implements NetworkRemoteInterface, Serializable  {
 	    //broadcasting a transaction to the network
 	    public void boradcastTransaction (StateTransaction tr) {
 			try {
-				Registry registry = LocateRegistry.getRegistry(peerHost,peerPort);
-				NetworkRemoteInterface stub = (NetworkRemoteInterface)registry.lookup(Constants.ServerNameBase + peerPort);
+				Registry registry = LocateRegistry.getRegistry(clientConfig.peerHost,clientConfig.usedPort);
+				NetworkRemoteInterface stub = (NetworkRemoteInterface)registry.lookup(Constants.ServerNameBase + clientConfig.usedPort);
 				stub.boradcastTransaction(tr);
 			} catch (Exception e) {
 				ServiceBus.logger.log(e,Severity.ERROR);
@@ -88,8 +89,8 @@ public class Peer implements NetworkRemoteInterface, Serializable  {
 	    //broadcasting a block to the network
 	    public void broadcastBlock(BlockBase block) {
 			try {
-				Registry registry = LocateRegistry.getRegistry(peerHost,peerPort);
-				NetworkRemoteInterface stub = (NetworkRemoteInterface)registry.lookup(Constants.ServerNameBase + peerPort);
+				Registry registry = LocateRegistry.getRegistry(clientConfig.peerHost,clientConfig.usedPort);
+				NetworkRemoteInterface stub = (NetworkRemoteInterface)registry.lookup(Constants.ServerNameBase + clientConfig.usedPort);
 				stub.broadcastBlock(block);
 			} catch (Exception e) {
 				ServiceBus.logger.log(e,Severity.ERROR);
@@ -99,8 +100,8 @@ public class Peer implements NetworkRemoteInterface, Serializable  {
 	    //getting the height of the block of the connected peer
 	    public int getMaxBlockHeight () {
 	    	try {
-				Registry registry = LocateRegistry.getRegistry(peerHost,peerPort);
-				NetworkRemoteInterface stub = (NetworkRemoteInterface)registry.lookup(Constants.ServerNameBase + peerPort);
+				Registry registry = LocateRegistry.getRegistry(clientConfig.peerHost,clientConfig.usedPort);
+				NetworkRemoteInterface stub = (NetworkRemoteInterface)registry.lookup(Constants.ServerNameBase + clientConfig.usedPort);
 				return stub.getMaxBlockHeight();
 			} catch (Exception e) {
 				ServiceBus.logger.log(e,Severity.ERROR);
@@ -111,8 +112,8 @@ public class Peer implements NetworkRemoteInterface, Serializable  {
 	    // getting block header Id-s
 	    public ArrayList<String> getInventar(int from, int to) {
 	    	try {
-				Registry registry = LocateRegistry.getRegistry(peerHost,peerPort);
-				NetworkRemoteInterface stub = (NetworkRemoteInterface)registry.lookup(Constants.ServerNameBase + peerPort);
+				Registry registry = LocateRegistry.getRegistry(clientConfig.peerHost,clientConfig.usedPort);
+				NetworkRemoteInterface stub = (NetworkRemoteInterface)registry.lookup(Constants.ServerNameBase + clientConfig.usedPort);
 				return stub.getInventar(from, to);
 			} catch (Exception e) {
 				ServiceBus.logger.log(e,Severity.ERROR);
@@ -123,8 +124,8 @@ public class Peer implements NetworkRemoteInterface, Serializable  {
 	    // getting a block specified by the Id
 	    public BlockBase getBlock(String blockId) {
 	    	try {
-				Registry registry = LocateRegistry.getRegistry(peerHost,peerPort);
-				NetworkRemoteInterface stub = (NetworkRemoteInterface)registry.lookup(Constants.ServerNameBase + peerPort);
+				Registry registry = LocateRegistry.getRegistry(clientConfig.peerHost,clientConfig.usedPort);
+				NetworkRemoteInterface stub = (NetworkRemoteInterface)registry.lookup(Constants.ServerNameBase + clientConfig.usedPort);
 				return stub.getBlock(blockId);
 			} catch (Exception e) {
 				ServiceBus.logger.log(e,Severity.ERROR);

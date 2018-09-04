@@ -20,14 +20,14 @@ import javax.swing.JButton;
 
 
 public class ExplorerUI extends Frame {
-	public final NodeBase node;
+	public final NodeServiceBase node;
 	Panel panel;
 	Label lblBlocks = new Label("Blocks : ");
 	Label lblTransaction = new Label("Transaction : ");
 	List lstBlocks = new List();
 	List lstTransactions = new List();
 	
-	public ExplorerUI(NodeBase _node) {
+	public ExplorerUI(NodeServiceBase _node) {
 		node = _node;
 		setTitle("Explorer");
 		setSize(800,600);//frame size 300 width and 300 height  

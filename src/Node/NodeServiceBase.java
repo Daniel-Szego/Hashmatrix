@@ -13,7 +13,7 @@ import Wallet.*;
 import Explorer.*;
 
 // initial version of the node
-public class NodeBase {
+public class NodeServiceBase {
 	
 	public final RandomWallet wallet;
 	public final MinerPOW miner ;
@@ -26,7 +26,7 @@ public class NodeBase {
 	public final LoggerConsole logger;
 	
 	// starting the node - test code, no persistance or communiction
-	public NodeBase() {
+	public NodeServiceBase() {
 		wallet = new RandomWallet(this);
 		miner = new MinerPOW(this);
 		blockchain = new BlockchainBase(this);

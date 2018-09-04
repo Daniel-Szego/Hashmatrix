@@ -6,9 +6,6 @@ public class ClientConfiguration {
 	// which port is used locally
 	public int usedPort;
 
-	// is the network started
-	public boolean networkStarted = false;
-
 	// host information of the peer
 	public String peerHost;
 	

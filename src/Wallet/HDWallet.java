@@ -9,7 +9,7 @@ public class HDWallet extends Wallet {
 	
 	private PrivateKey seedKey;
 	
-	public HDWallet(NodeBase _node){
+	public HDWallet(NodeServiceBase _node){
 		super(_node);
 	}
 

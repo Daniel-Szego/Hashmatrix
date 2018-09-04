@@ -20,7 +20,7 @@ public class Network implements NetworkRemoteInterface  {
 
 	// network constants Constants
 		
-	public final NodeBase node;
+	public final NodeServiceBase node;
 	public Registry registry;
 	public Peer selfPeer;
 	
@@ -30,7 +30,7 @@ public class Network implements NetworkRemoteInterface  {
 		selfPeer = masterPeer;
 	}
 	
-	public Network(NodeBase _node) {
+	public Network(NodeServiceBase _node) {
 		this.node = _node;		
 	}
 	

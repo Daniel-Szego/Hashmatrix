@@ -18,7 +18,7 @@ import javax.swing.JButton;
 
 // minimal experimenatl wallet User Interface
 public class WalletUI extends Frame implements ActionListener {
-	public final NodeBase node;
+	public final NodeServiceBase node;
 	Panel panel;
 	Label lblSync = new Label("Blockchain Syncing : ");
 	Label lblSyncValue = new Label();
@@ -37,7 +37,7 @@ public class WalletUI extends Frame implements ActionListener {
 	TextField txtTransferAmountValue = new TextField();
 	Button btnTransfer = new Button("Transfer");
 	
-	public WalletUI(NodeBase _node) {
+	public WalletUI(NodeServiceBase _node) {
 		node = _node;
 		setTitle("Wallet UI");
 		setSize(800,600);//frame size 300 width and 300 height  
