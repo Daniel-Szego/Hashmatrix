@@ -25,6 +25,6 @@ public class Constants {
 	public static int MaxPeers = 1;
 	
 	// version of the client
-	public String ClientVersion = "0.0.2";
+	public static String ClientVersion = "0.0.2";
 
 }
