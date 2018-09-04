@@ -16,19 +16,12 @@ import Chain.*;
 import Transaction.*;
 
 // handling networks, connections and sockets and server functionalities
-public class Network implements NetworkInterface  {
+public class Network implements NetworkRemoteInterface  {
 
 	// network constants Constants
-	public static int defaultport = 8425;
-	public static String serverNameBase = "NetworkInterface";
-	public static int peerLimit = 1;
 		
-	public int usedPort;
 	public final NodeBase node;
-	public String clientVersion = "0.0.2";
-	public boolean networkStarted = false;
 	public Registry registry;
-	public ArrayList<Peer> peers = new ArrayList<Peer>();
 	public Peer selfPeer;
 	
 	public Network(Peer masterPeer) {
@@ -130,7 +123,7 @@ public class Network implements NetworkInterface  {
         
         try {
         	//java.rmi.server.hostname = "localhost";
-        	NetworkInterface stub = (NetworkInterface) UnicastRemoteObject.exportObject(this, 0);
+        	NetworkRemoteInterface stub = (NetworkRemoteInterface) UnicastRemoteObject.exportObject(this, 0);
 
             // Bind the remote object's stub in the registry
             //Registry registry = LocateRegistry.getRegistry();

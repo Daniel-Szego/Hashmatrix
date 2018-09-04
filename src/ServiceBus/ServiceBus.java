@@ -43,7 +43,7 @@ public class ServiceBus {
 		events = new ArrayList<ServiceEvent>();
 		
 		// setting up services
-		blockchainService = new BlockchainServiceBase(_node);
+		blockchainService = new BlockchainServiceBase(this);
 		trPool = new TransactionPool();
 	}	
 

@@ -34,7 +34,7 @@ public class TestTrasactions {
 		tr3.signTransaction(keys.privateKey);
 		assertTrue(tr3.verifySignature());
 		
-		TransactionPool pool = new TransactionPool(null);
+		TransactionPool pool = new TransactionPool();
 		pool.addTransaction(tr1);
 		pool.addTransaction(tr2);
 		pool.addTransaction(tr3);
