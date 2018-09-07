@@ -13,36 +13,26 @@ import Wallet.*;
 import Explorer.*;
 
 // initial version of the node
-public class NodeServiceBase {
+public class NodeServiceBase implements NodeServiceInterface {
 	
-	public final RandomWallet wallet;
-	public final MinerPOW miner ;
-	public final BlockchainBase blockchain;
-	public final TransactionPool pool;
-	public final Explorer explorer;
-	public final Network network;
-	public WalletUI walletUI; //this parameter is optional
-	public final ServiceBus serviceBus;
-	public final LoggerConsole logger;
+	public final ServiceBus bus;
 	
 	// starting the node - test code, no persistance or communiction
+	// node service starts the service bus
 	public NodeServiceBase() {
-		wallet = new RandomWallet(this);
-		miner = new MinerPOW(this);
-		blockchain = new BlockchainBase(this);
-		pool = new TransactionPool(this);		
-		explorer = new Explorer(this);
-		network = new Network(this);
-		
-		// creating servicebus and registering services
-		serviceBus = new ServiceBus(this);
-		logger = new LoggerConsole();
+		bus = new ServiceBus(this);
+		initializeServiceListeners();
+	}
+	
+	// adding service listeners
+	protected void initializeServiceListeners() {
 		// logger listens for everything
-		serviceBus.addServiceListener(new ServiceListenerInfo(logger, null));
+		bus.addServiceListener(new ServiceListenerInfo(logger, null));
 		// explorer listens for new transactions
 		// later on on validated transaction and blocks as well
-		serviceBus.addServiceListener(new ServiceListenerInfo(explorer, ServiceEventBlockReceived.class));
-		serviceBus.addServiceListener(new ServiceListenerInfo(explorer, ServiceEventTransactionReceived.class));
+		bus.addServiceListener(new ServiceListenerInfo(explorer, ServiceEventBlockReceived.class));
+		bus.addServiceListener(new ServiceListenerInfo(explorer, ServiceEventTransactionReceived.class));
+
 	}
 	
 	// BROADCAST TRANSACTIONS	

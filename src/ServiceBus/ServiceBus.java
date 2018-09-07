@@ -26,7 +26,7 @@ public class ServiceBus {
 		crypto = new CryptoProvider();
 	}
 	
-	public final NodeServiceInterface node;
+	public final NodeServiceInterface nodeService;
 	ArrayList<ServiceEvent> events;
 	ArrayList<ServiceListenerInfo> listeners;
 	
@@ -38,7 +38,7 @@ public class ServiceBus {
 	public TransactionPoolInterface trPool;
 	
 	public ServiceBus (NodeServiceInterface _node) {
-		this.node = _node;
+		this.nodeService = _node;
 		listeners = new ArrayList<ServiceListenerInfo>();
 		events = new ArrayList<ServiceEvent>();
 		
