@@ -12,6 +12,8 @@ import Utils.Severity;
 // service base provides the remote service implementation
 public class NetworkServiceBase extends ServiceBase implements NetworkRemoteInterface {
 
+	
+	
 	// constructor
 	public NetworkServiceBase(ServiceBus _bus) {
 		super(ServiceBus.crypto.getRandomString(), _bus);		

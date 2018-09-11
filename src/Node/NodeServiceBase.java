@@ -17,10 +17,13 @@ public class NodeServiceBase implements NodeServiceInterface {
 	
 	public final ServiceBus bus;
 	
+	
 	// starting the node - test code, no persistance or communiction
 	// node service starts the service bus
 	public NodeServiceBase() {
 		bus = new ServiceBus(this);
+		
+		
 		initializeServiceListeners();
 	}
 	
